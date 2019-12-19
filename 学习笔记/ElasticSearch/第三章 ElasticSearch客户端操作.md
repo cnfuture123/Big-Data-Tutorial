@@ -7,7 +7,7 @@
     
 ## 使用Postman工具进行Restful接口访问
 
-  - Reference
+  - ![Postman Examples](代码/Postman/ElasticSearch_Postman)
   
 ## IK分词器
 
@@ -16,4 +16,4 @@
   
 ## 使用Java API访问
 
-  - Reference
+  - ![Java Examples](代码/Java)
