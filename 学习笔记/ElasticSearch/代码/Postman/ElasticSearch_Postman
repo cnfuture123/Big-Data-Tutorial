@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "dba9a765-6096-4f9e-8c7c-3befba985215",
+		"name": "ElasticSearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ES-Practice-Put",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"mappings\": { \"article\": { \"properties\": { \"id\": { \"type\": \"long\", \"store\": true, \"index\":\"not_analyzed\" },\"title\": { \"type\": \"text\", \"store\": true, \"index\":\"analyzed\", \"analyzer\":\"standard\" },\"content\": { \"type\": \"text\", \"store\": true, \"index\":\"analyzed\", \"analyzer\":\"standard\" } } } } }"
+				},
+				"url": {
+					"raw": "http://localhost:9200/blog",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Put2",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9200/blog1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/blog1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 1,\n\t\"title\": \"ElasticSearch\",\n\t\"content\": \"Learning ES\"\n\t\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9200/blog/article/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog",
+						"article",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/blog/article/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog",
+						"article",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Query",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"query\":{\n\t\t\"query_string\": {\n\t\t\t\"default_field\": \"content\",\n\t\t\t\"query\": \"ES\"\n\t\t}\n\t\n\t}\n\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9200/blog/article/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog",
+						"article",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Term",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"query\": {\n\t\t\"term\": {\n\t\t\t\"title\": \"E\"\n\t\t}\n\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9200/blog/article/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"blog",
+						"article",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Standard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:9200/_analyze?analyzer=standard&pretty=true&text=我是程序员",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9200",
+					"path": [
+						"_analyze"
+					],
+					"query": [
+						{
+							"key": "analyzer",
+							"value": "standard"
+						},
+						{
+							"key": "pretty",
+							"value": "true"
+						},
+						{
+							"key": "text",
+							"value": "我是程序员"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-IK_Smart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:9200/_analyze?analyzer=ik_smart&pretty=true&text=我是程序员",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9200",
+					"path": [
+						"_analyze"
+					],
+					"query": [
+						{
+							"key": "analyzer",
+							"value": "ik_smart"
+						},
+						{
+							"key": "pretty",
+							"value": "true"
+						},
+						{
+							"key": "text",
+							"value": "我是程序员"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-IK_Max_Word",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:9200/_analyze?analyzer=ik_max_word&pretty=true&text=我是程序员",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9200",
+					"path": [
+						"_analyze"
+					],
+					"query": [
+						{
+							"key": "analyzer",
+							"value": "ik_max_word"
+						},
+						{
+							"key": "pretty",
+							"value": "true"
+						},
+						{
+							"key": "text",
+							"value": "我是程序员"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ES-Practice-Put_IK",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	]
+}
