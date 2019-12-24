@@ -83,6 +83,50 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
   
 ## Kafka消费者
 
-      
+### 消费方式
+
+  - consumer采用pull（拉）模式从broker中读取数据。
+  - push（推）模式很难适应消费速率不同的消费者，因为消息发送速率是由broker决定的。因为它的目标是尽可能以最快速度传递消息，但是这样很容易造成consumer来不及处理消息，典型的表现就是拒绝服务以及网络拥塞。
+  - pull模式则可以根据consumer的消费能力以适当的速率消费消息。pull模式不足之处是，如果kafka没有数据，消费者可能会陷入循环中，一直返回空数据。针对这一点，Kafka的消费者在消费数据时会传入一个时长参数timeout，如果当前没有数据可供消费，consumer会等待一段时间之后再返回，这段时长即为timeout。
+  offset的维护
+### 分区分配策略
+
+  - 一个consumer group中有多个consumer，一个topic有多个partition，所以必然会涉及到partition的分配问题，即确定那个partition由哪个consumer来消费。
+  - Kafka有两种分配策略，一是RoundRobin，一是Range。
+  
+### offset的维护
+
+  - 由于consumer在消费过程中可能会出现断电宕机等故障，consumer恢复后，需要从故障前的位置的继续消费，所以consumer需要实时记录自己消费到了哪offset，以便故障恢复后继续消费。
+  - Kafka 0.9版本之前，consumer默认将offset保存在Zookeeper中，从0.9版本开始，consumer默认将offset保存在Kafka一个内置的topic中，该topic为__consumer_offsets。
+  
+###  Kafka高效读写数据
+
+  - 顺序写磁盘:
+    - Kafka的producer生产数据，要写入到log文件中，写的过程是一直追加到文件末端，为顺序写。
+    - 同样的磁盘，顺序写能到600M/s，而随机写只有100K/s。
+  - 零复制技术: 
+  
+  ![零复制技术](./图片/零复制技术.PNG)
+  
+### Zookeeper在Kafka中的作用
+
+  - Kafka集群中有一个broker会被选举为Controller，负责管理集群broker的上下线，所有topic的分区副本分配和leader选举等工作。
+  - Controller的管理工作都是依赖于ZooKeeper的。
+  - Leader选举流程:
+  
+  ![Leader选举流程](./图片/Leader选举流程.PNG)
+  
+## Kafka事务
+
+  - Kafka从0.11版本开始引入了事务支持。事务可以保证Kafka在Exactly Once语义的基础上，生产和消费可以跨分区和会话，要么全部成功，要么全部失败。
+  
+### Producer事务
+
+  - 为了实现跨分区跨会话的事务，需要引入一个全局唯一的Transaction ID，并将Producer获得的PID和Transaction ID绑定。这样当Producer重启后就可以通过正在进行的Transaction ID获得原来的PID。
+  - 为了管理Transaction，Kafka引入了一个新的组件Transaction Coordinator。Producer就是通过和Transaction Coordinator交互获得Transaction ID对应的任务状态。Transaction Coordinator还负责将事务所有写入Kafka的一个内部Topic，这样即使整个服务重启，由于事务状态得到保存，进行中的事务状态可以得到恢复，从而继续进行。
+  
+### Consumer事务
+
+  - 对于Consumer而言，事务的保证就会相对较弱，尤其是无法保证Commit的信息被精确消费。这是由于Consumer可以通过offset访问任意信息，而且不同的Segment File生命周期不同，同一事务的消息可能会出现重启后被删除的情况。
   
   
