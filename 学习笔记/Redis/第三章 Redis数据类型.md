@@ -88,7 +88,15 @@
   - Zset:
     - zadd <key> <score1> <value1> <score2> <value2> ... : 将一个或多个member元素及其score值加入到有序集key当中
     - zrange <key> <start> <stop> [withscores] : 返回有序集key中，下标在<start> <stop>之间的元素, 带withscores，分数一起和值返回到结果集
-    - 
+    - zrangebyscore <key> <min> <max> [withscores] : 返回有序集key中，所有score值介于min和max之间(包括等于min或max)的成员。有序集成员按score 值递增(从小到大)次序排列。
+    - zrevrangebyscore <key> <min> <max> [withscores] : 同上，改为从大到小排列。
+    - zincrby <key> <increment> <value> : 为元素的score加上增量
+    - zrem <key> <value> 删除该集合下，指定值的元素
+    - zcount <key> <min> <max> : 统计该集合，分数区间内的元素个数
+    - zrank <key> <value> : 返回该值在集合中的排名，从0开始
+    - zrevrank <key> <value> : 返回该值在集合中的逆序排名
+  
+
 
 
   
