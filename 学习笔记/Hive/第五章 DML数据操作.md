@@ -23,8 +23,8 @@
   - create table if not exists student2 as select id, name from student;
   
 ### 导入数据到指定的Hive表(import)
-''
-  - import table <table_name> from <hdfs file path>;
+
+  - import table <table_name> from <hdfs_file_path>;
   
 ## 数据导出
 
@@ -38,8 +38,28 @@
   
 ### Hadoop命令导出到本地
 
+  - dfs -get <hdfs_file_path> <local_file_path>
+  
+### Hive Shell命令导出
+
+  - 基本语法：
+    - hive -f/-e 执行语句或者脚本 > file
+    - bin/hive -e 'select * from student;' > <local_file_path>;
     
+### Export导出到HDFS上
+
+  - export table <table_name> to <hdfs_file_path>;
+  
+### Sqoop导出
+
+## 清除表中数据(truncate)
+
+  - truncate table <table_name>;
+  - 注意：Truncate只能删除管理表，不能删除外部表中数据。
+  
+  
+  
     
 
-  
+ 
 
