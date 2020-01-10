@@ -66,7 +66,7 @@ error。
     - Taildir Source维护了一个json格式的position file，它定期的往position File中更新每个文件读取到的最新的位置，因此能够实现断点续传。
     - Position File的格式：
   
-    ![Position File的格式](./图片/Position File的格式.PNG)
+    ![PositionFile的格式](./图片/PositionFile的格式.PNG)
 
 
 
