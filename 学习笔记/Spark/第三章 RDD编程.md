@@ -136,7 +136,80 @@
   - cogroup(otherDataset, [numTasks])：
     - 作用：在类型为(K,V)和(K,W)的RDD上调用，返回一个(K,(Iterable<V>,Iterable<W>))类型的RDD。
   
+## RDD的Action操作
+
+  - reduce(func)：
+    - 作用：通过func函数聚集RDD中的所有元素，先聚合分区内数据，再聚合分区间数据。
+  - collect()：
+    - 作用：在驱动程序中，以数组的形式返回数据集的所有元素。
+  - count()：
+    - 作用：返回RDD中元素的个数。
+  - first()：
+    - 作用：返回RDD中的第一个元素。
+  - take(n)：
+    - 作用：返回一个由RDD的前n个元素组成的数组。
+  - takeOrdered(n)：
+    - 作用：返回该RDD排序后的前n个元素组成的数组。
+  - aggregate(zeroValue: U)(seqOp: (U, T) ⇒ U, combOp: (U, U) ⇒ U)：
+    - 作用：aggregate函数将每个分区里面的元素通过seqOp和初始值进行聚合，然后用combine函数将每个分区的结果和初始值(zeroValue)进行combine操作。这个函数最终返回的类型不需要和RDD中元素类型一致。
+  - fold(num)(func)：
+    - 作用：折叠操作，aggregate的简化操作，seqop和combop一样。
+  - saveAsTextFile(path)：
+    - 作用：将数据集的元素以textfile的形式保存到HDFS文件系统或者其他支持的文件系统，对于每个元素，Spark将会调用toString方法，将它转换为文件中的文本。
+  - saveAsSequenceFile(path)：
+    - 作用：将数据集中的元素以Hadoop sequencefile的格式保存到指定的目录下，可以是HDFS或者其他Hadoop支持的文件系统。
+  - saveAsObjectFile(path)：
+    - 作用：用于将RDD中的元素序列化成对象，存储到文件中。
+  - countByKey()：
+    - 作用：针对(K,V)类型的RDD，返回一个(K,Int)的map，表示每一个key对应的元素个数。
+  - foreach(func)：
+    - 作用：在数据集的每一个元素上，运行函数func进行更新。
+   
+## RDD依赖关系
+
+  - Lineage（血统）：
+    - RDD只支持粗粒度转换，即在大量记录上执行的单个操作。
+    - 将创建RDD的一系列Lineage（血统）记录下来，以便恢复丢失的分区。
+    - RDD的Lineage会记录RDD的元数据信息和转换行为，当该RDD的部分分区数据丢失时，它可以根据这些信息来重新运算和恢复丢失的数据分区。
+    - RDD和它依赖的父RDD（s）的关系有两种不同的类型，即窄依赖（narrow dependency）和宽依赖（wide dependency）。
+  - 窄依赖：
+    - 窄依赖指的是每一个父RDD的Partition最多被子RDD的一个Partition使用，一对一。
+  - 宽依赖：
+    - 宽依赖指的是多个子RDD的Partition会依赖同一个父RDD的Partition，会引起shuffle，一对多。
+  - DAG(Directed Acyclic Graph)：
+    - 有向无环图。
+    - 原始的RDD通过一系列的转换就就形成了DAG，根据RDD之间的依赖关系的不同将DAG划分成不同的Stage。
+    - 对于窄依赖，partition的转换处理在Stage中完成计算。
+    - 对于宽依赖，由于有Shuffle的存在，只能在parent RDD处理完成后，才能开始接下来的计算，因此宽依赖是划分Stage的依据。
+  - 任务划分：
+    - RDD任务切分中间分为：Application、Job、Stage和Task。
+    - Application：初始化一个SparkContext即生成一个Application。
+    - Job：一个Action算子就会生成一个Job。
+    - Stage：根据RDD之间的依赖关系的不同将Job划分成不同的Stage，遇到一个宽依赖则划分一个Stage。
+    - Task：Stage是一个TaskSet，将Stage划分的结果发送到不同的Executor执行即为一个Task。
+    - 注意：Application->Job->Stage->Task每一层都是1对n的关系。
+    
+## RDD缓存
+
+  - RDD通过persist方法或cache方法可以将前面的计算结果缓存，默认情况下persist()会把数据以序列化的形式缓存在JVM的堆空间中。
+  - 但是并不是这两个方法被调用时立即缓存，而是触发后面的action时，该RDD将会被缓存在计算节点的内存中，并供后面重用。
+  - cache最终也是调用了persist方法，默认的存储级别都是仅在内存存储一份，Spark的存储级别还有好多种，存储级别在object StorageLevel中定义的。
+  - 缓存有可能丢失，或者存储于内存的数据由于内存不足而被删除，RDD的缓存容错机制保证了即使缓存丢失也能保证计算的正确执行。
   
+## RDD CheckPoint
+
+  - Spark中对于数据的保存除了持久化操作之外，还提供了一种检查点的机制，检查点（本质是通过将RDD写入Disk做检查点）是为了通过lineage做容错的辅助。
+  - lineage过长会造成容错成本过高，这样就不如在中间阶段做检查点容错，如果之后有节点出现问题而丢失分区，从做检查点的RDD开始重做Lineage，就会减少开销。
+  - 检查点通过将数据写入到HDFS文件系统实现了RDD的检查点功能。
+  - 为当前RDD设置检查点。该函数将会创建一个二进制的文件，并存储到checkpoint目录中，该目录是用SparkContext.setCheckpointDir()设置的。
+  - 在checkpoint的过程中，该RDD的所有依赖于父RDD中的信息将全部被移除。
+  - 对RDD进行checkpoint操作并不会马上被执行，必须执行Action操作才能触发。
+    
+    
+    
+    
+    
+    
     
       
   
