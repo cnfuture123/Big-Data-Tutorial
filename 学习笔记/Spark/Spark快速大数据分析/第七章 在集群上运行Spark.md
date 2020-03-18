@@ -61,7 +61,7 @@
     
   - spark-submit的一些常见标记：
     
-    ![spark-submit的一些常见标记](./图片/spark-submit的常见参数.PNG)
+    ![spark-submit的一些常见标记](./图片/spark-submit的常用参数.PNG)
     
 ## 打包代码与依赖
 
