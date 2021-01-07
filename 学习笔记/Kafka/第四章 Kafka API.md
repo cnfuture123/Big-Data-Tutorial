@@ -10,8 +10,9 @@
     
     ![消息发送流程](./图片/消息发送流程.PNG)
     - 相关参数：
-      - batch.size：只有数据积累到batch.size之后，sender才会发送数据。
+      - batch.size：只有数据积累到batch.size字节之后，sender才会发送数据。增加这个值可以提高吞吐量，但会占用更多内存以及增加时延。
       - linger.ms：如果数据迟迟未达到batch.size，sender等待linger.time之后就会发送数据。
+      - 以上两个参数哪个先满足就会生效。理论上调整这两个参数会提高性能，但实际测试发现基本没效果。
       
 ### 异步发送API
 
@@ -28,6 +29,7 @@
   ![带回调函数的API](./代码/ProducerCallBack.java)
   - 回调函数会在producer收到ack时调用，为异步调用，该方法有两个参数，分别是RecordMetadata 和 Exception。
   - 注意：消息发送失败会自动重试，不需要我们在回调函数中手动重试。
+  - 项目中使用回调函数判断发送过程中是否有异常，如果有异常则将数据写入错误日志，通过离线SFTP方式发送。
   
 ### 同步发送API
 
@@ -43,10 +45,14 @@
   - 需要用到的类：
     - KafkaConsumer：需要创建一个消费者对象，用来消费数据。
     - ConsumerConfig：获取所需的一系列配置参数。
-    - ConsuemrRecord：每条数据都要封装成一个ConsumerRecord对象。
+    - ConsumerRecord：每条数据都要封装成一个ConsumerRecord对象。
   - 自动提交offset的相关参数：
     - enable.auto.commit：是否开启自动提交offset功能。
     - auto.commit.interval.ms：自动提交offset的时间间隔。
+    - auto.offset.reset：重启策略，决定消费者重启时从什么位置开始消费数据。
+      - earliest: 当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费。
+      - latest: 当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，消费新产生的该分区下的数据。
+      - none: 当各分区都存在已提交的offset时，从offset后开始消费；只要有一个分区不存在已提交的offset，则抛出异常。
     
 ### 手动提交offset
 
