@@ -72,7 +72,7 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
     - Producer端数据丢失：
       - 当Producer的ack设置为0或1，最多只能保证leader有数据。若有一条发送的数据leader刚接收完毕，此时leader挂掉，那么partition的副本还未来得及同步，就会造成数据丢失。要想数据不丢失，就要将ack设置为-1，即所有的follower也同步到这条数据了，才发第二条数据，但是这样就降低了我们的性能。所以在实际工作中，往往得结合业务来平衡数据的一致性和系统的性能。
     - Consumer端数据丢失：
-      - 消费者自动offset时，如果刚好将offset提交后，但这条数据还没消费完，机器发生宕机，此时数据就丢失。需要关闭偏移量自动提交offset，改成手动提交，每次数据处理完后，再提交
+      - 消费者自动offset时，如果刚好将offset提交后，但这条数据还没消费完，机器发生宕机，此时数据就丢失。需要关闭偏移量自动提交offset，改成手动提交，每次数据处理完后，再提交offset。
   - 数据重复问题：
     - 消费者消费了几条数据，但是还没有到提交offset之时机器宕机了。在下一次机器重启的时候，消费者会先去读上次提交的偏移量进行消费，这就会导致数据重复消费。需要关闭偏移量自动提交offset，改成手动提交。
       
@@ -95,7 +95,7 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
   - consumer采用pull（拉）模式从broker中读取数据。
   - push（推）模式很难适应消费速率不同的消费者，因为消息发送速率是由broker决定的。因为它的目标是尽可能以最快速度传递消息，但是这样很容易造成consumer来不及处理消息，典型的表现就是拒绝服务以及网络拥塞。
   - pull模式则可以根据consumer的消费能力以适当的速率消费消息。pull模式不足之处是，如果kafka没有数据，消费者可能会陷入循环中，一直返回空数据。针对这一点，Kafka的消费者在消费数据时会传入一个时长参数timeout，如果当前没有数据可供消费，consumer会等待一段时间之后再返回，这段时长即为timeout。
-  offset的维护
+
 ### 分区分配策略
 
   - 一个consumer group中有多个consumer，一个topic有多个partition，所以必然会涉及到partition的分配问题，即确定那个partition由哪个consumer来消费。
@@ -105,6 +105,8 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
 
   - 由于consumer在消费过程中可能会出现断电宕机等故障，consumer恢复后，需要从故障前的位置的继续消费，所以consumer需要实时记录自己消费到了哪offset，以便故障恢复后继续消费。
   - Kafka 0.9版本之前，consumer默认将offset保存在Zookeeper中，从0.9版本开始，consumer默认将offset保存在Kafka一个内置的topic中，该topic为__consumer_offsets。
+  - 使用外部存储，如关系数据库，HBase，Redis等保存offset，在消费数据之前从外部存储中读取上次提交的offset。
+    - 实际项目中使用Gauss数据库保存offset，但是没有实现事务性，所以是At Least Once语义。Spark Streaming在消费数据之前从GaussDB中读取上次提交的offset，消费一个主题的数据之后更新GaussDB中的offset。
   
 ###  Kafka高效读写数据
 
