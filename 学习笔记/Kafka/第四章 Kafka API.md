@@ -78,3 +78,16 @@
     - onSend(ProducerRecord)：Producer确保在消息被序列化以及计算分区前调用该方法。用户可以在该方法中对消息做任何操作，但最好保证不要修改消息所属的 topic和分区，否则会影响目标分区的计算。
     - onAcknowledgement(RecordMetadata, Exception)：该方法会在消息从RecordAccumulator成功发送到Kafka Broker之后，或者在发送过程中失败时调用。并且通常都是在producer回调逻辑触发之前。onAcknowledgement运行在producer的IO线程中，因此不要在该方法中放入很重的逻辑，否则会拖慢producer的消息发送效率。
     - close：关闭interceptor，主要用于执行一些资源清理工作。
+    
+## Broker调优参数
+
+  - default.replication.factor: 3 //默认副本数
+  - auto.create.topics.enable: true //是否开启自动创建topic的功能
+  - delete.topic.enable: true //是否开启删除topic的功能
+  - num.partitions: 2 //自动创建topic时的分区数
+  - num.io.threads: 8 //Broker用来处理磁盘I/O的线程数目
+  - log.retention.hours: 24 //日志数据文件保留的最长时间(小时)
+  - log.retention.check.interval.ms: 30000 //检查日志数据的分段文件的间隔时间，以确定文件属性是否达到删除要求
+  - log.segment.bytes: 1073741824 //日志数据中分段文件的最大字节数
+  - log.dirs: /kafka/logs //Kafka数据保存路径，可以是多个目录，以“,”分隔
+  
