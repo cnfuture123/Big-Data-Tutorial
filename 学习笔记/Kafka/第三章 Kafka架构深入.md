@@ -138,4 +138,16 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
 
   - 对于Consumer而言，事务的保证就会相对较弱，尤其是无法保证Commit的信息被精确消费。这是由于Consumer可以通过offset访问任意信息，而且不同的Segment File生命周期不同，同一事务的消息可能会出现重启后被删除的情况。
   
-  
+## Kafka安全性
+
+### Kafka安全协议
+
+  - PLAINTEXT：支持无认证的明文访问
+    - 配置：security.protocol=PLAINTEXT
+  - SASL_PLAINTEXT：支持Kerberos认证的明文访问
+    - 配置：security.protocol=SASL_PLAINTEXT，sasl.kerberos.service.name = kafka
+  - SSL：支持无认证的SSL加密访问
+    - 配置：security.protocol=SSL，ssl.mode.enable=true
+  - SASL_SSL：支持Kerberos认证的SSL加密访问
+    - 配置：sasl.kerberos.service.name = kafka，ssl.mode.enable=true
+  - allow.everyone.if.no.acl.found设置为false开启Kafka集群安全模式，访问主题需要权限认证
