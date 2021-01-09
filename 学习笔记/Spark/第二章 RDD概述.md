@@ -1,19 +1,11 @@
 # RDD概述
 
-  - RDD（Resilient Distributed Dataset）叫做分布式数据集，是Spark中最基本的数据抽象。
+  - RDD（Resilient Distributed Dataset）叫做弹性分布式数据集，是Spark中最基本的数据抽象。
   - 代码中是一个抽象类，它代表一个不可变、可分区、里面的元素可并行计算的集合。
-  
-## RDD的属性
-
-  - 一组分区（Partition），即数据集的基本组成单位。
-  - 一个计算每个分区的函数。
-  - RDD之间的依赖关系。
-  - 一个Partitioner，即RDD的分片函数。
-  - 一个列表，存储每个Partition的优先位置（preferred location）。
   
 ## RDD特点
 
-  - RDD表示只读的分区的数据集，对RDD进行改动，只能通过RDD的转换操作，由一个RDD得到一个新的RDD，新的RDD包含了从其他RDD衍生所必需的信息。
+  - RDD表示只读的分区的数据集，对RDD进行改动，只能通过RDD的转换操作，由一个RDD得到一个新的RDD。
   - RDDs之间存在依赖，RDD的执行是按照血缘关系延时计算的。如果血缘关系较长，可以通过持久化RDD来切断血缘关系。
   - 注意细节：
     - 分区：
