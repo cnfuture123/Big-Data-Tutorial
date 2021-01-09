@@ -151,3 +151,55 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
   - SASL_SSL：支持Kerberos认证的SSL加密访问
     - 配置：sasl.kerberos.service.name = kafka，ssl.mode.enable=true
   - allow.everyone.if.no.acl.found设置为false开启Kafka集群安全模式，访问主题需要权限认证
+
+## Kafka常见问题
+
+  - Flume可以正常连接Kafka，但是发送消息失败：
+    - 可能原因：
+      - Kafka服务异常
+      - Flume连接Kafka地址错误，导致发送失败
+      - Flume发送超过Kafka大小限制的消息，导致发送失败
+    - 解决方法：
+      - 查看Kafka集群当前状态，如果Kafka服务异常，则根据异常相应地处理
+      - 如果Flume连接地址错误，则修改为正确的地址
+      - 如果发送的消息超过大小限制，则调整Kafka服务端相关参数，修改"message.max.bytes"值，使得message.max.bytes > 当前业务中消息最大值
+  - Kafka生产者发送数据时鉴权失败：
+    - 可能原因：
+      - 客户端Producer侧配置jaas.conf和user.keytab文件错误
+    - 解决方法：
+      - 修改jaas.conf和user.keytab文件为正确的配置
+  - Kafka生产者访问主题时报权限错误：
+    - 可能原因：
+      - 集群为安全模式，生产者没有该主题的访问权限
+    - 解决方法：
+      - 修改"allow.everyone.if.no.acl.found"参数为ture，将集群设置为非安全模式
+      - 赋予生产者访问权限
+  - 消费者消费数据失败，一直处于等待状态; 或者报错：Error getting partition metadata
+    - 同上
+  - 消费者消费数据报错：SchemaException: Error reading field 'brokers'
+    - 可能原因：
+      - 客户端和服务端Jar版本不一致
+    - 解决方法：
+      - 修改消费者使用的Kafka依赖版本，与服务端保持一致
+  - 网络不稳定导致分区Leader无法选举出来，引起消费卡死：
+    - 可能原因：
+      - 出现网络异常后，新老controller感知的可用节点不同，导致新controller某个分区的Leader信息与ZooKeeper记录元数据的信息不一致，导致controller选举流程出现错误，选不出Leader
+    - 解决方法：
+      - 需要有新的选举事件才能触发Leader选出来，例如重启
+  - 消费卡顿问题（中途消费不到数据，过一会又继续消费）：
+    - 可能原因：
+      - 网络问题，环境出现大量丢包情况
+    - 解决方法:
+      - 解决网络丢包问题
+  - 执行Kakfa Topic创建操作，发现无法创建提示replication factor larger than available brokers：
+    - 可能原因：
+      - Kafka服务当前可用Broker小于设置的replication factor
+    - 解决方法：
+      - 增加可用Broker，或者减小设置的replication factor
+  - 执行topic的消费时会自动创建不存在的topic：
+    - 可能原因：
+      - auto.create.topics.enable值为true
+    - 解决方法：
+      - 将auto.create.topics.enable值设置为false
+      
+  
