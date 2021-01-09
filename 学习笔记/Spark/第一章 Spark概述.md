@@ -1,6 +1,6 @@
 # Spark概述
 
-  - Spark是一种基于内存的快速、通用、可扩展的大数据分析引擎。
+  - Spark是一种基于内存的快速、通用、可扩展的大数据计算引擎。
   
 ## Spark内置模块
 
@@ -11,6 +11,7 @@
   - Spark Core：
     - 实现了Spark的基本功能，包含任务调度、内存管理、错误恢复、与存储系统交互等模块。
     - 还包含了对弹性分布式数据集(Resilient Distributed DataSet，简称RDD)的API定义。
+    - RDD表示分布在多个计算节点上可以并行操作的元素集合。
   - Spark SQL：
     - 用来操作结构化数据的程序包。
     - 通过Spark SQL，我们可以使用SQL或者Apache Hive版本的SQL方言(HQL)来查询数据。
@@ -21,6 +22,8 @@
   - Spark MLlib：
     - 提供常见的机器学习(ML)功能的程序库。
     - 包括分类、回归、聚类、协同过滤等，还提供了模型评估、数据导入等额外的支持功能。
+  - GraphX：
+    - 用来操作图的程序库。可以进行并行的图计算。 
   - 集群管理器：
     - Spark支持在各种集群管理器(Cluster Manager)上运行，包括Hadoop YARN、Apache Mesos，以及Spark自带的一个简易调度器，叫作独立调度器。 
     
@@ -35,18 +38,19 @@
 ### Driver（驱动器）
 
   - Spark的驱动器是执行开发程序中的main方法的进程。
-  - 用来创建SparkContext、创建RDD，以及进行RDD的转化操作和行动操作代码的执行。
+  - 创建SparkContext对象来访问Spark，这个对象代表对计算集群的一个连接。
+  - 创建RDD，以及进行RDD的转化操作和行动操作代码的执行。
   - 主要职责：
-    - 把用户程序转为作业（JOB）。
-    - 跟踪Executor的运行状况。
-    - 为Executor节点调度任务。
-    - UI展示应用运行状况。
+    - 把用户程序转为作业（JOB）
+    - 为Executor节点调度任务
+    - 管理并跟踪Executor的运行状况
+    - UI展示应用运行状况
     
 ### Executor（执行器）
 
   - Spark Executor是一个工作进程，负责在Spark作业中运行任务，任务间相互独立。
   - Spark应用启动时，Executor节点被同时启动，并且始终伴随着整个Spark应用的生命周期而存在。
-  - 如果有Executor节点发生了故障或崩溃，Spark应用也可以继续执行，会将出错节点上的任务调度到其他Executor节点上继续运行。
+  - 如果有Executor节点发生了故障或崩溃，Spark应用会将出错节点上的任务调度到其他Executor节点上继续运行。
   - 主要职责：
     - 负责运行组成Spark应用的任务，并将结果返回给驱动器进程。
     - 通过自身的块管理器（Block Manager）为用户程序中要求缓存的RDD提供内存式存储。RDD是直接缓存在Executor进程内的，因此任务可以在运行时充分利用缓存数据加速运算。
