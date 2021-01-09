@@ -10,15 +10,16 @@
   
 ## RDD的创建
 
-  - 在Spark中创建RDD的创建方式可以分为三种：从集合中创建RDD；从外部存储创建RDD；从其他RDD创建。
+  - 在Spark中创建RDD的创建方式可以分为三种：从集合中创建RDD；从外部存储创建RDD；从其他RDD通过转换创建。
   - 从集合中创建RDD，Spark主要提供了两种函数：parallelize和makeRDD：
-    - val rdd1 = sc.makeRDD(Array(1,2,3,4,5,6,7,8))
+    - val rdd1 = sc.parallelize(Array(1,2,3,4,5,6,7,8))
   - 由外部存储系统的数据集创建，包括本地的文件系统，还有所有Hadoop支持的数据集，比如HDFS、Cassandra、HBase等：
     - val rdd2= sc.textFile("hdfs://hadoop102:9000/RELEASE")
   
 ## RDD的转换
 
   - RDD整体上分为Value类型和Key-Value类型。
+  - 转换操作从已有的RDD派生出新的RDD，并且是惰性求值，只有在行动操作中用到这些RDD时才会被计算。
   
 ### Value类型
 
@@ -28,8 +29,8 @@
       - var source  = sc.parallelize(1 to 10)
       - val mapRDD = source.map(_ * 2)
   - mapPartitions(func):
-    - 作用：类似于map，但独立地在RDD的每一个分片上运行，因此在类型为T的RDD上运行时，func的函数类型必须是Iterator[T] => Iterator[U]。
-    - 假设有N个元素，有M个分区，那么map的函数的将被调用N次,而mapPartitions被调用M次,一个函数一次处理所有分区。
+    - 作用：类似于map，但独立地在RDD的每一个分区上运行，因此在类型为T的RDD上运行时，func的函数类型必须是Iterator[T] => Iterator[U]。
+    - 假设有N个元素，有M个分区，那么map的函数的将被调用N次,而mapPartitions被调用M次,一个函数一次处理所有分区数据。
     - 示例：
       - val rdd = sc.makeRDD(Array(1, 2, 3, 4))
       - rdd.mapPartitions(x => x.map(_ * 2))
@@ -39,7 +40,7 @@
       - val rdd = sc.parallelize(Array(1,2,3,4))
       - val indexRdd = rdd.mapPartitionsWithIndex((index,items)=>(items.map((index,_))))
   - flatMap(func):
-    - 作用：类似于map，但是每一个输入元素可以被映射为0或多个输出元素（所以func应该返回一个序列，而不是单一元素）。
+    - 作用：类似于map，返回一个序列的迭代器，而不是单一元素。
   - glom():
     - 作用：将每一个分区形成一个数组，形成新的RDD类型时RDD[Array[T]]。
     - 示例：
@@ -96,7 +97,7 @@
 ### Key-Value类型
 
   - partitionBy：
-    - 作用：对pairRDD进行分区操作，如果原有的partionRDD和现有的partionRDD是一致的话就不进行分区， 否则会生成ShuffleRDD，即会产生shuffle过程。
+    - 作用：对pairRDD进行分区操作，如果原有的partionRDD和现有的partionRDD不一致即会产生shuffle过程。
     - 示例：
       - val rdd = sc.parallelize(Array((1,"aaa"),(2,"bbb"),(3,"ccc"),(4,"ddd")),4)
       - var rdd2 = rdd.partitionBy(new org.apache.spark.HashPartitioner(2))
@@ -167,15 +168,14 @@
    
 ## RDD依赖关系
 
-  - Lineage（血统）：
+  - Lineage（谱系图）：
+    - RDD的Lineage会记录RDD的元数据信息和依赖关系，当该RDD的部分分区数据丢失时，它可以根据这些信息来重新运算和恢复丢失的数据分区。
     - RDD只支持粗粒度转换，即在大量记录上执行的单个操作。
-    - 将创建RDD的一系列Lineage（血统）记录下来，以便恢复丢失的分区。
-    - RDD的Lineage会记录RDD的元数据信息和转换行为，当该RDD的部分分区数据丢失时，它可以根据这些信息来重新运算和恢复丢失的数据分区。
-    - RDD和它依赖的父RDD（s）的关系有两种不同的类型，即窄依赖（narrow dependency）和宽依赖（wide dependency）。
-  - 窄依赖：
-    - 窄依赖指的是每一个父RDD的Partition最多被子RDD的一个Partition使用，一对一。
-  - 宽依赖：
-    - 宽依赖指的是多个子RDD的Partition会依赖同一个父RDD的Partition，会引起shuffle，一对多。
+  - RDD和它依赖的父RDD（s）的关系有两种不同的类型，即窄依赖（narrow dependency）和宽依赖（wide dependency）。
+    - 窄依赖：
+      - 每一个父RDD的Partition最多被子RDD的一个Partition使用，一对一。
+    - 宽依赖：
+      - 同一个父RDD的Partition会被多个子RDD的Partition依赖，会引起shuffle，一对多。
   - DAG(Directed Acyclic Graph)：
     - 有向无环图。
     - 原始的RDD通过一系列的转换就就形成了DAG，根据RDD之间的依赖关系的不同将DAG划分成不同的Stage。
@@ -191,31 +191,25 @@
     
 ## RDD缓存
 
-  - RDD通过persist方法或cache方法可以将前面的计算结果缓存，默认情况下persist()会把数据以序列化的形式缓存在JVM的堆空间中。
-  - 但是并不是这两个方法被调用时立即缓存，而是触发后面的action时，该RDD将会被缓存在计算节点的内存中，并供后面重用。
-  - cache最终也是调用了persist方法，默认的存储级别都是仅在内存存储一份，Spark的存储级别还有好多种，存储级别在object StorageLevel中定义的。
-  - 缓存有可能丢失，或者存储于内存的数据由于内存不足而被删除，RDD的缓存容错机制保证了即使缓存丢失也能保证计算的正确执行。
+  - RDD通过persist方法或cache方法可以将前面的计算结果缓存
+  - 两者区别是：
+    - 默认情况下persist()会把数据以序列化的形式缓存在JVM的堆空间中，但是也可以通过StorageLevel来指定存储级别。
+    - cache调用了persist方法，存储级别是仅在内存存储一份。
+  - 这两个方法不是被调用时立即缓存，而是触发后面的action时，该RDD将会被缓存在计算节点的内存中，并供后面重用。
+  - 支持的存储级别：
+    - MEMORY_ONLY
+    - MEMORY_ONLY_SER
+    - MEMORY_AND_DISK
+    - MEMORY_AND_DISK_SER
+    - DISK_ONLY
+    - 在以上存储级别末尾加_2，可以把数据存2份备份
   
 ## RDD CheckPoint
 
-  - Spark中对于数据的保存除了持久化操作之外，还提供了一种检查点的机制，检查点（本质是通过将RDD写入Disk做检查点）是为了通过lineage做容错的辅助。
-  - lineage过长会造成容错成本过高，这样就不如在中间阶段做检查点容错，如果之后有节点出现问题而丢失分区，从做检查点的RDD开始重做Lineage，就会减少开销。
-  - 检查点通过将数据写入到HDFS文件系统实现了RDD的检查点功能。
-  - 为当前RDD设置检查点。该函数将会创建一个二进制的文件，并存储到checkpoint目录中，该目录是用SparkContext.setCheckpointDir()设置的。
+  - Spark中对于数据的保存除了持久化操作之外，还提供了一种检查点的机制，检查点（本质是通过将RDD写入磁盘做检查点）是为了通过lineage做容错的辅助。
+  - lineage过长会造成容错成本过高，不如在中间阶段做检查点容错，如果之后有节点出现问题而丢失分区，从做检查点的RDD开始重做Lineage，就会减少开销。
+  - 为当前RDD设置检查点。该函数将会创建一个二进制的文件，并存储到checkpoint目录中，sc.setCheckpointDir()设置的。
   - 在checkpoint的过程中，该RDD的所有依赖于父RDD中的信息将全部被移除。
   - 对RDD进行checkpoint操作并不会马上被执行，必须执行Action操作才能触发。
     
-    
-    
-    
-    
-    
-    
-      
   
-      
-      
-      
-      
-      
-      
