@@ -17,4 +17,9 @@
   
   ![SparkStreaming架构](./图片/SparkStreaming架构.PNG)
   
+  - 核心组件：
+    - Cluster Manager：集群管理器，负责资源管理和分配。
+    - Driver：运行应用程序的主函数，初始化SparkContext(StreamingContext)，SparkContext连接集群管理器，并负责任务的调度。
+    - Executor：执行具体的任务，包括数据的存储和计算。
+  
   
