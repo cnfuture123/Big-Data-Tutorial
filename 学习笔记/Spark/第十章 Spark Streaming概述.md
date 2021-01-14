@@ -70,7 +70,13 @@
       - spark://HOST:PORT: 连接Spark Standalone集群
       - mesos://HOST:PORT: 连接Mesos集群
       - yarn: 连接Yarn集群
-      
+  - 反压机制：
+    - 背景：
+      - 当一个批次数据的处理时间大于批次时间间隔时，意味着数据处理速度跟不上数据接收速度，会造成数据在接收端的积压。当积累的数据过多时，如果数据存储采用MEMORY_ONLY模式就会导致OOM，采用MEMORY_AND_DISK多余的数据溢写到磁盘上反而会增加数据读取时间。
+      - Spark Streaming从1.5开始引入反压机制（BackPressure），动态控制数据接收速率来适配集群数据处理能力。
+    - 配置参数：
+      - spark.streaming.backpressure.enabled=true : 开启反压
+      - spark.streaming.kafka.maxRatePerPartition=10000 : 限定每个Kafka partition每秒最多消费条数
     
      
   
