@@ -52,6 +52,24 @@
         ssc.checkpoint("checkpointDirectory") // set checkpoint directory
         ```
     - 配置应用程序Dirver的自动重启，为了自动从Driver故障中恢复，运行流应用程序的部署设施必须能监控Driver进程，如果失败了能够重启它。
+  - 程序的提交：
+    ```
+    bin/spark-submit 
+      --class <main-class> 
+      --deploy-mode client/master
+      --master <master-url>
+      --files <./jaas.conf,./jaas-zk.conf,krb5.conf,user.keytab> //上传配置文件到集群
+      --jars <./a.jar,./b.jar,c.jar> //上传依赖到集群
+      --num-executors 5 
+      --queue <job-queue> //指定程序运行的队列
+    ```
+    - 支持的master类型：
+      - local: 本地一个线程运行程序
+      - local[K]: 本地K个线程运行程序
+      - local[*]: 本地用机器核数的线程运行程序
+      - spark://HOST:PORT: 连接Spark Standalone集群
+      - mesos://HOST:PORT: 连接Mesos集群
+      - yarn: 连接Yarn集群
       
     
      
