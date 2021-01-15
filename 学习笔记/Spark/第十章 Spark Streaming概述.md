@@ -78,6 +78,81 @@
       - spark.streaming.backpressure.enabled=true : 开启反压
       - spark.streaming.kafka.maxRatePerPartition=10000 : 限定每个Kafka partition每秒最多消费条数
     
-     
-  
-  
+## Spark Streaming和Kafka的集成（Direct API）
+
+  - 背景：Spark 1.3引入Kafka Direct API。通过周期性地获取Kafka每个分区的最新offset，Spark Driver只需简单计算下一个批次需要处理Kafka分区偏移量的范围，然后Spark Executor直接从相应分区消费数据。这种方法把Kafka当作成一个文件系统，然后像读文件一样来消费主题中的数据。
+  - 消费数据：
+    - 设置消费者参数：
+      ```
+      val consumerParams = Map[String, String](
+        "bootstrap.servers" -> brokers,
+        "group.id" -> consumerGroup,
+        "key.deserializer" -> "org.apache.kafka.common.serialization.StringDeserializer",
+        "value.deserializer" -> "org.apache.kafka.common.serialization.StringDeserializer",
+        "security.protocol" -> "SASL_PLAINTEXT",
+        "sasl.kerberos.service.name" -> "kafka",
+        "kerberos.domain.name" -> "hadoop.hadoop.com"
+      )
+      ```
+    - 配置策略：
+      ```
+      val locationStrategy = LocationStrategies.PreferConsistent
+      val consumerStrategy = ConsumerStrategies.Subscribe[String, String](Set(topic), consumerParams)
+      ```
+    - 接收并处理数据：
+      ```
+      val stream: InputDStream[ConsumerRecord[String, String]] = KafkaUtils.createDirectStream[String, String](ssc, locationStrategy, consumerStrategy)
+      val topicStream: DStream[String] = stream.transform(record => record.map(r => r.value))
+      topicStream.foreachRDD(
+        rdd => process(rdd)  
+      )
+      ```
+  - 消费者API解析：
+    - LocationStrategies：分区数据调度策略。Spark集成Kafka时在Executor节点缓存Consumers（而不是每次重新创建），并且将Kafka分区数据调度到有合适Consumer的机器节点。
+      - PreferConsistent：平均地将分区数据分配到可用的Executors
+      - PreferBrokers：调度分区数据到这个分区的Kafka leader上，executors和Kafka brokers在相同的机器上时使用
+      - PreferFixed：显示地指定分区数据到主机的映射，分区负载不均衡时使用
+    - ConsumerStrategies：消费策略。
+      - Subscribe：订阅一个固定集合的主题
+      - SubscribePattern：可以使用正则表达式指定主题
+      - Assign：指定一个固定集合的分区
+      - ConsumerStrategy是一个public类，可以通过继承进行定制化
+    - ConsumerRecord：Direct API返回的对象，包含：主题名称、分区号、偏移量、<key, value>形式的消费数据
+      - 获取数据：val data = stream.transform(record => record.map(r => r.value))
+      - 获取key：val key = stream.transform(record => record.map(r => r.key))
+  - 生产数据：
+    - 设置生产者参数：
+      ```
+      val props = new Propertes()
+      props.put("bootstrap.servers", brokers)
+      props.put("acks", "1")
+      props.put("batch.size", "16384")
+      props.put("linger.ms", "10")
+      props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+      props.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
+      props.put("security.protocol", "SASL_PLAINTEXT")
+      props.put("sasl.kerberos.service.name", "kafka")
+      props.put("kerberos.domain.name", "hadoop.hadoop.com")
+      ```
+    - 创建生产者对象：
+      ```
+      val producer = new KafkaProducer(props)
+      ```
+    - 同步发送数据：
+      ```
+      val record = new ProducerRecord[String, Array[Byte]](topic, message.getBytes("UTF-8"))
+      producer.send(record).get()
+      ```
+    - 异步发送数据：
+      ```
+      producer.send(record, new Callback{
+        override def onCompletion(recordMetadata: RecordMetadata, e: Exception): Unit = {
+          if (e != null) {
+            process exception
+          } else {
+            do something
+          }
+        }
+      })
+      ```
+
