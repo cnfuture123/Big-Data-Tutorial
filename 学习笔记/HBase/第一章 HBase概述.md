@@ -1,6 +1,10 @@
-# HBase概述
+## HBase概述
 
   - HBase定义: HBase是一种分布式、可扩展、支持海量数据存储的NoSQL数据库，面向列族的数据库。
+  - HBase使用场景：
+    - 有足够的数据
+    - 关系型数据库的特性不是限制
+    - 保证足够的服务器，分布式集群要求足够多的DataNode
   - HBase数据模型: 
     - 逻辑上，HBase的数据模型同关系型数据库很类似，数据存储在一张表中，有行有列。
     - 但从HBase的底层物理存储结构（K-V）来看，HBase更像是一个multi-dimensional map。
@@ -44,16 +48,31 @@
       
   - 架构角色：
     - Region Server：
-      - Region Server为Region的管理者，其实现类为HRegionServer。
-      - 对于数据的操作：get, put, delete。
-      - 对于Region的操作：splitRegion、compactRegion。
+      - 概述：
+        - 一个Region Server就是一个机器节点，包含多个Region，为Region的管理者。HRegionServer是其实现类
+        - 一个Region可以包含多个列族（HStore）
+      - 接口：
+        - 对于数据的操作：get, put, delete。
+        - 对于Region的操作：splitRegion、compactRegion。
+      - 进程：RegionServer后台运行一些线程
+        - CompactSplitThread: 检查何时做splits，并处理minor compactions
+        - MajorCompactionChecker: 检查何时做major compactions
+        - MemStoreFlusher: 周期性将MemStore内存中的数据刷入StoreFiles
+        - LogRoller: 周期性检查RegionServer的WAL
     - Master:
-      - Master是所有Region Server的管理者，其实现类为HMaster。
-      - 对于表的操作：create, delete, alter。
-      - 对于RegionServer的操作：分配regions到每个RegionServer，监控每个RegionServer的状态，负载均衡和故障转移。
+      - 概述：
+        - Master是所有RegionServer的管理者，负责监控RegionServer，并且是元数据修改的接口。
+        - 在分布式集群中，Master运行在NameNode上，其实现类为HMaster。
+        - 对于RegionServer的操作：分配regions到每个RegionServer，监控每个RegionServer的状态，负载均衡和故障转移。
+      - 接口：
+        - 对于表的操作：createTable, modifyTable, removeTable, enable, disable
+        - 对于列族的操作：addColumn, modifyColumn, removeColumn
+        - 对于Region的操作：move, assign, unassign
+      - 进程：Master后台运行一些线程
+        - LoadBalancer: 周期性地移动，重新分配regions，实现集群的负载均衡
+        - CatalogJanitor: 周期性检查和清理hbase:meta表
     - ZooKeeper:
       - HBase通过Zookeeper来做Master的高可用、RegionServer的监控、元数据的入口以及集群配置的维护等工作。
     - HDFS:
       - HDFS为HBase提供最终的底层数据存储服务，同时为HBase提供高可用的支持。
-      
-      
+        
