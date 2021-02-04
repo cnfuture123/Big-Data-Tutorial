@@ -54,7 +54,14 @@
       - get 'table_name', 'row_key', {COLUMNS => 'c1', TIMESTAMP => ts1}
     - LIMIT: 返回的行数
       - scan 'table_name', {LIMIT => 行数}
-  - 
+  - Split/Merge操作：
+    - split 'tableName', 'splitKey'
+    - split 'regionName', 'splitKey'
+    - merge_region 'region1', 'region2'
+    - merge_region 'region1', 'region2', true
+  - 查看HBase集群状态：
+    - hbase hbck -details
+    - hbase hbck table1, table2
     
   
   
