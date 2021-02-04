@@ -50,7 +50,7 @@
     - Region Server：
       - 概述：
         - 一个Region Server就是一个机器节点，包含多个Region，为Region的管理者。HRegionServer是其实现类
-        - 一个Region可以包含多个列族（HStore）
+        - 负责切分正在运行过程中变的过大的Region
       - 接口：
         - 对于数据的操作：get, put, delete。
         - 对于Region的操作：splitRegion、compactRegion。
@@ -71,6 +71,20 @@
       - 进程：Master后台运行一些线程
         - LoadBalancer: 周期性地移动，重新分配regions，实现集群的负载均衡
         - CatalogJanitor: 周期性检查和清理hbase:meta表
+    - HRegion:
+      - table在行的方向上分隔为多个Region。Region是HBase中分布式存储和负载均衡的最小单元，即不同的region可以分别在不同的Region Server上，但同一个Region是不会拆分到多个server上。
+      - Region按大小分隔，每个表一般是只有一个region。随着数据不断插入表，region不断增大，当region的某个列族达到一个阈值（默认256M）时就会分成两个新的region。
+    - Store:
+      - 每一个region由一个或多个store组成，HBase会把一起访问的数据放在一个store里面，即为每个ColumnFamily建一个store。
+      - 一个Store由一个MemStore和0或者多个StoreFile组成。 HBase以store的大小来判断是否需要切分region。
+    - MemStore:
+      - MemStore是内存存储系统，一旦数据大小达到阈值，会溢写到磁盘作为额外的StoreFile存储，这个操作由MemStoreFlusher线程完成
+    - StoreFile:
+      - MemStore的数据写到磁盘的文件就是StoreFile，StoreFile底层是以HFile的格式保存
+    - HFile:
+      - HBase中KeyValue数据的存储格式，是hadoop的二进制格式文件
+    - HLog:
+      - HLog文件就是一个普通的Hadoop Sequence File，key是HLogKey对象，其中记录了写入数据的归属信息，除了table和region名字外，还同时包括sequence number和timestamp。value是HBase的KeyValue对象，即对应HFile中的KeyValue。
     - ZooKeeper:
       - HBase通过Zookeeper来做Master的高可用、RegionServer的监控、元数据的入口以及集群配置的维护等工作。
     - HDFS:
