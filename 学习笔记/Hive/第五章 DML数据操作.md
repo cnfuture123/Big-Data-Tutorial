@@ -16,11 +16,11 @@
   - 基本插入数据：
     - insert into table <table_name> values(...);
   - 基本模式插入（根据单张表查询结果）：
-    - insert overwrite table student select id, name from student where id > 10;
+    - insert overwrite table student select id, name from student_2 where id > 10;
  
 ### 查询语句中创建表并加载数据(as select)
 
-  - create table if not exists student2 as select id, name from student;
+  - create table if not exists student_2 as select id, name from student;
   
 ### 导入数据到指定的Hive表(import)
 
@@ -30,36 +30,19 @@
 
 ### insert导出
   - 将查询的结果导出到本地：
-    - insert overwrite local directory <local path> select * from <table_name>;
+    - insert overwrite local directory <local_path> select * from <table_name>;
   - 将查询的结果格式化导出到本地：
-    - insert overwrite local directory <local path> row format delimited fields terminated by '\t' select * from <table_name>;
+    - insert overwrite local directory <local_path> row format delimited fields terminated by '\t' select * from <table_name>;
   - 将查询的结果导出到HDFS上(没有local)：
-    - insert overwrite directory <local path> row format delimited fields terminated by '\t' select * from <table_name>;
+    - insert overwrite directory <hdfs_path> row format delimited fields terminated by '\t' select * from <table_name>;
   
 ### Hadoop命令导出到本地
 
   - dfs -get <hdfs_file_path> <local_file_path>
-  
-### Hive Shell命令导出
-
-  - 基本语法：
-    - hive -f/-e 执行语句或者脚本 > file
-    - bin/hive -e 'select * from student;' > <local_file_path>;
     
 ### Export导出到HDFS上
 
   - export table <table_name> to <hdfs_file_path>;
-  
-### Sqoop导出
 
-## 清除表中数据(truncate)
-
-  - truncate table <table_name>;
-  - 注意：Truncate只能删除管理表，不能删除外部表中数据。
   
   
-  
-    
-
- 
-
