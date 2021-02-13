@@ -1,7 +1,8 @@
 # Redis概述
 
-  - Redis是一个开源的key-value存储系统，基于内存运行，并支持持久化的NoSQL数据库。
+  - Redis是一个开源的key-value存储系统，基于内存运行，分布式，并支持持久化的NoSQL数据库。
   - C语言编写，遵守BSD协议。
+  - Redis通常被称为数据结构服务器，因为值（value）可以是字符串(String)、哈希(Hash)、列表(list)、集合(sets)和有序集合(sorted sets)等类型。
   
 ## Redis特点
 
@@ -19,7 +20,8 @@
 ## 基础知识
 
   - 单进程。
-  - 默认16个数据库，类似数组下表从零开始，初始默认使用零号库。
+  - 默认16个数据库，类似数组下表从零开始，初始默认使用0号库。
+    - 可以通过调整Redis的配置文件redis/redis.conf中的databases来修改这个值，设置完毕后重启Redis便完成配置。
   - select命令切换数据库。
   - dbsize查看当前数据库的key的数量。
   - flushdb：清空当前库。
