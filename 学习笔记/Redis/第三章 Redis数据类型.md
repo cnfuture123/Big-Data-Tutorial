@@ -19,9 +19,8 @@
     - 可以自动排重,没有重复元素。
     - 提供了判断某个成员是否在一个set集合内的重要接口，这个也是list所不能提供的。
   - Hash:
-    - 是一个键值对集合。KV模式不变，但V是一个键值对。这个评分（score）被用来按照从最低分到最高分的方式排序集合中的成员。
-    - 是一个string类型的field和value的映射表，适合用于存储对象。
-    - 类似Java里面的Map<String,Object>。
+    - 是一个键值对集合。KV模式不变，但V是一个键值对；是一个string类型的field和value的映射表，适合用于存储对象。
+    - Redis的Hash实际是内部存储的Value为一个HashMap，并提供了直接存取这个Map成员的接口
   - Zset(sorted set):
     - zset与普通集合set非常相似，是一个没有重复元素的string集合。
     - 不同之处是有序集合的所有成员都关联了一个评分（score），这个评分（score）被用来按照从最低分到最高分的方式排序集合中的成员。
@@ -62,7 +61,7 @@
     - lrange <key> <start> <stop> : 按照索引范围获得元素(从左到右)
     - lindex <key> <index> : 按照索引下标获得元素(从左到右)
     - llen <key> : 获得列表长度
-    - linsert <key> before/after <value> <new value> : 在<value>的前面或者后面插入<newvalue>
+    - linsert <key> before/after <value> <new_value> : 在<value>的前面或者后面插入<new_value>
     - lrem <key> <n> <value> : 从左边删除n个value(从左到右)
     - ltrim <key> <start> <stop> : 截取指定范围的值后再赋值给key
   - Set:
@@ -95,9 +94,4 @@
     - zcount <key> <min> <max> : 统计该集合，分数区间内的元素个数
     - zrank <key> <value> : 返回该值在集合中的排名，从0开始
     - zrevrank <key> <value> : 返回该值在集合中的逆序排名
-  
-
-
-
-  
   
