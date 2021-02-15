@@ -52,14 +52,10 @@
       - slaveof no one : 使当前数据库停止与其他数据库的同步，转成主数据库。
       
     - 哨兵模式：
-      - 反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库。
-      - 故障恢复：
-        - Sentinel之间进行选举，在剩余活着的机器里选举出一个leader，由选举出的leader进行failover（故障迁移）。
-        - Sentinel leader选取slave节点中的一个slave作为新的Master节点。
-        - Sentinel leader会在上一步选举的新master上执行slaveof no one操作，将其提升为master节点。
-        - Sentinel leader向其它slave发送命令，让剩余的slave成为新的master节点的slave。
-        - Sentinel leader会让原来的master降级为slave，当其恢复正常工作。
-        - Sentinel leader会发送命令让其从新的master进行复制。上述的failover操作均由sentinel自己独自完成，完全无需人工干预。
+      - 监控：哨兵会不断地检查主节点和从节点是否运作正常
+      - 自动故障转移：当主节点不能正常工作时，哨兵会开始自动故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并让其他从节点改为复制新的主节点。
+      - 配置提供者：客户端在初始化时，通过连接哨兵来获得当前Redis服务的主节点地址。
+      - 通知：哨兵可以将故障转移的结果发送给客户端。
       - 选取新master的方式：
         - 选择优先级靠前的，由slave-priority设置优先级。
         - 选择偏移量最大的，即已经复制数据量最大的从节点。
