@@ -142,5 +142,18 @@
   - Optional类的方法：
     - 创建Optional类对象的方法：
       ```
-      - Optional.of(T t)：
+      - Optional.of(T t)：创建一个Optional实例，t必须非空
+      - Optional.ofNullable(T t)：创建一个Optional实例，t可以为null
+      - Optional.empty()：创建一个空的Optional实例
       ```
+    - 判断Optional容器是否包含对象：
+      ```
+      - boolean isPresent()：判断是否包含对象
+      - void ifPresent(Consumer<? super T> consumer)：如果有值，就执行Consumer接口的实现代码，并且该值作为参数传给它
+      ```
+    - 获取Optional容器的对象：
+      ```
+      - T get()：如果调用对象包含值，返回该值，否则抛出异常
+      - 
+      ```
+
