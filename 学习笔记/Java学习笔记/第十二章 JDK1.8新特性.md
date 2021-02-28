@@ -154,6 +154,7 @@
     - 获取Optional容器的对象：
       ```
       - T get()：如果调用对象包含值，返回该值，否则抛出异常
-      - 
+      - T orElse(T other)：如果有值则返回，否则返回指定的other对象
+      - T orElseGet(Supplier<? extends T> other)：如果有值则返回，否则返回由Supplier接口实现提供的对象
       ```
 
