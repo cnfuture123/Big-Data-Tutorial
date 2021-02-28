@@ -63,5 +63,84 @@
       
 ## Stream API
 
+  - Stream概述：
+    - Stream是Java 8中处理集合的关键抽象概念，可以执行复杂的查找、过滤和映射等操作。
+    - 使用Stream API对集合数据进行操作，类似于使用SQL执行数据库查询。
+    - Stream本质是数据流，用于操作数据源（集合、数组等）所生成的元素序列
+  - Stream特点：
+    - 集合讲的是数据，Stream讲的是计算
+    - Stream本身不会存储元素
+    - Stream不会改变源对象，操作后会返回一个持有结果的新Stream
+    - Stream是延迟操作的，等到需要结果时才执行
+  - Stream操作步骤：
+    - 创建Stream：通过数据源（集合、数组等）获取流
+      - 通过集合：
+        ```
+        - default Stream<E> stream()：返回一个顺序流
+        - default Stream<E> parallelStream()：返回一个并行流
+        ```
+      - 通过数组：
+        ```
+        - static<T> Stream<T> stream(T[] array)
+        - static IntStream stream(int[] array)
+        - static DoubleStream stream(double[] array)
+        ```
+      - 通过Stream的of()：
+        ```
+        - public static<T> Stream<T> of(T... values)
+        ```
+      - 通过Stream静态方法创建无限流：
+        ```
+        - 迭代方式：public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f)
+        - 生成方式：public static<T> Stream<T> generate(Supplier<T> s)
+        ```
+    - 中间操作：中间操作链，对数据源的数据进行操作
+      - 筛选和切片：
+        ```
+        - filter(Predicate p)：过滤元素
+        - distinct()：去重
+        - limit(long maxSize)：限制元素个数
+        - skip(long n)：返回跳过前n个元素的流
+        ```
+      - 映射：
+        ```
+        - map(Function f)：接收一个函数作为参数，该函数被应用到每个元素上，映射为一个新的元素
+        - flatMap(Function f)：接收一个函数作为参数，将流中的每个值换成另一个流，然后将所有流连成一个流
+        ```
+      - 排序：
+        ```
+        - sorted()：按自然顺序排序的新流
+        - sorted(Comparator com)：按比较器顺序排序的新流
+        ```
+    - 终止操作：执行中间操作链，并产生结果
+      - 匹配和查找：
+        ```
+        - allMatch(Predicate p)：检查是否匹配所有元素
+        - anyMatch(Predicate p)：检查是否至少匹配一个元素
+        - findFirst()：返回第一个元素
+        - findAny()：返回当前流中的任意元素
+        ```
+      - 统计：
+        ```
+        - count()：返回元素总数
+        - forEach(Consumer c)：迭代
+        ```
+      - 归约：
+        ```
+        - reduce(T iden, BinaryOperator b)：可以将流中元素结合，得到一个值，返回T
+        - reduce(BinaryOperator b)：可以将流中元素结合，得到一个值，返回Optional<T>
+        ```
+      - 收集：
+        ```
+        - collect(Collector c)：流中的元素做汇总
+        ```
+        
+## Optional类
 
-      
+  - 概述：
+    - Optional<T>类是一个容器类，可以保存类型T的值代表这个值存在，或者保存null表示这个值不存在。
+  - Optional类的方法：
+    - 创建Optional类对象的方法：
+      ```
+      - Optional.of(T t)：
+      ```
