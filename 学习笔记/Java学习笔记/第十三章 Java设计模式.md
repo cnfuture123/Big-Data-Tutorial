@@ -66,8 +66,121 @@
   - 单例模式的要素：
     - 私有的构造方法
     - 指向自己实例的私有静态引用
-
-
-
-
     - 以自己实例为返回值的静态的公有的方法
+  - 饿汉式和懒汉式：
+    - 饿汉式单例在单例类被加载时候，就实例化一个对象交给自己的引用
+      - 示例：
+        ```
+        public class Singleton {
+          private static Singleton singleton = new Singleton();
+          private Singleton(){};
+          public static Singleton getInstance() {
+            return singleton;
+          }
+        }
+        ```
+    - 懒汉式在调用取得实例方法的时候才会实例化对象
+      - 示例：
+        ```
+        public class Singleton {
+          private static Singleton singleton;
+          private Singleton(){};
+          public static Singleton getInstance() {
+            if (singleton == null) {
+              singleton = new Singleton();
+            }
+            return singleton;
+          }
+        }        
+        ```
+  - 单例模式优点：
+    - 在内存中只有一个对象，节省内存空间
+    - 避免频繁的创建销毁对象，可以提高性能
+    - 避免对共享资源的多重占用
+  - 单例模式使用场景：
+    - 需要频繁实例化然后销毁的对象
+    - 创建对象时耗时过多或者耗资源过多，但又经常用到的对象
+    - 频繁访问数据库或文件的对象
+    - 要求只有一个对象的场景
+        
+### 工厂模式
+
+#### 简单工厂模式
+
+  - 简单工厂模式：用于实现逻辑的封装，并通过公共的接口提供对象的实例化服务，在添加新的类时只需要做少量的修改。该模式通过向工厂传递类型来指定要创建的对象
+  - 示例：
+    ```
+    public class VehicleFactory {
+      public enum VehicleType {
+        Bike, Car, Truck;
+      }
+      public static Vehicle create(VehicleType type) {
+        if (type.equals(VehicleType.Bike)) {
+          return new Bike();
+        }
+        if (type.equals(VehicleType.Car)) {
+          return new Car();
+        }
+        if (type.equals(VehicleType.Truck)) {
+          return new Truck();
+        }
+      } 
+    }
+    ```
+  - 使用场景：
+    - 需要创建的对象较少。
+    - 客户端不关心对象的创建过程。
+
+#### 工厂方法模式
+
+  - 工厂方法模式：定义一个用于创建对象的接口，让子类决定实例化哪一个类，工厂方法使一个类的实例化延迟到其子类。
+  - 示例：
+    ```
+    public interface Reader {
+      void read();
+    }
+    public class JpgReader implements Reader {
+      @Override
+      public void read() {
+          System.out.print("read jpg");
+      }
+    }
+    public class PngReader implements Reader {
+      @Override
+      public void read() {
+          System.out.print("read png");
+      }
+    }
+    
+    public interface ReaderFactory {
+      Reader getReader();
+    }
+    public class JpgReaderFactory implements ReaderFactory {
+      @Override
+      public Reader getReader() {
+          return new JpgReader();
+      }
+    }
+    public class PngReaderFactory implements ReaderFactory {
+      @Override
+      public Reader getReader() {
+          return new PngReader();
+      }
+    }
+    ReaderFactory factory=new PngReaderFactory();
+    Reader  reader=factory.getReader();
+    reader.read();
+    ```
+  - 工厂方法模式有四个要素：
+    - 工厂接口：工厂方法模式的核心，与调用者直接交互用来提供产品。
+    - 工厂实现：工厂实现决定如何实例化产品，是实现扩展的途径，需要有多少种产品，就需要有多少个具体的工厂实现
+    - 产品接口：定义产品的规范，所有的产品实现都必须遵循产品接口定义的规范
+    - 产品实现：实现产品接口的具体类，决定了产品在客户端中的具体行为
+  - 使用场景：
+    - 作为一种创建类模式，在任何需要生成复杂对象的地方，都可以使用工厂方法模式。
+    - 由于工厂模式是依靠抽象架构的，它把实例化产品的任务交由实现类完成，扩展性比较好。当需要系统有比较好的扩展性时，可以考虑工厂模式，不同的产品用不同的实现工厂来组装。
+
+#### 抽象工厂模式
+
+
+
