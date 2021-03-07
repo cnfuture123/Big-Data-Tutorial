@@ -37,3 +37,6 @@
 ## IOC容器
 
 ### IOC和DI
+
+  - IOC(Inversion of Control)：反转控制
+    
