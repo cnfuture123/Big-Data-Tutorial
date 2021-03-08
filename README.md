@@ -9,7 +9,7 @@
   - ![Java学习笔记](./学习笔记/Java学习笔记)
   - ![Kafka学习笔记](./学习笔记/Kafka)
   - ![Spark学习笔记](./学习笔记/Spark)
-  - ![Spring学习笔记](./学习笔记/Sping)
+  - ![Spring学习笔记](./学习笔记/Spring)
   - ![Scala学习笔记](./学习笔记/Scala)
   - ![ElasticSearch学习笔记](./学习笔记/ElasticSearch)
   - ![Sqoop学习笔记](./学习笔记/Sqoop)
