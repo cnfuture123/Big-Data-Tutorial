@@ -41,4 +41,18 @@
   - IOC(Inversion of Control)：反转控制
     - 在应用程序的组件需要获取资源时，传统的方式是组件主动从容器中获取所需的资源
     - 反转控制的思想是由容器主动的将资源推送给需要的组件，开发人员不需要知道容器是如何创建资源对象的
-    
+  - DI(Dependency Injection)：依赖注入
+    - IOC的另一种表述方式：即组件以一些预先定义好的方式(例如：setter方法)接受来自于容器的资源注入。
+    - IOC描述的是一种思想，而DI是对IOC思想的具体实现。
+  - IOC容器在Spring中的实现：
+    - 通过IOC容器读取Bean的实例之前，需要先将IOC容器本身实例化
+    - Spring提供了IOC容器的两种实现方式：
+      - BeanFactory：IOC容器的基本实现，是Spring内部的基础设施，是面向Spring本身的
+      - ApplicationContext：BeanFactory的子接口，提供了更多高级特性，面向Spring的使用者
+  - ApplicationContext的主要实现类：
+    - ClassPathXmlApplicationContext：对应类路径下的XML格式的配置文件
+    - FileSystemXmlApplicationContext：对应文件系统中的XML格式的配置文件
+  - ConfigurableApplicationContext：
+    - ApplicationContext的子接口，包含一些扩展方法：refresh(), close()等
+  - WebApplicationContext：
+    - 专门为WEB应用而准备的，允许从WEB根目录的路径中完成初始化工作
