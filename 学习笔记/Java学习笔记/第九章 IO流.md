@@ -140,7 +140,7 @@
   - 概述：
     - ObjectInputStream和ObjectOutputStream：用于存储和读取基本类型数据或对象的处理流，可以把Java的对象写入到数据源中，也能将对象从数据源中还原
       - 序列化：用ObjectOutputStream保存基本类型数据或对象的机制
-      - 反序列化：用ObjectOutputStream读取基本类型数据或对象的机制
+      - 反序列化：用ObjectInputStream读取基本类型数据或对象的机制
       - 不能序列化static和transient修饰的成员变量
   - 对象的序列化：
     - 对象序列化机制允许把内存中的Java对象转换成平台无关的二进制流，进而把二进制流持久化地保存在磁盘上，或通过网络将二进制流传输到另一个网络节点
