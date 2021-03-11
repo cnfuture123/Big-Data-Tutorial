@@ -39,12 +39,12 @@
   - 读数据步骤：
     - 客户端通过Distributed FileSystem向NameNode请求下载文件，NameNode通过查询元数据，找到文件块所在的DataNode地址。
     - 挑选一台DataNode（就近原则，然后随机）服务器，请求读取数据。
+      - 数据本地化距离计算：由小到大
+        - Processed on the same node
+        - Different nodes on the same rack
+        - Nodes on different racks in the same data center
+        - Nodes in different data centers
     - DataNode开始传输数据给客户端（从磁盘里面读取数据输入流，以Packet为单位来做校验）。
     - 客户端以Packet为单位接收，先在本地缓存，然后写入目标文件。
     
-    
-    
-    
-  
-
   
