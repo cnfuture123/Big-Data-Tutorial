@@ -15,9 +15,21 @@
     
 ## 数据完整性
 
-  - DataNode节点保证数据完整性的方法：
-    - 当DataNode读取Block的时候，它会计算CheckSum。
-    - 如果计算后的CheckSum，与Block创建时值不一样，说明Block已经损坏。
-    - Client读取其他DataNode上的Block。
-    - DataNode在其文件创建后周期验证CheckSum。
+  - 检测损坏数据的常用方式是计算数据的校验和。如果新产生的校验和与初始的不一致，则该数据被损坏了。这个技术只是错误检测，不能对数据进行修复。
+  - HDFS的数据完整性：
+    - Datanodes在接收到数据时校验数据以及它的校验和，可能发生在从客户端接收数据或者从其他节点复制数据。如果Datanode检测到错误，客户端会收到IOException。
+    - 每个Datanode保存checksum校验的日志，因此它知道上一次数据块是什么时候校验的。
+    - 除了在客户端读数据时校验，每个Datanode后台运行DataBlockScanner周期检验Datanode上所有的数据块。
+   
+ ## 压缩
+ 
+  - 文件压缩有两个好处：
+    - 减少存储文件需要的空间
+    - 加速数据在网络中或磁盘间的传输
+  - 文件压缩格式：
+  
+    ![image](https://user-images.githubusercontent.com/46510621/110920527-764c3a80-8358-11eb-93e5-772b02254aa7.png)
+    
+    - 所有的压缩算法面临空间/时间的折中：更快地压缩和解压速率通常占用的存储空间更大。
+    - Splittable表示是否可以查询到数据流的任意位置，并开始读取数据。
   
