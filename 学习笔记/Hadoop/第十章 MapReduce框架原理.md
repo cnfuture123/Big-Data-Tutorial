@@ -67,12 +67,13 @@
 
   - MapReduce工作流程：
   
-  ![MapReduce工作流程1](./图片/MapReduce工作流程1.PNG)
+    ![MapReduce工作流程1](./图片/MapReduce工作流程1.PNG)
   
-  ![MapReduce工作流程2](./图片/MapReduce工作流程2.PNG)
+    ![MapReduce工作流程2](./图片/MapReduce工作流程2.PNG)
   
   - 注意细节：
     - Shuffle过程详解：
+      - MR保证reduce的输入都是根据key排序。这个排序过程以及，将map输出传输到reduce作为输入的过程被称为shuffle
       - MapTask收集我们的map()方法输出的kv对，放到内存缓冲区中。
       - 从内存缓冲区不断溢出本地磁盘文件，可能会溢出多个文件。
       - 多个溢出文件会被合并成大的溢出文件。
@@ -87,7 +88,7 @@
   - 默认分区是根据key的hashcode对ReduceTasks个数取模得到的。用户没法控制哪个key存储到哪个分区。
   - Partition注意细节：
   
-  ![Partition注意细节](./图片/Partition注意细节.PNG)
+    ![Partition注意细节](./图片/Partition注意细节.PNG)
   
 ### WritableComparable排序
 
@@ -104,7 +105,7 @@
 
   - Combiner概述：
   
-  ![Combiner概述](./图片/Combiner概述.PNG)
+    ![Combiner概述](./图片/Combiner概述.PNG)
   
 ### GroupingComparator分组（辅助排序）
 
@@ -118,25 +119,29 @@
 
   - MapTask工作机制：
   
-  ![MapTask工作机制](./图片/MapTask工作机制.PNG)
+    ![MapTask工作机制](./图片/MapTask工作机制.PNG)
   
 ## ReduceTask工作机制
 
   - ReduceTask工作机制：
   
-  ![ReduceTask工作机制](./图片/ReduceTask工作机制.PNG)
+    ![ReduceTask工作机制](./图片/ReduceTask工作机制.PNG)
   
   - 设置ReduceTask并行度（个数）：ReduceTask的并行度同样影响整个Job的执行并发度和执行效率，但与MapTask的并发数由切片数决定不同，ReduceTask数量的决定是可以直接手动设置：
     - example : job.setNumReduceTasks(4);
   - ReduceTask注意细节：
   
-  ![ReduceTask注意细节](./图片/ReduceTask注意细节.PNG)
+   ![ReduceTask注意细节](./图片/ReduceTask注意细节.PNG)
   
 ## OutputFormat数据输出
 
   - OutputFormat概述：
   
-  ![OutputFormat概述](./图片/OutputFormat概述.PNG)
+    ![OutputFormat概述](./图片/OutputFormat概述.PNG)
+    
+  - MultipleOutputs：可以写数据到文件，并且文件名字可以从键和值中构造。Map输出文件名格式为name-m-nnnnn，reduce输出文件名格式为name-r-nnnnn。nnnnn是对应分区数。
+  - LazyOutputFormat：输出文件只有包含记录时才会被创建
+    
   
 ## MapReduce开发总结
 
