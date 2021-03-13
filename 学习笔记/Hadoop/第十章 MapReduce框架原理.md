@@ -28,27 +28,40 @@
 ### CombineTextInputFormat
 
   - CombineTextInputFormat用于小文件过多的场景，它可以将多个小文件从逻辑上规划到一个切片中，这样，多个小文件就可以交给一个MapTask处理。
+  - 处理小文件缺点：
+    - 大量的小文件需要对应数量的map任务，每个map任务会引入额外的开销
+    - 大量的小文件增加查找文件的开销。
+    - 存储大量的小文件浪费NameNode内存
   - CombineTextInputFormat切片机制：
   
-  ![CombineTextInputFormat切片机制](./图片/CombineTextInputFormat切片机制.PNG)
+    ![CombineTextInputFormat切片机制](./图片/CombineTextInputFormat切片机制.PNG)
   
 ### TextInputFormat
 
-  - TextInputFormat：
+  - TextInputFormat是默认的InputFormat，每条记录是输入的一行。键是每行起点的字节偏移量，值是每行内容。
   
-  ![TextInputFormat](./图片/TextInputFormat.PNG)
+    ![TextInputFormat](./图片/TextInputFormat.PNG)
   
 ### KeyValueTextInputFormat
 
   - KeyValueTextInputFormat：
   
-  ![KeyValueTextInputFormat](./图片/KeyValueTextInputFormat.PNG)
+    ![KeyValueTextInputFormat](./图片/KeyValueTextInputFormat.PNG)
   
 ### NLineInputFormat
 
-  - NLineInputFormat：
+  - NLineInputFormat：N指的是每个mapper接收N行数据。
   
-  ![NLineInputFormat](./图片/NLineInputFormat.PNG)
+    ![NLineInputFormat](./图片/NLineInputFormat.PNG)
+    
+### SequenceFileInputFormat
+
+  - SequenceFileInputFormat: 存储二进制键值对
+
+### DBInputFormat
+
+  - DBInputFormat支持用JDBC从关系型数据库读取数据
+  - 另一种在HDFS和关系型数据库移动数据的方式是Sqoop
   
 ## MapReduce工作流程
 
