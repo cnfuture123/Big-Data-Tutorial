@@ -3,11 +3,16 @@
 ## InputFormat数据输入
 
   - MapTask并行度决定机制：
-    - 数据块：Block是HDFS物理上把数据分成一块一块。
-    - 数据切片：数据切片只是在逻辑上对输入进行分片，并不会在磁盘上将其切分成片进行存储。
+    - 数据切片：数据切片只是在逻辑上对输入进行分片，它只是引用到输入数据的位置。
+    - InputFormat负责创建输入分段，并划分为一系列的记录。
+    - 客户端通过getSplits()计算分段，然后发送到Application Master。AM将map任务调度到距离分段数据近的节点。Map任务调用createRecordReader()获取分段的RecordReader，它用来迭代记录，并生成键值对传给map函数。
     - 图示：
     
-    ![MapTask并行度决定机制](./图片/MapTask并行度决定机制.PNG)
+      ![MapTask并行度决定机制](./图片/MapTask并行度决定机制.PNG)
+    
+    - InputFormat类分级：
+      
+     
     
 ### FileInputFormat
 
