@@ -70,7 +70,44 @@
     ![MapReduce工作流程1](./图片/MapReduce工作流程1.PNG)
   
     ![MapReduce工作流程2](./图片/MapReduce工作流程2.PNG)
-  
+    
+    - 作业提交：
+      - Resource Manager分配新的Application ID，用于MR Job ID
+      - 检查作业的输出规范，例如输出目录是否存在等
+      - 计算作业的输入分段
+      - 拷贝资源：Jar文件，配置文件，计算的输入分段等到共享文件系统（HDFS）
+    - 作业初始化：
+      - Yarn调度器分配Container，然后RM在这个Container里启动Application Master进程，并且AM进程受Node Manager管理
+      - AM是一个Java进程，它创建一些bookkeeping对象追踪作业的进度；然后从共享文件系统获取输入分段；然后给每个输入分段创建对应的map任务，以及指定的reduce任务。
+    - 任务分配：
+      - AM向RM申请运行map和reduce任务的containers。
+      - Reduce任务可以在集群任意位置运行，而Map任务有数据本地化的限制
+    - 任务执行：
+      - 任务由Java进程运行，它的主类是YarnChild。运行任务之前，它会确定资源，包括：Jar，配置文件，缓存中的文件等
+      - 任务会向AM报告进度和状态
+    - 作业完成：
+      - 作业完成时，AM和Container会清理工作状态，中间输出会被删除。作业信息会被归档到Job History Server。
+
+### Failures
+
+  - Task Failure:
+    - Task JVM在退出之前把错误报告给AM，错误记录到用户日志，AM标记任务为失败并且释放容器资源用于其他任务。
+    - 如果AM一段时间没有收到某个任务的进度更新，则标记该任务为失败。超时周期通常是10分钟，由mapreduce.task.timeout配置。超时后task JVM会自动被终止。
+    - AM会避免在同一个Node Manager上重新调度之前失败的任务。如果任务失败了4次，则不会再重试。整个作业会标记为失败。
+  - AM Failure:
+    - AM失败重试次数由mapreduce.am.max-attempts参数控制，超过之后整个作业失败。
+    - AM周期性地向RM发送心跳。如果AM失败，RM会检测到AM失败并再新的容器里启动新的AM实例。对于MR的AM，它会通过job history恢复任务的状态，因此不需要重新运行所有任务。
+  - Node Manager Failure:
+    - 如果Node Manager失败会运行很慢，它会停止向RM发送心跳。RM会检测到NM失败，并将它从可用的节点池中移除。
+    - 如果NM失败次数过高会被加入黑名单
+  - Resource Manager Failure:
+    - 默认配置RM是单点失败，所有运行的作业都会失败，并且不能恢复。
+    - 可以通过active-standby的配置运行一对RM实现高可用。如果Active RM失败了，Standby RM接管任务
+    - 所有运行应用的信息可以存储在ZK或者HDFS，因此Standby RM可以通过它恢复失败的RM核心状态。当新的RM启动时，它读取应用信息，并重启应用的AM。
+    - 由Standby到Active转换的过程是故障处理控制器完成。
+
+### Shuffle and Sort
+
   - 注意细节：
     - Shuffle过程详解：
       - MR保证reduce的输入都是根据key排序。这个排序过程以及，将map输出传输到reduce作为输入的过程被称为shuffle
