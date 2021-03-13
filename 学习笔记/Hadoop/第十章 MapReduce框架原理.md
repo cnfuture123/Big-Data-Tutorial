@@ -16,13 +16,14 @@
     
 ### FileInputFormat
 
+  - 使用文件作为数据源的基类，做两件事情：定义输入数据包含哪些文件，生成输入文件的分段。
   - FileInputFormat切片机制：
   
-  ![FileInputFormat切片机制](./图片/FileInputFormat切片机制.PNG)
+    ![FileInputFormat切片机制](./图片/FileInputFormat切片机制.PNG)
   
   - 切片大小的计算：
   
-  ![切片大小的计算](./图片/切片大小的计算.PNG)
+    ![切片大小的计算](./图片/切片大小的计算.PNG)
   
 ### CombineTextInputFormat
 
