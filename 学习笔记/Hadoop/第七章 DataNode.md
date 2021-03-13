@@ -33,3 +33,37 @@
     - 所有的压缩算法面临空间/时间的折中：更快地压缩和解压速率通常占用的存储空间更大。
     - Splittable表示是否可以查询到数据流的任意位置，并开始读取数据。
   
+## Codecs
+
+  - Codec是压缩解压算法的实现。Hadoop codec表示为CompressionCodec接口的实现。
+  
+    ![image](https://user-images.githubusercontent.com/46510621/111014279-f8327700-83dd-11eb-9650-0bdec814f022.png)
+
+## 序列化
+
+  - 序列化是将结构化的对象转化为字节流的过程，以便在网络传输或者持久化数据时使用。反序列化是相反的过程：将字节流转化为结构化对象。
+  - 序列化主要用用于两个场景：进程间通信和持久化数据。Hadoop使用远程程序调用（RPC）实现进程间通信。
+  - Hadoop使用自身的序列化格式：Writables，它是完整的，快速的，但是不容易扩展，且对于Java之外的语言不容易使用。
+  
+    ![image](https://user-images.githubusercontent.com/46510621/111014356-447db700-83de-11eb-8b46-7a787c561856.png)
+
+  - Writable类：
+
+    ![image](https://user-images.githubusercontent.com/46510621/111014372-55c6c380-83de-11eb-80ba-f0acdca1de2e.png)
+
+    - Text is a Writable for UTF-8 sequences。它可以看做java.lang.String。
+
+## SequenceFile
+
+  - Hadoop SequenceFile为键值对提供了持久化的数据结构。它也可以用于小文件的容器，可以将小文件打包成SequenceFile使得存储和计算更加高效。
+  - SequenceFile格式：
+    - 一个SequenceFile包含一个header，跟着一条或多条记录。Header包含：键值类的名称，压缩信息，用户定义的元数据以及同步标记。同步标记允许reader同步记录的界限，并从任意位置读取数据。
+    - Sequence内部结构：
+
+      ![image](https://user-images.githubusercontent.com/46510621/111014535-09c84e80-83df-11eb-8c71-b35cfd1cf15d.png)
+
+    - Block Compression同时压缩多条记录，它比单条记录的压缩完整性更好，因为它可以利用记录间的相似性。
+
+      ![image](https://user-images.githubusercontent.com/46510621/111014549-1cdb1e80-83df-11eb-8557-7d57fb618b9e.png)
+
+
