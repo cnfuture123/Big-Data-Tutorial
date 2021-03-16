@@ -72,9 +72,9 @@
       - Spring自动匹配合适的构造器：
         ```
         <bean id="student" class="cn.bean.Student">
-        <constructor-arg value="01"/>
-        <constructor-arg value="cn"/>
-        <constructor-arg value="28"/>
+          <constructor-arg value="01"/>
+          <constructor-arg value="cn"/>
+          <constructor-arg value="28"/>
         </bean>
         ```
       - 通过索引值指定参数位置:
@@ -100,9 +100,9 @@
 
 ### 集合属性
 
-  - 在Spring中可以通过一组内置的XML标签来配置集合属性，例如：<list>，<set>或<map>。
+  - 在Spring中可以通过一组内置的XML标签来配置集合属性，例如：```<list>，<set>或<map>```
   - 数组和List：
-    - 指定<list>标签，通过<value>指定简单的常量值，通过<ref>指定对其他Bean的引用，通过<null/>指定空元素。甚至可以内嵌其他集合。
+    - 指定```<list>```标签，通过<value>指定简单的常量值，通过```<ref>```指定对其他Bean的引用，通过```<null/>```指定空元素。甚至可以内嵌其他集合。
       ```
       <bean id="shop" class="com.cn.Shop">
         <property name="categoryList">
@@ -114,8 +114,8 @@
       </bean>
       ```
   - Map:
-    - 通过<map>标签定义，<map>标签里可以使用多个<entry>作为子标签。每个条目包含一个键和一个值。
-    - 可以将Map的键和值作为<entry>的属性定义：简单常量使用key和value来定义；bean引用通过key-ref和value-ref属性定义。
+    - 通过```<map>```标签定义，标签里可以使用多个```<entry>```作为子标签。每个条目包含一个键和一个值。
+    - 可以将Map的键和值作为```<entry>```的属性定义：简单常量使用key和value来定义；bean引用通过key-ref和value-ref属性定义。
       ```
       <bean id="shop" class="com.cn.Shop">
         <property name="shopMap">
