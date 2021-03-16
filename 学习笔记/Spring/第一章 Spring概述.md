@@ -144,7 +144,7 @@
       - 子bean也可以覆盖从父bean继承过来的配置
     - 示例：
     ```
-    <!-- 以emp01作为父bean，继承后可以省略公共属性值的配置 -->
+    <!-- 以emp作为父bean，继承后可以省略公共属性值的配置 -->
     <bean id="emp02" parent="emp">
       <property name="empId" value="1002"/>
       <property name="empName" value="cn2"/>
@@ -155,7 +155,7 @@
     - 创建一个bean的时候需要保证另外一个bean也被创建，称前面的bean对后面的bean有依赖。需要注意的是依赖关系不等于引用关系，Employee即使依赖Department也可以不引用它。
     - 示例：
       ```
-      <bean id="emp03" class="com.cn.Employee" depends-on="dept ">
+      <bean id="emp03" class="com.cn.Employee" depends-on="dept">
         <property name="empId" value="1003"/>
         <property name="empName" value="Kate"/>
         <property name="age" value="21"/>
