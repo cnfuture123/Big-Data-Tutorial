@@ -78,7 +78,7 @@
       - 拷贝资源：Jar文件，配置文件，计算的输入分段等到共享文件系统（HDFS）
     - 作业初始化：
       - Yarn调度器分配Container，然后RM在这个Container里启动Application Master进程，并且AM进程受Node Manager管理
-      - AM是一个Java进程，它创建一些bookkeeping对象追踪作业的进度；然后从共享文件系统获取输入分段；然后给每个输入分段创建对应的map任务，以及指定的reduce任务。
+      - AM是一个Java进程，它创建一些bookkeeping对象追踪作业的进度；然后从HDFS获取输入分段，给每个输入分段创建对应的map任务，以及指定的reduce任务。
     - 任务分配：
       - AM向RM申请运行map和reduce任务的containers。
       - Reduce任务可以在集群任意位置运行，而Map任务有数据本地化的限制
@@ -98,7 +98,7 @@
     - AM失败重试次数由mapreduce.am.max-attempts参数控制，超过之后整个作业失败。
     - AM周期性地向RM发送心跳。如果AM失败，RM会检测到AM失败并再新的容器里启动新的AM实例。对于MR的AM，它会通过job history恢复任务的状态，因此不需要重新运行所有任务。
   - Node Manager Failure:
-    - 如果Node Manager失败会运行很慢，它会停止向RM发送心跳。RM会检测到NM失败，并将它从可用的节点池中移除。
+    - 如果Node Manager失败或运行很慢，它会停止向RM发送心跳。RM会检测到NM失败，并将它从可用的节点池中移除。
     - 如果NM失败次数过高会被加入黑名单
   - Resource Manager Failure:
     - 默认配置RM是单点失败，所有运行的作业都会失败，并且不能恢复。
@@ -108,9 +108,16 @@
 
 ### Shuffle and Sort
 
+  - MR保证reduce的输入都是根据key排序，这个排序过程以及将map输出传输到reduce作为输入的过程被称为shuffle
+  - Map端：
+    
+    - 图片
+    - 
+
+
   - 注意细节：
     - Shuffle过程详解：
-      - MR保证reduce的输入都是根据key排序。这个排序过程以及，将map输出传输到reduce作为输入的过程被称为shuffle
+      - 
       - MapTask收集我们的map()方法输出的kv对，放到内存缓冲区中。
       - 从内存缓冲区不断溢出本地磁盘文件，可能会溢出多个文件。
       - 多个溢出文件会被合并成大的溢出文件。
