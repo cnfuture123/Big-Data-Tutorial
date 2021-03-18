@@ -21,7 +21,58 @@
   - 切入点(pointcut)：如果把连接点看作数据库中的记录，那么切入点就是查询条件——AOP可以通过切入点定位到特定的连接点。切入点通过org.springframework.aop.Pointcut接口进行描述，它使用类和方法作为连接点的查询条件。
   - 图解：
   
-    
+    ![图片](https://user-images.githubusercontent.com/46510621/111643148-aeacb680-8839-11eb-8c60-0d759934da32.png)
 
 ## AspectJ
 
+  - 简介：
+    - AspectJ：Java社区里最完整最流行的AOP框架。
+    - 在Spring2.0以上版本中，可以使用基于AspectJ注解或基于XML配置的AOP。
+  - 配置：
+    - <aop:aspectj-autoproxy>：当Spring IOC容器检测到bean配置文件中的<aop:aspectj-autoproxy>元素时，会自动为与AspectJ切面匹配的bean创建代理
+  - 用AspectJ注解声明切面：
+    - 要在Spring中声明AspectJ切面，只需要在IOC容器中将切面声明为bean实例。
+    - 在AspectJ注解中，切面只是一个带有@Aspect注解的Java类，它往往要包含很多通知，通知是标注有某种注解的简单的Java方法。
+    - AspectJ支持5种类型的通知注解：
+      - @Before：前置通知，在方法执行之前执行
+      - @After：后置通知，在方法执行之后执行
+      - @AfterRunning：返回通知，在方法返回结果之后执行
+      - @AfterThrowing：异常通知，在方法抛出异常之后执行
+      - @Around：环绕通知，围绕着方法执行
+
+## AOP细节
+
+  - 切入点表达式：
+    - 作用：通过表达式的方式定位一个或多个具体的连接点。
+    - 语法：
+      - 格式：
+        ```
+        execution([权限修饰符] [返回值类型] [简单类名/全类名] [方法名]([参数列表]))
+        ```
+      - 举例：
+        ```
+        1.ArithmeticCalculator接口中声明的所有方法
+          execution(* com.cn.spring.ArithmeticCalculator.*(..))
+          第一个"*"代表任意修饰符及任意返回值
+          第二个"*"代表任意方法
+          ".."匹配任意数量、任意类型的参数。
+        2.ArithmeticCalculator接口的所有公有方法
+          execution(public * ArithmeticCalculator.*(..))
+        3.参数类型为double，double类型的方法
+          execution(public double ArithmeticCalculator.*(double, double))
+        ```
+    - 切入点表达式应用到实际的切面类中:
+    
+      ![图片](https://user-images.githubusercontent.com/46510621/111645989-372c5680-883c-11eb-8cfc-03006498ef57.png)
+
+  - 连接点细节：
+    - 连接点的具体信息，例如：当前连接点所在方法的方法名、当前传入的参数值等，这些信息都封装在JoinPoint接口的实例对象中。
+  - 通知：
+    - 概述：
+      - 在具体的连接点上要执行的操作
+      - 一个切面可以包括一个或者多个通知
+      - 通知所使用的注解的值往往是切入点表达式
+    - 前置通知：
+      - 
+      
+        
