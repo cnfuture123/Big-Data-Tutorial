@@ -88,6 +88,40 @@
       
 ## 以XML方式配置切面
 
+  - 配置细节：
+    - 在bean配置文件中，所有的Spring AOP配置都必须定义在<aop:config>元素内部。对于每个切面而言，都要创建一个<aop:aspect>元素来为具体的切面实现引用后端bean实例。
+  - 声明切入点：
+    - 切入点使用<aop:pointcut>元素声明
+    - 切入点必须定义在<aop:aspect>元素下，或者直接定义在<aop:config>元素下：
+      - 定义在<aop:aspect>元素下：只对当前切面有效
+      - 定义在<aop:config>元素下：对所有切面都有效
+    - 基于XML的AOP配置不允许在切入点表达式中用名称引用其他切入点
+  - 声明通知：
+    - 在aop名称空间中，每种通知类型都对应一个特定的XML元素，method属性指定切面类中通知方法的名称
+
+    ![图片](https://user-images.githubusercontent.com/46510621/111656182-406df100-8845-11eb-8f09-01adf2337091.png)
+
+## JdbcTemplate
+
+  - 概述：Spring的JdbcTemplate看作是一个小型的轻量级持久化层框架，为不同类型的JDBC操作提供模板方法，可以在尽可能保留灵活性的情况下，将数据库存取的工作量降到最低。 
+  - JdbcTemplate所需要的JAR包：
+    - spring-jdbc-4.0.0.RELEASE.jar
+    - spring-orm-4.0.0.RELEASE.jar
+    - spring-tx-4.0.0.RELEASE.jar
+  - JdbcTemplate对象：
+    
+    ![图片](https://user-images.githubusercontent.com/46510621/111656773-cbe78200-8845-11eb-938f-c1c2d327b01c.png)
+
+  - 持久化操作：
+    - 增删改：JdbcTemplate.update(String, Object...)
+    - 批量增删改：JdbcTemplate.batchUpdate(String, List<Object[]>)
+      - Object[]封装了SQL语句每一次执行时所需要的参数
+      - List集合封装了SQL语句多次执行时的所有参数
+    - 查询单行：JdbcTemplate.queryForObject(String, RowMapper<Department>, Object...)
+    - 查询多行：JdbcTemplate.query(String, RowMapper<Department>, Object...)
+    
+## 声明式事务管理
 
 
 
+  
