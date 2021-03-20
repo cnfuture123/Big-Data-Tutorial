@@ -111,3 +111,42 @@
       - ModelAndView、Model、View
       - String及其他任意的Java类型
     
+## 获取参数
+
+  - 通过实体Bean接收请求参数：
+    - 适用于get和post提交请求方式
+    - Bean的属性名称必须与请求参数名称相同
+    - 示例：
+      - 创建POJO实体类：
+
+        ![image](https://user-images.githubusercontent.com/46510621/111861437-394ffb80-8989-11eb-90c1-8a17973fe1ae.png)
+
+      - 创建控制器类:
+
+        ![image](https://user-images.githubusercontent.com/46510621/111861601-81235280-898a-11eb-95f6-8b47688a1989.png)
+
+  - 通过处理方法的形参接收请求参数:
+    - 把表单参数写在控制器类相应方法的形参中，即形参名称与请求参数名称完全相同
+    - 适用于get和post提交请求方式
+  - 通过HttpServletRequest接收请求参数:
+    - 适用于get和post提交请求方式
+    - 示例：
+      
+      ![image](https://user-images.githubusercontent.com/46510621/111861647-f1ca6f00-898a-11eb-9853-d645386a2309.png)
+
+  - 通过@PathVariable接收URL中的请求参数：
+    - 通过@PathVariable可以将URL中占位符参数绑定到控制器处理方法的入参中
+    - 示例：
+    
+      ![image](https://user-images.githubusercontent.com/46510621/111861696-39e99180-898b-11eb-97be-58f31cc354bf.png)
+
+  - 通过@RequestParam接收请求参数：
+    - 将请求参数传递给请求方法
+    - 通过@RequestParam接收请求参数与“通过处理方法的形参接收请求参数”的区别：当请求参数与接收参数名不一致时，“通过处理方法的形参接收请求参数”不会报404 错误，而“通过@RequestParam接收请参数”会报404错误。
+    - 示例：
+    
+      ![image](https://user-images.githubusercontent.com/46510621/111861815-1ecb5180-898c-11eb-9c93-359f9290b19f.png)
+
+
+
+
