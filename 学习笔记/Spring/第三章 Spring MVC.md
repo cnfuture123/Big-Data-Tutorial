@@ -147,6 +147,33 @@
     
       ![image](https://user-images.githubusercontent.com/46510621/111861815-1ecb5180-898c-11eb-9c93-359f9290b19f.png)
 
+## 转发与重定向(forward/redirect)
 
+  - 两者区别：
+    - 转发是将用户对当前处理的请求转发给另一个视图或处理请求，以前的request中存放的信息不会失效
+    - 重定向是将用户从当前处理请求定向到另一个视图，以前的请求（request）中存放的信息全部失效
+  - 转发过程：
+    - 客户浏览器发送HTTP请求，Web服务器接受此请求，调用内部的一个方法在容器内部完成请求处理和转发动作，将目标资源发送给客户
+    - 转发的路径必须是同一个Web容器下的URL，其不能转向到其他的Web路径上，中间传递的是自己的容器内的request
+    - 在客户浏览器的地址栏中显示的仍然是其第一次访问的路径，也就是说客户是感觉不到服务器做了转发的
+  - 重定向过程:
+    - 客户浏览器发送HTTP请求，Web服务器接受后发送302状态码及对应新的location给客户浏览器，客户浏览器发现是302响应，则自动再发送一个新的HTTP请求，请求URL是新的location地址，服务器根据此请求寻找资源并发送给客户。
+    - 这里location可以重定向到任意URL，在客户浏览器的地址栏中显示的是其重定向的路径
+  - 示例：
 
+    ![image](https://user-images.githubusercontent.com/46510621/111862022-70c0a700-898d-11eb-89f3-35bc03f7db19.png)
+
+## @ModelAttribute注解的使用
+
+  - 实现功能：
+    - 绑定请求参数到实体对象（表单的命令对象）:
+    
+      ![image](https://user-images.githubusercontent.com/46510621/111862122-25f35f00-898e-11eb-880f-fcb44a293c36.png)
+
+      - 将请求参数的输入封装到user对象中
+      - 创建UserForm实例
+    - 注解一个非请求处理方法:
+      - @ModelAttribute注解的方法将在每次调用该控制器类的请求处理方法前被调用，这种特性可以用来控制登录权限
+
+        ![image](https://user-images.githubusercontent.com/46510621/111862164-7e2a6100-898e-11eb-9e00-78b633fd4c82.png)
 
