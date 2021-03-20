@@ -48,12 +48,45 @@
 
       ![image](https://user-images.githubusercontent.com/46510621/111857755-a99d5380-896e-11eb-9445-9aea6185121a.png)
 
+    - LoginController代码示例：
     
+      ![image](https://user-images.githubusercontent.com/46510621/111857777-c89be580-896e-11eb-9c98-4ecb067f000d.png)
 
+  - 创建Spring MVC配置文件并配置Controller映射信息：
+    - 在WEB-INF目录下创建名为springmvc-servlet.xml的配置文件
+    - 代码示例：
+    
+      ![image](https://user-images.githubusercontent.com/46510621/111857818-14e72580-896f-11eb-8b43-740ee61ccf51.png)
 
+  - 创建应用的其他页面：
+    - RegisterController控制器处理成功后跳转到/WEB-INF/jsp下的register.jsp视图，LoginController控制器处理成功后跳转到/WEB-INF/jsp下的login.jsp视图，因此在应用的/WEB-INF/jsp目录下应有 register.jsp和login.jsp页面
+  - 发布并运行Spring MVC应用：
+    - 第一次运行Spring MVC应用时需要将应用发布到Tomcat。例如在运行springMVCDemo01应用时可以选中应用名称springMVCDemo01并右击，然后选择Run As→Run on Server命令
+    - 通过地址“http://localhost:8080/springMVCDemo01”首先访问 index.jsp页面
+    
+## @Controller和@RequestMapping注解详解
 
+### @Controller注解
 
+  - 基于注解的控制器具有以下两个优点：
+    - 在基于注解的控制器类中可以编写多个处理方法，进而可以处理多个请求（动作），可以将相关的操作编写在同一个控制器类中，从而减少控制器类的数量，方便以后的维护
+    - 基于注解的控制器不需要在配置文件中部署映射，仅需要使用@RequestMapping注解一个方法进行请求处理
+  - 使用@Controller注解声明某类的实例是一个控制器，示例：
 
+    ![image](https://user-images.githubusercontent.com/46510621/111858013-82478600-8970-11eb-86e9-7d587c196635.png)
+
+  - 在Spring MVC中使用扫描机制找到应用中所有基于注解的控制器类，需要在配置文件中声明spring-context，并使用<context：component-scan/> 元素指定控制器类的基本包（请确保所有控制器类都在基本包及其子包下）。
+
+    ![image](https://user-images.githubusercontent.com/46510621/111858031-b9b63280-8970-11eb-9f41-ce81cd6c0f37.png)
+
+### @RequestMapping注解
+
+  - @RequestMapping注解作用是将请求与处理方法一一对应
+  - 方法级别注解，标记在方法上：
+    
+    ![image](https://user-images.githubusercontent.com/46510621/111858089-25000480-8971-11eb-8c60-cacce2ac1db2.png)
+
+    
 
 
     
