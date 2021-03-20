@@ -86,7 +86,28 @@
     
     ![image](https://user-images.githubusercontent.com/46510621/111858089-25000480-8971-11eb-8c60-cacce2ac1db2.png)
 
+    - 注解的value属性将请求URI映射到方法，value属性是RequestMapping注解的默认属性
+    - 用户可以使用如下URL访问login方法，在访问login方法之前需要事先在/WEB-INF/jsp/目录下创建login.jsp
+      ```
+      http://localhost:8080/springMVCDemo02/index/login
+      ```
+  - 类级别注解，标记在类上：
+  
+    ![image](https://user-images.githubusercontent.com/46510621/111861153-25a39580-8987-11eb-8874-116c476ba897.png)
+
+    - 在类级别注解的情况下，控制器类中的所有方法都将映射为类级别的请求
+    - 为了方便维护程序，建议开发者采用类级别注解，将相关处理放在同一个控制器类中。例如，对商品的增、删、改、查处理方法都可以放在ItemOperate控制类中
+  - 请求处理方法:
+    - 常用的参数类型：
+      - Servlet API类型：
+        
+        ![image](https://user-images.githubusercontent.com/46510621/111861261-cb570480-8987-11eb-8406-9a08c4d905c8.png)
+
+      - org.springframework.ui.Model类型，该类型是一个包含Map的Spring框架类型：
+
+        ![image](https://user-images.githubusercontent.com/46510621/111861280-ede91d80-8987-11eb-9f51-b735cbee48df.png)
     
-
-
+    - 常见的返回类型:
+      - ModelAndView、Model、View
+      - String及其他任意的Java类型
     
