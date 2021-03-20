@@ -177,3 +177,52 @@
 
         ![image](https://user-images.githubusercontent.com/46510621/111862164-7e2a6100-898e-11eb-9e00-78b633fd4c82.png)
 
+## 拦截器
+
+  - 作用：用于拦截用户的请求并做相应的处理，通常应用在权限验证、记录请求信息的日志、判断用户是否登录等功能上。
+  - 定义一个拦截器可以通过两种方式：
+    - 通过实现HandlerInterceptor接口或继承HandlerInterceptor接口的实现类
+    - 通过实现WebRequestInterceptor接口或继承WebRequestInterceptor接口的实现类
+  - 示例：
+
+    ![image](https://user-images.githubusercontent.com/46510621/111863047-0b23e900-8994-11eb-890c-db046e3cdd04.png)
+
+    - preHandle方法：该方法在控制器的处理请求方法前执行，其返回值表示是否中断后续操作，返回true表示继续向下执行，返回false表示中断后续操作
+    - postHandle方法：该方法在控制器的处理请求方法调用之后、解析视图之前执行，可以通过此方法对请求域中的模型和视图做进一步的修改
+    - afterCompletion方法：该方法在控制器的处理请求方法执行完成后执行，即视图渲染结束后执行，可以通过此方法实现一些资源清理、记录日志信息等工作
+  - 拦截器的配置：
+    
+    ![image](https://user-images.githubusercontent.com/46510621/111863121-7d94c900-8994-11eb-8ca4-355e9ce54d06.png)
+
+  - 拦截器的执行流程：
+    - 单个拦截器的执行流程：程序将首先执行拦截器类中的preHandle方法，如果该方法返回true，程序将继续执行控制器中处理请求的方法，否则中断执行。如果preHandle方法返回true，并且控制器中处理请求方法执行后、返回视图前将执行postHandle方法，返回视图后才执行afterCompletion方法。
+  - 多个拦截器的执行流程：
+    - 在Web应用中通常需要有多个拦截器同时工作，这时它们的preHandle方法将按照配置文件中拦截器的配置顺序执行，而它们的postHandle方法和afterCompletion方法则按照配置顺序的反序执行
+
+## Hibernate-Validator数据验证
+
+  - 配置属性文件与验证器：
+    
+    ![image](https://user-images.githubusercontent.com/46510621/111864238-b46ddd80-899a-11eb-9567-cf34fbac3872.png)
+
+  - 标注类型：
+    - 空检查：
+      
+      ![image](https://user-images.githubusercontent.com/46510621/111864266-d7988d00-899a-11eb-8c67-2898d7aa29c6.png)
+
+    - boolean检查：
+      
+      ![image](https://user-images.githubusercontent.com/46510621/111864279-e8490300-899a-11eb-892f-116394f6064e.png)
+
+    - 长度检查：
+      
+      ![image](https://user-images.githubusercontent.com/46510621/111864291-f860e280-899a-11eb-9112-19e2c0a97727.png)
+
+    - 日期检查：
+    
+      ![image](https://user-images.githubusercontent.com/46510621/111864302-0878c200-899b-11eb-8c52-80736e39cd3e.png)
+
+    - 数值检查：
+
+      ![image](https://user-images.githubusercontent.com/46510621/111864312-19c1ce80-899b-11eb-9883-b5e0adfbe82f.png)
+
