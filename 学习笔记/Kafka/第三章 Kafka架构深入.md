@@ -52,7 +52,7 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
   - Kafka选择了第二种方案, 因为Kafka的每个分区都有大量的数据，第一种方案会造成大量数据的冗余。虽然第二种方案的网络延迟会比较高，但网络延迟对Kafka的影响较小。
   - ISR(in-sync replica set): 
     - Leader维护了一个动态的in-sync replica set (ISR)，意为和leader保持同步的follower集合。
-    - 当ISR中的follower完成数据的同步之后，leader就会给follower发送ack。
+    - 当ISR中的follower完成数据的同步之后，就会给leader发送ack。
     - 如果follower长时间未向leader同步数据 ， 则该follower将被踢出ISR， 该时间阈值由replica.lag.time.max.ms 参数设定。
     - Leader发生故障之后，就会从ISR中选举新的leader。
   - ack应答机制：
