@@ -190,8 +190,43 @@
     
   - MultipleOutputs：可以写数据到文件，并且文件名字可以从键和值中构造。Map输出文件名格式为name-m-nnnnn，reduce输出文件名格式为name-r-nnnnn。nnnnn是对应分区数。
   - LazyOutputFormat：输出文件只有包含记录时才会被创建
-    
-  
+
+## MR特性
+
+### Counters
+
+  - Counters聚集作业的统计信息，用于质量控制或者应用级别的统计数据。
+  - 内置的counter组：
+
+    - 图片
+
+  - Task Counters：
+    - Task Counter收集任务执行过程中的信息，将作业中的所有任务信息聚集起来。
+    - Task Counter由每个任务维护，并且周期性地发送到Application Master。
+  - Job Counters：
+    - Job Counter由Application Master维护，它收集作业级别的统计数据。
+
+### Joins
+
+  - Mapper执行连接操作为map-side连接，reducer端为reduce-side连接。
+  - Mapper-Side连接：在数据到达map函数之前做连接操作。输入数据集会被分为相同数量的分区，并且由相同的键（join键）排序。
+  - Reducer-Side连接：Mapper使用join键作为map输出键，因此键相同的记录会发送到同一个reducer。
+
+### Side Data分布
+
+  - Side Data是作业处理主数据集所需的额外的只读数据。
+  - 作业配置：
+    - 调用Configuration的setter方法以键值对的形式设置作业的配置
+    - 作业配置加载到内存，由客户端，Application Master，Task JVM读取
+  - 分布式缓存：
+    - 使用Hadoop分布式缓存可以拷贝文件和归档文件到执行任务的节点：
+      ```
+      -files选项将文件分发到节点
+      -archives选项拷贝归档文件
+      -libjars选项将jar文件加载到mapper和reducer任务的类路径
+      ```
+    - 当启动作业时，Hadoop将相应的文件拷贝到分布式文件系统（HDFS）。然后在任务运行之前，Node Manager将文件从HDFS拷贝到本地磁盘（缓存）。因此任务可以访问到这些文件。
+      
 ## MapReduce开发总结
 
   - MapReduce开发总结：
