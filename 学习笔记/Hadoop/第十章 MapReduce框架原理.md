@@ -112,20 +112,25 @@
   - Map端：
     
     - 图片
-    - 
 
+    - 每个map任务有一个环形内存缓冲区，默认100MB，可以通过mapreduce.task.io.sort.mb参数调优。当缓冲区数据达到阈值，通常是80%时，一个后台线程启动，将数据会溢写到磁盘。
+    - 数据写入到磁盘之前，后台线程先将数据分区，对应于reducers。在每个分区内根据key排序。如果有combiner函数，则应用于排序后的输出数据。
+  - Reducer端:
+    - Reduce任务有一些复制线程并行地获取map输出。默认5个线程，可以由mapreduce.reduce.shuffle.parallelcopies参数配置。
+    - 对于一个作业，AM知道map输出和节点之间地映射，reducer中的线程周期性地询问AM map输出的节点，然后去各个MapTask机器上取相应的结果分区数据。
+    - 如果map输出比较小，拷贝到reduce任务的内存中；否则拷贝到磁盘。当拷贝的数据在磁盘上积累时，后台线程会将数据合并成更大的，有序的文件。
+    - 所有的map输出拷贝之后，reduce任务进入排序阶段，这个阶段合并map输出，并排序。
+    - 然后是reduce阶段，对于每个key应用reduce函数，结果输出到外部文件系统，例如HDFS。
+  - 配置调优:
+    - 通用的规则是给shuffle尽可能大的内存，然而需要保证map和reduce函数有足够的内存运行。
+    - 对于map端，减少数据溢写磁盘的次数可以提高性能。增加mapreduce.task.io.sort.mb参数可以减少溢写的次数。
+    - 对于reduce端，中间数据可以存入内存中可以提高性能。
 
-  - 注意细节：
-    - Shuffle过程详解：
-      - 
-      - MapTask收集我们的map()方法输出的kv对，放到内存缓冲区中。
-      - 从内存缓冲区不断溢出本地磁盘文件，可能会溢出多个文件。
-      - 多个溢出文件会被合并成大的溢出文件。
-      - 在溢出过程及合并的过程中，都要调用Partitioner进行分区和针对key进行排序。
-      - ReduceTask根据自己的分区号，去各个MapTask机器上取相应的结果分区数据。
-      - ReduceTask会取到同一个分区的来自不同MapTask的结果文件，ReduceTask会将这些文件再进行合并（归并排序）。
-      - 合并成大文件后，Shuffle的过程也就结束了，后面进入ReduceTask的逻辑运算过程（从文件中取出一个一个的键值对Group，调用用户自定义的reduce()方法）。
-    - Shuffle中的缓冲区大小会影响到MapReduce程序的执行效率，原则上说，缓冲区越大，磁盘io的次数越少，执行速度就越快。缓冲区的大小可以通过参数调整，参数：io.sort.mb默认100M。
+### 任务执行
+
+  - 输出Committers：
+    - 新MR API中，OutputCommitter由OutputFormat确定，默认是FileOutputCommitter。
+    - 当作业成功时，commitJob()被调用会删除临时工作空间。如果作业失败，abortJob()被调用，同样会删除临时工作空间。
     
 ### Partition分区
 
