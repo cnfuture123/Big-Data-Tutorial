@@ -52,8 +52,7 @@
   
   ![Hive运行机制](./图片/Hive运行机制.PNG)
   
-  - Hive运行机制总结：Hive通过给用户提供的一系列交互接口，接收到用户的指令(SQL)，使用自己的Driver，结合元数据(MetaStore)，将这些指令翻译成MapReduce，提交到Hadoop中执行，最后，将
-执行返回的结果输出到用户交互接口。
+  - Hive运行机制总结：Hive通过给用户提供的一系列交互接口，接收到用户的指令(SQL)，使用自己的Driver，结合元数据(MetaStore)，将这些指令翻译成MapReduce，提交到Hadoop中执行，最后将执行返回的结果输出到用户交互接口。
 
 ## Hive和关系型数据库比较
 
