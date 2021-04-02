@@ -40,12 +40,17 @@
 ## Hive常见属性配置
 
   - Hive数据仓库位置配置：
-    - 数据仓库的默认位置是：/user/hive/warehouse。
+    - 数据仓库的默认位置是：/user/hive/warehouse
     - 可在hive-site.xml文件中配置。
   - Hive运行日志信息配置：
-    - 日志默认存储路径是：/tmp/<user name>/hive.log
+    - 日志默认存储路径是：
+      ```
+      /tmp/<user name>/hive.log
+      ```
     - 可在hive-log4j.properties文件中配置：
-      - hive.log.dir=<log path>
+      ```
+      hive.log.dir=<log path>
+      ```
   - 参数配置方式：
     - 配置文件方式：
       - 默认配置文件：hive-default.xml。
