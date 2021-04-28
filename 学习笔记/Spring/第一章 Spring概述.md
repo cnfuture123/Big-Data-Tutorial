@@ -256,6 +256,8 @@
         - 要求提供一个bean名称的属性，若该属性为空，则自动采用标注处的变量或方法名作为bean的名称。
       - @Inject注解：
         - @Inject和@Autowired注解一样也是按类型注入匹配的bean，但没有reqired属性。
+  - Spring循环依赖问题？
+    - 参考：https://zhuanlan.zhihu.com/p/62382615
 
 
 
