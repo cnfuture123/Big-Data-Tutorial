@@ -65,10 +65,28 @@
     
 ## Redis Bloom Filter
 
-
+  - RedisBloom模块提供布隆滤波器，这种数据结构以牺牲精确率换取内存使用的效率，适用于大数据和流式应用。
+  - 布隆滤波器的扩展性：
+    - 当单个布隆滤波器达到容量阈值时，则创建一个新的布隆滤波器。通常新的布隆滤波器容量大于旧的，减小创建新布隆滤波器的概率。
+  - Java使用JReBloom库实现Redis Bloom Filter
+    - ClusterClient用来连接Redis集群，常用的方法如下：
+      ```
+      // 创建Bloom Filter
+      public boolean createFilter(final String name, final long initCapacity, final double errorRate){};
+      // 添加元素
+      public boolean add(String name, String value){};
+      public boolean add(String name, final byte[] value){};
+      // 批量添加元素
+      public boolean[] addMulti(String name, String... values){};
+      // 查询
+      public boolean exists(String name, String value){};
+      // 批量查询
+      public boolean[] existsMulti(final String name, final String... values){};
+      ```
 
 ## 参考
   
   - https://llimllib.github.io/bloomfilter-tutorial/
   - https://www.geeksforgeeks.org/bloom-filters-introduction-and-python-implementation/
   - https://segmentfault.com/a/1190000012620152
+  - https://oss.redislabs.com/redisbloom/#references
