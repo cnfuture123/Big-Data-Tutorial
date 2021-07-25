@@ -31,7 +31,39 @@
     示例：
     BloomFilter.create(Funnels.stringFunnel(Charset.defaultCharset()), this.filterSize, this.fpp);
     ```
-    - 
+    - 参数说明：
+      - funnel: 输入的数据
+      - expectedInsertions：预计插入的元素总数
+      - fpp: 期望误判率
+      - strategy: 实现Strategy的实例
+  - 计算bit数组的长度以及哈希函数的个数:
+    ```
+    static long optimalNumOfBits(long n, double p) {
+      if (p == 0) {
+        p = Double.MIN_VALUE;
+      }
+      return (long) (-n * Math.log(p) / (Math.log(2) * Math.log(2)));
+    }
+    
+    static int optimalNumOfHashFunctions(long n, long m) {
+      return Math.max(1, (int) Math.round((double) m / n * Math.log(2)));
+    }
+    ```
+    - 根据expectedInsertions和fpp计算bit数组的长度
+    - 根据expectedInsertions和bit数组的长度计算哈希函数的个数
+  - 核心方法：
+    ```
+    // 添加元素
+    public boolean put(T object) {
+      return this.strategy.put(object, this.funnel, this.numHashFunctions, this.bits)
+    }
+    // 判断元素是否存在
+    public boolean mightContain(T object) {
+      return this.strategy.mightContain(object, this.funnel, this.numHashFunctions, this.bits)
+    }
+    ```
+    
+## Redis Bloom Filter
 
 
 
@@ -39,3 +71,4 @@
   
   - https://llimllib.github.io/bloomfilter-tutorial/
   - https://www.geeksforgeeks.org/bloom-filters-introduction-and-python-implementation/
+  - https://segmentfault.com/a/1190000012620152
