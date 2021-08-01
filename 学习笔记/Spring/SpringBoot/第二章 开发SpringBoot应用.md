@@ -49,6 +49,21 @@
 ## 配置类
 
   - @Configuration注解用于基于Java的配置类
+  - @Import注解可以引入其他的配置类，或者通过@ComponentScan注解自动引入所有Spring组件
+  - @ImportResource注解可以加载XML配置文件
+
+## 自动配置
+
+  - Spring Boot会基于添加的jar依赖自动配置Spring应用
+  - 禁用某个自动配置类：
+    - 在@SpringBootApplication中使用exclude属性指定需要禁用的配置类
+      ```
+      @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+      public class MyApplication {
+      
+      }
+      ```
+    - 如果类不在类路径上，可以使用excludeName属性，并指定该类的全限定名
 
 ## 参考
 
