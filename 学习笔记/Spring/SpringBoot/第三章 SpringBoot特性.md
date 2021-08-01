@@ -74,5 +74,15 @@
 
 ## JSON
   
+  - Spring Boot集成3种JSON库：Gson, Jackson, JSON-B。Jackson是默认库
   
+## 开发Web应用
+
+  - 大多数时候使用spring-boot-starter-web去开发Web应用，spring-boot-starter-webflux用于开发响应式Web应用
+  - Spring MVC框架：
+    - Model-View-Controller框架
+    - 使用@Controller or @RestController注解的Beans处理HTTP请求
+    - @RequestMapping注解将请求映射到对应的方法
+    - HttpMessageConverters：Spring MVC使用这个接口转换HTTP请求和响应，支持自定义
+    
   
