@@ -67,4 +67,4 @@
 
 ## 参考
 
-  - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#upgrading
+  - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using
