@@ -111,5 +111,31 @@
       ```
   - Web过滤器：
     - Spring WebFlux提供WebFilter接口去提供过滤HTTP请求和响应数据
+  - JAX-RS and Jersey：
+    - JAX-RS编程模型开发REST接口，可以使用Jersey代替Spring MVC
+    - 使用方式：
+      - 引入spring-boot-starter-jersey依赖
+      - 创建一个ResourceConfig类型的@Bean，注册所有的接口
+        ```
+        @Component
+        public class MyJerseyConfig extends ResourceConfig {
+            public MyJerseyConfig() {
+                register(MyEndpoint.class);
+            }
+        }
+
+        ```
+  - 嵌入Servlet容器
+    - Spring Boot支持嵌入的Tomcat, Jetty, Undertow服务器
+    - 默认内置服务器监听HTTP请求的端口是8080
+    - 注册Servlets, Filters, and Listeners:
+      - 使用ServletRegistrationBean, FilterRegistrationBean, and ServletListenerRegistrationBean
+      - Filters应该是有序的，通过@Order注解或者实现Ordered接口
+      - 使用@ServletComponentScan可以启用被@WebServlet, @WebFilter, and @WebListener注解类的自动注册
+  - 嵌入Reactive Server容器
+    - 支持内置Reactor Netty, Tomcat, Jetty, and Undertow. 
+    - 当自动配置Reactor Netty or Jetty时，Spring Boot会创建特殊的beans来提供HTTP资源给ReactorResourceFactory or JettyResourceFactory。
+    
+## 集成关系型数据库
     
 
