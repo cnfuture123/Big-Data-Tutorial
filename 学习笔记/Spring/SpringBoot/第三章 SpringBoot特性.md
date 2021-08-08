@@ -79,10 +79,37 @@
 ## 开发Web应用
 
   - 大多数时候使用spring-boot-starter-web去开发Web应用，spring-boot-starter-webflux用于开发响应式Web应用
-  - Spring MVC框架：
-    - Model-View-Controller框架
-    - 使用@Controller or @RestController注解的Beans处理HTTP请求
-    - @RequestMapping注解将请求映射到对应的方法
-    - HttpMessageConverters：Spring MVC使用这个接口转换HTTP请求和响应，支持自定义
-    
   
+### Spring MVC框架
+  - Model-View-Controller框架
+  - 使用@Controller or @RestController注解的Beans处理HTTP请求
+  - @RequestMapping注解将请求映射到对应的方法
+  - HttpMessageConverters：Spring MVC使用这个接口转换HTTP请求和响应，支持自定义
+  - Json序列化和反序列化：
+    - @JsonComponent注解可以直接使用在JsonSerializer, JsonDeserializer or KeyDeserializer实现上
+    - 所有@JsonComponent beans会自动被注册为Jackson
+  - 静态内容：
+    - Spring Boot默认将静态内容配置在类路径/static (or /public or /resources or /META-INF/resources)等目录
+    - 可以指定资源路径：
+      ```
+      spring.mvc.static-path-pattern=/resources/**
+      ```
+  - 欢迎页：首先在配置的静态资源路径下找index.html，如果没有，继续找index模板，然后使用它作为欢迎页
+  - 路径匹配和内容协商：
+    - Spring MVC将请求路径匹配到应用定义的mappings方法(@GetMapping, @PostMapping注解的方法)
+    - Spring Boot禁用了后缀模式匹配，例如："GET /projects/spring-boot.json"不会匹配到@GetMapping("/projects/spring-boot")
+    
+### Spring WebFlux
+
+  - Spring WebFlux使用HttpMessageReade和HttpMessageWriter接口去转换HTTP请求和响应
+  - 静态内容：
+    - 默认静态内容放在/static (or /public or /resources or /META-INF/resources)等目录
+    - 可以通过实现自定义的WebFluxConfigurer，并重写addResourceHandlers方法
+    - 指定资源路径：
+      ```
+      spring.webflux.static-path-pattern=/resources/**
+      ```
+  - Web过滤器：
+    - Spring WebFlux提供WebFilter接口去提供过滤HTTP请求和响应数据
+    
+
