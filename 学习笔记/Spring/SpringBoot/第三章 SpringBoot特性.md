@@ -138,4 +138,26 @@
     
 ## 集成关系型数据库
     
+### 配置数据源
+
+  - 配置数据源：
+    - javax.sql.DataSource接口提供了数据库连接的标准方法，传统的DataSource使用URL及证书建立数据库连接
+    - Spring Boot支持自动配置嵌入的 H2, HSQL, and Derby数据库
+  - 连接外部数据库：
+    - 数据源配置：
+      ```
+      spring.datasource.url=jdbc:mysql://localhost/test
+      spring.datasource.username=dbuser
+      spring.datasource.password=dbpass
+      ```
+  - 连接池：
+    - Spring Boot按如下顺序选择连接池：HikariCP -> Tomcat pooling DataSource -> Commons DBCP2 -> Oracle UCP
+    - 使用spring-boot-starter-jdbc or spring-boot-starter-data-jpa starters时默认配置HikariCP依赖
+    
+### JPA and Spring Data JPA
+
+  - Java Persistence API是将对象映射到关系型数据库的标准方式
+  - spring-boot-starter-data-jpa提供Hibernate, Spring Data JPA, Spring ORM等依赖的支持
+  
+### Spring Data JDBC
 
