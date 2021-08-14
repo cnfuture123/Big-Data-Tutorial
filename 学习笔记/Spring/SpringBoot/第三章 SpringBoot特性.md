@@ -186,5 +186,42 @@
       spring.elasticsearch.rest.password=secret
       ```
   - 使用响应式REST客户端连接ES:
-    
+    - spring-boot-starter-elasticsearch and spring-boot-starter-webflux提供依赖
+    - Spring Boot自动配置和注册一个ReactiveElasticsearchClient bean
+    - 可以调整的参数配置：
+      ```
+      spring.data.elasticsearch.client.reactive.endpoints=search.example.com:9200
+      spring.data.elasticsearch.client.reactive.use-ssl=true
+      spring.data.elasticsearch.client.reactive.socket-timeout=10s
+      spring.data.elasticsearch.client.reactive.username=user
+      spring.data.elasticsearch.client.reactive.password=secret
+      ```
+      
+## 消息队列
+
+### JMS
+
+  - javax.jms.ConnectionFactory接口提供创建javax.jms.Connection的标准方法和JMS broker
+  - ActiveMQ:
+    - spring-boot-starter-activemq提供依赖
+    - 可以调整的参数配置：
+      ```
+      spring.activemq.broker-url=tcp://192.168.1.210:9876
+      spring.activemq.user=admin
+      spring.activemq.password=secret
+      ```
+  - 发送消息：
+    - JmsTemplate是自动配置的，可以将它注入beans
+      ```
+      @Component
+      public class MyBean {
+          private final JmsTemplate jmsTemplate;
+          public MyBean(JmsTemplate jmsTemplate) {
+              this.jmsTemplate = jmsTemplate;
+          }
+          // ...
+      }
+      ```
+  - 接收消息：
+    - 
 
