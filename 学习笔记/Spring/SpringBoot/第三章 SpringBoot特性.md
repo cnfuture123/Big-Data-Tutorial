@@ -159,5 +159,32 @@
   - Java Persistence API是将对象映射到关系型数据库的标准方式
   - spring-boot-starter-data-jpa提供Hibernate, Spring Data JPA, Spring ORM等依赖的支持
   
-### Spring Data JDBC
+## 集成非关系型数据库
+
+### Redis
+
+  - spring-boot-starter-data-redis提供相关的依赖
+  - 连接Redis:
+    - 可以使用自动配置的RedisConnectionFactory, StringRedisTemplate或RedisTemplate实例连接Redis服务器
+    
+### MongoDB
+
+  - 可以使用spring-boot-starter-data-mongodb and spring-boot-starter-data-mongodb-reactive配置依赖
+  - 可以注入MongoDatabaseFactory连接MongoDB服务器，如果自定义了MongoClient，将会使用它配置一个合适的MongoDatabaseFactory
+  - MongoClient可以用MongoClientSettings bean进行配置，如果MongoClientSettings没有配置，则使用spring.data.mongodb的属性在application.properties中进行配置
+  
+### Elasticsearch
+
+  - spring-boot-starter-data-elasticsearch提供依赖
+  - 使用REST客户端连接ES:
+    - Spring Boot支持"High Level" client，如果类路径有这个依赖，Spring Boot会自动配置并注册一个RestHighLevelClient bean
+    - 可以调整的参数配置：
+      ```
+      spring.elasticsearch.rest.uris=https://search.example.com:9200
+      spring.elasticsearch.rest.read-timeout=10s
+      spring.elasticsearch.rest.username=user
+      spring.elasticsearch.rest.password=secret
+      ```
+  - 使用响应式REST客户端连接ES:
+    
 
