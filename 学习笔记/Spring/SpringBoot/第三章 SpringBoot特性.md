@@ -328,3 +328,112 @@
   - 测试Spring应用：
     - 依赖注入的一个主要优势是代码更容易做单测，可以使用new实例化对象，也可以使用mock objects代替真正的依赖
     - Spring框架包含专用的测试模块用来做集成测试，可以声明org.springframework:spring-test依赖或者使用spring-boot-starter-test
+  - 测试Spring Boot应用：
+    - 使用@SpringBootTest注解，可以代替标准的spring-test @ContextConfiguration注解
+    - 默认@SpringBootTest不会启动服务器，可以定义webEnvironment属性指定应用如：何运行：
+      - MOCK: 加载web ApplicationContext，并提供mock web环境。可以和@AutoConfigureMockMvc or @AutoConfigureWebTestClient注解一起用于wen应用的mock-based测试
+      - RANDOM_PORT：加载WebServerApplicationContext，并提供真实的web环境，嵌入的服务器会启动，并监听随机的端口
+      - DEFINED_PORT：加载WebServerApplicationContext，并提供真实的web环境，嵌入的服务器会启动，并监听application.properties中指定的端口，或默认的8080端口
+      - NONE：加载web ApplicationContext，但不提供web环境
+    - 传入应用参数：
+      - 可以使用args属性注入参数：
+        ```
+        @SpringBootTest(args = "--app.test=one")
+        class MyApplicationArgumentTests {
+            @Test
+            void applicationArgumentsPopulated(@Autowired ApplicationArguments args) {
+                assertThat(args.getOptionNames()).containsOnly("app.test");
+                assertThat(args.getOptionValues("app.test")).containsOnly("one");
+            }
+        }
+        ```
+    - mock环境测试：
+      - 默认@SpringBootTest不会启动服务器，通过配置MockMvc开启mock环境
+        ```
+        @SpringBootTest
+        @AutoConfigureMockMvc
+        class MyMockMvcTests {
+            @Test
+            void exampleTest(@Autowired MockMvc mvc) throws Exception {
+                mvc.perform(get("/")).andExpect(status().isOk()).andExpect(content().string("Hello World"));
+            }
+        }
+        ```
+    - 在运行的服务器上测试：
+      - 推荐使用随机端口的模式，@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)，每次测试运行时一个随机端口会被选择
+      - 可以使用@Autowire注入一个WebTestClient调用REST服务
+        ```
+        @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+        class MyRandomPortWebTestClientTests {
+            @Test
+            void exampleTest(@Autowired WebTestClient webClient) {
+                webClient
+                    .get().uri("/")
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody(String.class).isEqualTo("Hello World");
+            }
+        }
+        ```
+    - 自动配置JSON测试
+      - @JsonTest注解自动配置JSON mapper，包含：Jackson ObjectMapper, Gson, Jsonb
+    - 自动配置Spring MVC测试
+      - @WebMvcTest注解自动配置Spring MVC的基础元素
+      - 通常@WebMvcTest用于单个的Controller，和@MockBean一起使用提供mock实现
+      - @WebMvcTest也会自动配置MockMvc
+      ```
+      @WebMvcTest(UserVehicleController.class)
+      class MyControllerTests {
+          @Autowired
+          private MockMvc mvc;
+          @MockBean
+          private UserVehicleService userVehicleService;
+          @Test
+          void testExample() throws Exception {
+              given(this.userVehicleService.getVehicleDetails("sboot"))
+                  .willReturn(new VehicleDetails("Honda", "Civic"));
+              this.mvc.perform(get("/sboot/vehicle").accept(MediaType.TEXT_PLAIN))
+                  .andExpect(status().isOk())
+                  .andExpect(content().string("Honda Civic"));
+          }
+      }
+      ```
+    - 测试工具
+      - TestPropertyValues：
+        - 添加属性到ConfigurableEnvironment or ConfigurableApplicationContext，使用key=value字符串的形式
+          ```
+          class MyEnvironmentTests {
+            @Test
+            void testPropertySources() {
+                MockEnvironment environment = new MockEnvironment();
+                TestPropertyValues.of("org=Spring", "name=Boot").applyTo(environment);
+                assertThat(environment.getProperty("name")).isEqualTo("Boot");
+            }
+          }
+          ```
+      - OutputCapture:
+        - JUnit扩展，可以用于捕获System.out and System.err输出
+        - 使用@ExtendWith(OutputCaptureExtension.class)，并且注入CapturedOutput作为测试类构造器或测试方法的一个参数
+          ```
+          @ExtendWith(OutputCaptureExtension.class)
+          class MyOutputCaptureTests {
+              @Test
+              void testName(CapturedOutput output) {
+                  System.out.println("Hello World!");
+                  assertThat(output).contains("World");
+              }
+          }
+          ```
+      - TestRestTemplate：
+        - 代替RestTemplate，可用于集成测试
+          ```
+          class MyTests {
+            private TestRestTemplate template = new TestRestTemplate();
+            @Test
+            void testRequest() throws Exception {
+                ResponseEntity<String> headers = this.template.getForEntity("https://myhost.example.com/example", String.class);
+                assertThat(headers.getHeaders().getLocation()).hasHost("other.example.com");
+            }
+          }
+          ```
+
