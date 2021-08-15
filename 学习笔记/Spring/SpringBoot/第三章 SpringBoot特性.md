@@ -269,3 +269,19 @@
     
 ## RestTemplate调用REST服务
 
+  - Spring Boot自动配置RestTemplateBuilder，可以用来创建RestTemplate实例
+    ```
+    @Service
+    public class MyService {
+        private final RestTemplate restTemplate;
+        public MyService(RestTemplateBuilder restTemplateBuilder) {
+            this.restTemplate = restTemplateBuilder.build();
+        }
+        public Details someRestCall(String name) {
+            return this.restTemplate.getForObject("/{name}/details", Details.class, name);
+        }
+    }
+    ```
+  - 可以使用RestTemplateCustomizer bean自定义配置
+
+## 校验
