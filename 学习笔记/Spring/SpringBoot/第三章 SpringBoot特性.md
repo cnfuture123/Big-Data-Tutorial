@@ -223,5 +223,49 @@
       }
       ```
   - 接收消息：
-    - 
+    - @JmsListener注解可以创建一个监听器endpoint
+      ```
+      @Component
+      public class MyBean {
+          @JmsListener(destination = "someQueue")
+          public void processMessage(String content) {
+              // ...
+          }
+      }
+      ```
+### Kafka
+
+  - 可以调整的参数配置：
+    ```
+    spring.kafka.bootstrap-servers=localhost:9092
+    spring.kafka.consumer.group-id=myGroup
+    ```
+  - 发送信息：
+    - Spring的KafkaTemplate是自动配置的，可以注入到beans
+      ```
+      @Component
+      public class MyBean {
+          private final KafkaTemplate<String, String> kafkaTemplate;
+          public MyBean(KafkaTemplate<String, String> kafkaTemplate) {
+              this.kafkaTemplate = kafkaTemplate;
+          }
+          // ...
+      }
+      ```
+  - 接收信息：
+    - @KafkaListener注解用来创建一个监听器endpoint
+      ```
+      @Component
+      public class MyBean {
+          @KafkaListener(topics = "someTopic")
+          public void processMessage(String content) {
+              // ...
+          }
+      }
+      ```
+  - Kafka Streams
+    - 如果kafka-streams在类路径上，Spring Boot会自动配置KafkaStreamsConfiguration bean
+    - @EnableKafkaStreams注解可以启用Kafka Streams
+    
+## RestTemplate调用REST服务
 
