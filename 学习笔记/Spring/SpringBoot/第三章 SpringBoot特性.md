@@ -285,3 +285,46 @@
   - 可以使用RestTemplateCustomizer bean自定义配置
 
 ## 校验
+
+  - 只要JSR-303实现（例如Hibernate validator）在类路径上，方法级别检验的特性会被自动启用，然后可以使用javax.validation约束作用在方法的参数或返回值
+    ```
+    @Service
+    @Validated
+    public class MyBean {
+        public Archive findByCodeAndAuthor(@Size(min = 8, max = 10) String code, Author author) {
+            return ...
+        }
+    }
+    ```
+    
+## 任务执行和调度
+
+  - 如果Executor bean不存在，Spring Boot会自动配置ThreadPoolTaskExecutor，并关联到异步任务执行（@EnableAsync）和Spring MVC异步请求处理
+    - 线程池使用8个core，并且可以根据负载伸缩
+    - 可以调整的参数配置：
+      ```
+      spring.task.execution.pool.max-size=16
+      spring.task.execution.pool.queue-capacity=100
+      spring.task.execution.pool.keep-alive=10s
+      ```
+  - 如果需要调度任务的执行（使用@EnableScheduling），ThreadPoolTaskScheduler会被自动配置
+    - 线程池默认使用一个线程，可以通过如下参数调整：
+      ```
+      spring.task.scheduling.thread-name-prefix=scheduling-
+      spring.task.scheduling.pool.size=2
+      ```
+      
+## JMX
+
+  - Java Management Extensions(JMX)提供标准的机制监控和管理应用
+  - Spring Boot将MBeanServer暴露为一个bean，bean会绑定一个mbeanServer ID
+  - 由Spring JMX注解（@ManagedResource, @ManagedAttribute, or @ManagedOperation）都会暴露给MBeanServer
+  
+## 测试
+
+  - 2个主要的模块提供测试的相关支持：
+    - spring-boot-test包含核心的元素
+    - spring-boot-test-autoconfigure支持测试的自动配置
+  - 测试Spring应用：
+    - 依赖注入的一个主要优势是代码更容易做单测，可以使用new实例化对象，也可以使用mock objects代替真正的依赖
+    - Spring框架包含专用的测试模块用来做集成测试，可以声明org.springframework:spring-test依赖或者使用spring-boot-starter-test
