@@ -436,4 +436,46 @@
             }
           }
           ```
+          
+## 自定义自动配置
+
+  - 了解自动配置的beans
+    - 自动配置是由@Configuration类实现，@Conditional注解用于约束自动配置应用的条件
+  - Condition注解
+    - Class Conditions：
+      - @ConditionalOnClass and @ConditionalOnMissingBean注解，表明自动配置在特定类存在或不存在时才应用
+        ```
+        @Configuration(proxyBeanMethods = false)
+        // Some conditions ...
+        public class MyAutoConfiguration {
+            @Configuration(proxyBeanMethods = false)
+            @ConditionalOnClass(SomeService.class)
+            public static class SomeServiceConfiguration {
+                @Bean
+                @ConditionalOnMissingBean
+                public SomeService someService() {
+                    return new SomeService();
+                }
+            }
+        }
+        ```
+    - Bean Conditions:
+      - @ConditionalOnBean and @ConditionalOnMissingBean注解，表明自动配置在特定Bean存在或不存在时才应用
+        ```
+        @Configuration(proxyBeanMethods = false)
+        public class MyAutoConfiguration {
+            @Bean
+            @ConditionalOnMissingBean
+            public SomeService someService() {
+                return new SomeService();
+            }
+        }
+        ```
+    - Property Conditions:
+      - @ConditionalOnProperty注解，表明Spring环境属性存在时配置生效
+      - 可以使用prefix and name属性指定应该被检查的属性
+    - Resource Conditions：
+      - @ConditionalOnResource注解，表明特定的资源存在时配置生效
+    - Web Application Conditions：
+      - @ConditionalOnWebApplication and @ConditionalOnNotWebApplication注解，表明根据是否是web应用时配置生效
 
