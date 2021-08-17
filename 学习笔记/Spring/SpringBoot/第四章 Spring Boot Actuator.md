@@ -37,7 +37,12 @@
       ```
   - 健康信息：
     - 健康信息用来检查运行应用的状态
-    - 
+    - health endpoint依赖于management.endpoint.health.show-details and management.endpoint.health.show-components属性配置决定
+      ![image](https://user-images.githubusercontent.com/46510621/129756768-90be45ec-72ec-42a3-a9f1-c9fc559de2bd.png)
+    - 健康信息由 HealthContributorRegistry收集，默认包含ApplicationContext中的所有HealthContributor
+    - HealthContributor可以是HealthIndicator或CompositeHealthContributor
+    - Spring Boot自动配置一些HealthIndicators，并可以通过management.health.'key'.enabled启用或禁用
+  - 通过HTTP监控和管理
 
 
 
