@@ -42,8 +42,38 @@
     - 健康信息由 HealthContributorRegistry收集，默认包含ApplicationContext中的所有HealthContributor
     - HealthContributor可以是HealthIndicator或CompositeHealthContributor
     - Spring Boot自动配置一些HealthIndicators，并可以通过management.health.'key'.enabled启用或禁用
-  - 通过HTTP监控和管理
+  
+## 通过HTTP监控和管理
+  
+  - 自定义Endpoint路径：
+    ```
+    management.endpoints.web.base-path=/manage
+    ```
+  - 自定义服务器端口
+    ```
+    management.server.port=8081
+    ```
+  - 禁用HTTP Endpoints:
+    ```
+    management.server.port=-1
+    or 
+    management.endpoints.web.exposure.exclude=*
+    ```
 
+## Loggers
+  
+  - Actuator可以在运行时查看或配置日志级别
+  - 日志级别：
+    - 包括：TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF, null
+    - null表明没有显式配置日志级别
+  - 可以通过HTTP Post请求改变日志级别：
+    ```
+    {
+        "configuredLevel": "DEBUG"
+    }
+    ```
+  
+## Metrics
 
 
 
