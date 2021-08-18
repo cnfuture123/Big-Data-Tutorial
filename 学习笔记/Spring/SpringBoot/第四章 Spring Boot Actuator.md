@@ -75,5 +75,21 @@
   
 ## Metrics
 
-
-
+   - 支持的度量指标：
+    - JVM指标：jvm.
+      - 内存和缓冲池数据
+      - 垃圾收集数据
+      - 线程利用率
+      - 加载和卸载的类数量
+    - 系统指标：system. process.
+      - CPU指标
+      - 文件描述指标
+      - 应用运行时间
+    - 日志指标：
+      - Logback和Log4J2的指标
+    - Spring MVC指标：
+      ![image](https://user-images.githubusercontent.com/46510621/129928443-19a2aafc-4cd5-4b5a-8a31-2e962003208b.png)
+  - Metrics Endpoint:
+    - /actuator/metrics会展示可用的度量指标
+    - 进一步查看具体的度量信息，例如：/actuator/metrics/jvm.memory.max
+    
