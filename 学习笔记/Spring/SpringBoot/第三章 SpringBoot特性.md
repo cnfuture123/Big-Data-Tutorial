@@ -443,7 +443,7 @@
     - 自动配置是由@Configuration类实现，@Conditional注解用于约束自动配置应用的条件
   - Condition注解
     - Class Conditions：
-      - @ConditionalOnClass and @ConditionalOnMissingBean注解，表明自动配置在特定类存在或不存在时才应用
+      - @ConditionalOnClass and @ConditionalOnMissingClass注解，表明自动配置在特定类存在或不存在时才应用
         ```
         @Configuration(proxyBeanMethods = false)
         // Some conditions ...
