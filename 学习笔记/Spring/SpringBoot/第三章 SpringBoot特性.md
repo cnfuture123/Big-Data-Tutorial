@@ -101,7 +101,7 @@
     
 ### Spring WebFlux
 
-  - Spring WebFlux使用HttpMessageReade和HttpMessageWriter接口去转换HTTP请求和响应
+  - Spring WebFlux使用HttpMessageReader和HttpMessageWriter接口去转换HTTP请求和响应
   - 静态内容：
     - 默认静态内容放在/static (or /public or /resources or /META-INF/resources)等目录
     - 可以通过实现自定义的WebFluxConfigurer，并重写addResourceHandlers方法
