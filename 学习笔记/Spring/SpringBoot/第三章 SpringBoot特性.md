@@ -330,7 +330,7 @@
     - Spring框架包含专用的测试模块用来做集成测试，可以声明org.springframework:spring-test依赖或者使用spring-boot-starter-test
   - 测试Spring Boot应用：
     - 使用@SpringBootTest注解，可以代替标准的spring-test @ContextConfiguration注解
-    - 默认@SpringBootTest不会启动服务器，可以定义webEnvironment属性指定应用如：何运行：
+    - 默认@SpringBootTest不会启动服务器，可以定义webEnvironment属性指定应用如何运行：
       - MOCK: 加载web ApplicationContext，并提供mock web环境。可以和@AutoConfigureMockMvc or @AutoConfigureWebTestClient注解一起用于wen应用的mock-based测试
       - RANDOM_PORT：加载WebServerApplicationContext，并提供真实的web环境，嵌入的服务器会启动，并监听随机的端口
       - DEFINED_PORT：加载WebServerApplicationContext，并提供真实的web环境，嵌入的服务器会启动，并监听application.properties中指定的端口，或默认的8080端口
