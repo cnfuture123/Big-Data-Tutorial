@@ -23,7 +23,7 @@
     - shutdown: 应用逐渐停止
     - threaddump: 进行线程转储
   - 启用Endpoints:
-    - 使用management.endpoint.<id>.enabled属性可以控制是否启用该endpoint
+    - 使用```management.endpoint.<id>.enabled```属性可以控制是否启用该endpoint
       ```
       management.endpoint.shutdown.enabled=true
       ```
