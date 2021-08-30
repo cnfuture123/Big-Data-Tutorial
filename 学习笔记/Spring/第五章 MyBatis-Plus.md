@@ -27,4 +27,13 @@
     </dependency>
     ```
 
+## 注解
+
+  - @TableName: 表名注解
+    ![image](https://user-images.githubusercontent.com/46510621/131311573-16cd591f-12f4-43b6-9b08-77151a780d77.png)
+  - @TableId: 主键注解
+    ![image](https://user-images.githubusercontent.com/46510621/131311973-ce1f7357-23f7-4efd-b7ab-9f04f404f40e.png)
+    - IdType可选项：
+      ![image](https://user-images.githubusercontent.com/46510621/131312241-006252dc-1e27-478c-840d-65c733947eb9.png)
+
 
