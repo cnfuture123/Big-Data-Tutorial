@@ -37,8 +37,13 @@
       ![image](https://user-images.githubusercontent.com/46510621/131312241-006252dc-1e27-478c-840d-65c733947eb9.png)
   - @TableField: 字段注解（非主键）
     - FieldStrategy: 
-      ![Uploading image.png…]()
+      ![image](https://user-images.githubusercontent.com/46510621/131318388-d501f9ed-6bcc-4c29-b427-cc496d19fac9.png)
     - FieldFill:
-      ![Uploading image.png…]()
+      ![image](https://user-images.githubusercontent.com/46510621/131318421-ecab77ed-3bfb-4376-afcc-62d8d2c138c2.png)
+  - @Version: 乐观锁注解，标记在字段上
+  - @EnumValue: 枚举类注解(注解在枚举字段上)  
+  - @TableLogic: 逻辑删除
+    ![image](https://user-images.githubusercontent.com/46510621/131318895-871079bc-78e9-4aea-b5a0-524656958752.png)
 
+  
 
