@@ -35,5 +35,10 @@
     ![image](https://user-images.githubusercontent.com/46510621/131311973-ce1f7357-23f7-4efd-b7ab-9f04f404f40e.png)
     - IdType可选项：
       ![image](https://user-images.githubusercontent.com/46510621/131312241-006252dc-1e27-478c-840d-65c733947eb9.png)
+  - @TableField: 字段注解（非主键）
+    - FieldStrategy: 
+      ![Uploading image.png…]()
+    - FieldFill:
+      ![Uploading image.png…]()
 
 
