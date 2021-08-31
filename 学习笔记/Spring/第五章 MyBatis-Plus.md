@@ -112,6 +112,61 @@
     - 建议如果存在自定义通用Service方法的可能，请创建自己的IBaseService继承 Mybatis-Plus 提供的基类
     - 对象Wrapper为条件构造器
   - Save:
-    
+    - 方法说明
+      ```
+      // 插入一条记录（选择字段，策略插入）
+      boolean save(T entity);
+      // 插入（批量）
+      boolean saveBatch(Collection<T> entityList);
+      // 插入（批量）
+      boolean saveBatch(Collection<T> entityList, int batchSize);
+      ```
+    - 参数说明：
+      ![image](https://user-images.githubusercontent.com/46510621/131440548-244db2a1-6773-4876-adc2-b0137eabc6fe.png)
+  - SaveOrUpdate:
+    - 方法说明：
+      ```
+      // TableId 注解存在更新记录，否插入一条记录
+      boolean saveOrUpdate(T entity);
+      // 根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)方法
+      boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper);
+      // 批量修改插入
+      boolean saveOrUpdateBatch(Collection<T> entityList);
+      // 批量修改插入
+      boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize);
+      ```
+    - 参数说明：
+      ![image](https://user-images.githubusercontent.com/46510621/131451319-343c7325-4edd-4d38-8a0c-16c15ab39421.png)
+  - Remove:
+    - 方法说明：
+      ```
+      // 根据 entity 条件，删除记录
+      boolean remove(Wrapper<T> queryWrapper);
+      // 根据 ID 删除
+      boolean removeById(Serializable id);
+      // 根据 columnMap 条件，删除记录
+      boolean removeByMap(Map<String, Object> columnMap);
+      // 删除（根据ID 批量删除）
+      boolean removeByIds(Collection<? extends Serializable> idList);
+      ```
+    - 参数说明：
+      ![image](https://user-images.githubusercontent.com/46510621/131451665-cf2e1d78-3648-49d6-8deb-499561a3e1f4.png)
+  - Update:
+    - 方法说明：
+      ```
+      // 根据 UpdateWrapper 条件，更新记录 需要设置sqlset
+      boolean update(Wrapper<T> updateWrapper);
+      // 根据 whereWrapper 条件，更新记录
+      boolean update(T updateEntity, Wrapper<T> whereWrapper);
+      // 根据 ID 选择修改
+      boolean updateById(T entity);
+      // 根据ID 批量更新
+      boolean updateBatchById(Collection<T> entityList);
+      // 根据ID 批量更新
+      boolean updateBatchById(Collection<T> entityList, int batchSize);
+      ```
+    - 参数说明：
+      ![image](https://user-images.githubusercontent.com/46510621/131452216-e328893b-2a46-4d0f-9e1f-ae99bff1373a.png)
+
           
 
