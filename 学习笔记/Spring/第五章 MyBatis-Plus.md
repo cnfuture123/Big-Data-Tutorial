@@ -231,6 +231,60 @@
       lambdaUpdate().eq(Entity::getId, value).update(entity);
       ```
     
+### Mapper CRUD接口
 
-          
+  - 说明：
+    - 通用CRUD封装BaseMapper接口，为Mybatis-Plus启动时自动解析实体表关系映射转换为Mybatis内部对象注入容器
+    - 参数Serializable为任意类型主键，Mybatis-Plus不推荐使用复合主键，约定每一张表都有自己的唯一id主键
+    - 对象Wrapper为条件构造器
+  - Insert:
+    ```
+    // 插入一条记录
+    int insert(T entity);
+    ```
+  - Delete:
+    ```
+    // 根据 entity 条件，删除记录
+    int delete(@Param(Constants.WRAPPER) Wrapper<T> wrapper);
+    // 删除（根据ID 批量删除）
+    int deleteBatchIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);
+    // 根据 ID 删除
+    int deleteById(Serializable id);
+    // 根据 columnMap 条件，删除记录
+    int deleteByMap(@Param(Constants.COLUMN_MAP) Map<String, Object> columnMap);
+    ```
+  - Update:
+    ```
+    // 根据 whereWrapper 条件，更新记录
+    int update(@Param(Constants.ENTITY) T updateEntity, @Param(Constants.WRAPPER) Wrapper<T> whereWrapper);
+    // 根据 ID 修改
+    int updateById(@Param(Constants.ENTITY) T entity);
+    ```
+  - Select:
+    ```
+    // 根据 ID 查询
+    T selectById(Serializable id);
+    // 根据 entity 条件，查询一条记录
+    T selectOne(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
 
+    // 查询（根据ID 批量查询）
+    List<T> selectBatchIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);
+    // 根据 entity 条件，查询全部记录
+    List<T> selectList(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+    // 查询（根据 columnMap 条件）
+    List<T> selectByMap(@Param(Constants.COLUMN_MAP) Map<String, Object> columnMap);
+    // 根据 Wrapper 条件，查询全部记录
+    List<Map<String, Object>> selectMaps(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+    // 根据 Wrapper 条件，查询全部记录。注意： 只返回第一个字段的值
+    List<Object> selectObjs(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+
+    // 根据 entity 条件，查询全部记录（并翻页）
+    IPage<T> selectPage(IPage<T> page, @Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+    // 根据 Wrapper 条件，查询全部记录（并翻页）
+    IPage<Map<String, Object>> selectMapsPage(IPage<T> page, @Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+    // 根据 Wrapper 条件，查询总记录数
+    Integer selectCount(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
+    ```
+    
+
+    
