@@ -286,5 +286,17 @@
     Integer selectCount(@Param(Constants.WRAPPER) Wrapper<T> queryWrapper);
     ```
     
+## 条件构造器
 
+  - AbstractWrapper:
+    - QueryWrapper(LambdaQueryWrapper) 和 UpdateWrapper(LambdaUpdateWrapper) 的父类
+    - 用于生成sql的where条件, entity属性也用于生成sql的where条件
+    - entity生成的where条件与使用各个api生成的where条件没有任何关联行为
+  - QueryWrapper:
+    - 继承自AbstractWrapper,自身的内部属性entity也用于生成where条件
+    - LambdaQueryWrapper可以通过new QueryWrapper().lambda()方法获取
+  - UpdateWrapper:
+    - 继承自AbstractWrapper, 自身的内部属性entity也用于生成where条件
+    - LambdaUpdateWrapper, 可以通过new UpdateWrapper().lambda()方法获取
+    
     
