@@ -299,4 +299,33 @@
     - 继承自AbstractWrapper, 自身的内部属性entity也用于生成where条件
     - LambdaUpdateWrapper, 可以通过new UpdateWrapper().lambda()方法获取
     
-    
+## 逻辑删除
+
+  - 说明：
+    - 只对自动注入的sql起效
+      - 插入: 不作限制
+      - 查找: 追加where条件过滤掉已删除数据,且使用 wrapper.entity 生成的where条件会忽略该字段
+      - 更新: 追加where条件防止更新到已删除数据,且使用 wrapper.entity 生成的where条件会忽略该字段
+      - 删除: 转变为更新
+    - 逻辑删除是为了方便数据恢复和保护数据本身价值等的一种方案，但实际就是删除
+    - 如果你需要频繁查出来看就不应使用逻辑删除，而是以一个状态去表示
+  - 使用方法：
+    - 实体类字段上加上@TableLogic注解
+      ```
+      @TableLogic
+      private Integer deleted
+      ```
+
+## 字段类型处理器
+
+  - 类型处理器：
+    - 用于JavaType与JdbcType之间的转换
+    - 用于PreparedStatement设置参数值和从ResultSet或CallableStatement中取出一个值
+      ```
+      @TableField(typeHandler = JacksonTypeHandler.class)
+      // @TableField(typeHandler = FastjsonTypeHandler.class)
+      private OtherInfo otherInfo;
+      ```
+      
+
+
