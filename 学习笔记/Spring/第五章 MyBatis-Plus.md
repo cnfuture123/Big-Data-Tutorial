@@ -112,61 +112,125 @@
     - 建议如果存在自定义通用Service方法的可能，请创建自己的IBaseService继承 Mybatis-Plus 提供的基类
     - 对象Wrapper为条件构造器
   - Save:
-    - 方法说明
-      ```
-      // 插入一条记录（选择字段，策略插入）
-      boolean save(T entity);
-      // 插入（批量）
-      boolean saveBatch(Collection<T> entityList);
-      // 插入（批量）
-      boolean saveBatch(Collection<T> entityList, int batchSize);
-      ```
-    - 参数说明：
-      ![image](https://user-images.githubusercontent.com/46510621/131440548-244db2a1-6773-4876-adc2-b0137eabc6fe.png)
+    ```
+    // 插入一条记录（选择字段，策略插入）
+    boolean save(T entity);
+    // 插入（批量）
+    boolean saveBatch(Collection<T> entityList);
+    // 插入（批量）
+    boolean saveBatch(Collection<T> entityList, int batchSize);
+    ```
   - SaveOrUpdate:
-    - 方法说明：
-      ```
-      // TableId 注解存在更新记录，否插入一条记录
-      boolean saveOrUpdate(T entity);
-      // 根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)方法
-      boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper);
-      // 批量修改插入
-      boolean saveOrUpdateBatch(Collection<T> entityList);
-      // 批量修改插入
-      boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize);
-      ```
-    - 参数说明：
-      ![image](https://user-images.githubusercontent.com/46510621/131451319-343c7325-4edd-4d38-8a0c-16c15ab39421.png)
+    ```
+    // TableId 注解存在更新记录，否插入一条记录
+    boolean saveOrUpdate(T entity);
+    // 根据updateWrapper尝试更新，否继续执行saveOrUpdate(T)方法
+    boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper);
+    // 批量修改插入
+    boolean saveOrUpdateBatch(Collection<T> entityList);
+    // 批量修改插入
+    boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize);
+    ```
   - Remove:
-    - 方法说明：
-      ```
-      // 根据 entity 条件，删除记录
-      boolean remove(Wrapper<T> queryWrapper);
-      // 根据 ID 删除
-      boolean removeById(Serializable id);
-      // 根据 columnMap 条件，删除记录
-      boolean removeByMap(Map<String, Object> columnMap);
-      // 删除（根据ID 批量删除）
-      boolean removeByIds(Collection<? extends Serializable> idList);
-      ```
-    - 参数说明：
-      ![image](https://user-images.githubusercontent.com/46510621/131451665-cf2e1d78-3648-49d6-8deb-499561a3e1f4.png)
+    ```
+    // 根据 entity 条件，删除记录
+    boolean remove(Wrapper<T> queryWrapper);
+    // 根据 ID 删除
+    boolean removeById(Serializable id);
+    // 根据 columnMap 条件，删除记录
+    boolean removeByMap(Map<String, Object> columnMap);
+    // 删除（根据ID 批量删除）
+    boolean removeByIds(Collection<? extends Serializable> idList);
+    ```
   - Update:
-    - 方法说明：
+    ```
+    // 根据 UpdateWrapper 条件，更新记录 需要设置sqlset
+    boolean update(Wrapper<T> updateWrapper);
+    // 根据 whereWrapper 条件，更新记录
+    boolean update(T updateEntity, Wrapper<T> whereWrapper);
+    // 根据 ID 选择修改
+    boolean updateById(T entity);
+    // 根据ID 批量更新
+    boolean updateBatchById(Collection<T> entityList);
+    // 根据ID 批量更新
+    boolean updateBatchById(Collection<T> entityList, int batchSize);
+    ```
+  - Get:
+    ```
+    // 根据 ID 查询
+    T getById(Serializable id);
+    // 根据 Wrapper，查询一条记录。结果集，如果是多个会抛出异常，随机取一条加上限制条件 wrapper.last("LIMIT 1")
+    T getOne(Wrapper<T> queryWrapper);
+    // 根据 Wrapper，查询一条记录
+    T getOne(Wrapper<T> queryWrapper, boolean throwEx);
+    // 根据 Wrapper，查询一条记录
+    Map<String, Object> getMap(Wrapper<T> queryWrapper);
+    // 根据 Wrapper，查询一条记录
+    <V> V getObj(Wrapper<T> queryWrapper, Function<? super Object, V> mapper);
+    ```
+  - List:
+    ```
+    // 查询所有
+    List<T> list();
+    // 查询列表
+    List<T> list(Wrapper<T> queryWrapper);
+    // 查询（根据ID 批量查询）
+    Collection<T> listByIds(Collection<? extends Serializable> idList);
+    // 查询（根据 columnMap 条件）
+    Collection<T> listByMap(Map<String, Object> columnMap);
+    // 查询所有列表
+    List<Map<String, Object>> listMaps();
+    // 查询列表
+    List<Map<String, Object>> listMaps(Wrapper<T> queryWrapper);
+    // 查询全部记录
+    List<Object> listObjs();
+    // 查询全部记录
+    <V> List<V> listObjs(Function<? super Object, V> mapper);
+    // 根据 Wrapper 条件，查询全部记录
+    List<Object> listObjs(Wrapper<T> queryWrapper);
+    // 根据 Wrapper 条件，查询全部记录
+    <V> List<V> listObjs(Wrapper<T> queryWrapper, Function<? super Object, V> mapper);
+    ```
+  - Page:
+    ```
+    // 无条件分页查询
+    IPage<T> page(IPage<T> page);
+    // 条件分页查询
+    IPage<T> page(IPage<T> page, Wrapper<T> queryWrapper);
+    // 无条件分页查询
+    IPage<Map<String, Object>> pageMaps(IPage<T> page);
+    // 条件分页查询
+    IPage<Map<String, Object>> pageMaps(IPage<T> page, Wrapper<T> queryWrapper);
+    ```
+  - Count:
+    ```
+    // 查询总记录数
+    int count();
+    // 根据 Wrapper 条件，查询总记录数
+    int count(Wrapper<T> queryWrapper);
+    ```
+  - Chain:
+    - query:
       ```
-      // 根据 UpdateWrapper 条件，更新记录 需要设置sqlset
-      boolean update(Wrapper<T> updateWrapper);
-      // 根据 whereWrapper 条件，更新记录
-      boolean update(T updateEntity, Wrapper<T> whereWrapper);
-      // 根据 ID 选择修改
-      boolean updateById(T entity);
-      // 根据ID 批量更新
-      boolean updateBatchById(Collection<T> entityList);
-      // 根据ID 批量更新
-      boolean updateBatchById(Collection<T> entityList, int batchSize);
+      // 链式查询 普通
+      QueryChainWrapper<T> query();
+      // 链式查询 lambda 式。注意：不支持 Kotlin
+      LambdaQueryChainWrapper<T> lambdaQuery(); 
+      // 示例：
+      query().eq("column", value).one();
+      lambdaQuery().eq(Entity::getId, value).list();
       ```
-    - 参数说明：
-      ![image](https://user-images.githubusercontent.com/46510621/131452216-e328893b-2a46-4d0f-9e1f-ae99bff1373a.png)
+    - update:
+      ```
+      // 链式更改 普通
+      UpdateChainWrapper<T> update();
+      // 链式更改 lambda 式。注意：不支持 Kotlin 
+      LambdaUpdateChainWrapper<T> lambdaUpdate();
+      // 示例：
+      update().eq("column", value).remove();
+      lambdaUpdate().eq(Entity::getId, value).update(entity);
+      ```
+    
 
           
 
