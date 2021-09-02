@@ -60,5 +60,25 @@
       - 在分片/节点失败的情况下，提供了高可用性。
       - 增加处理读请求的搜索量/吞吐量。
     
-      
+## 索引模块
+
+  - 索引模块是每个索引创建的，并且控制这个索引所有设置
+  
+### 索引设置
+
+  - 索引设置包含2种：
+    - 静态的：在创建索引时设置
+      - index.number_of_shards：每个索引的主分片数，默认是1
+      - index.number_of_routing_shards：和index.number_of_shards一起使用，路由documents到主分片
+    - 动态的：可以通过更新索引的API去修改
+      - index.number_of_replicas：每个主分片的复制分片，默认是1
+      - index.search.idle.after：分片不能被搜索或请求的搜索空闲时间，默认是30秒
+      - index.refresh_interval：多久刷新一次，将最近对索引的修改对搜索和查询可见，默认是1秒，设置为-1会禁用刷新操作。
+      - index.max_terms_count：Terms Query中terms数量的最大值，默认是65536
+      - index.routing.allocation.enable：控制索引的分配分配
+        ![image](https://user-images.githubusercontent.com/46510621/131835485-c0e9a23b-26f2-4af7-935f-9d08fbd78346.png)
+      - index.routing.rebalance.enable: 启用分片的负载均衡
+        ![image](https://user-images.githubusercontent.com/46510621/131835633-28e9d62c-2e56-4a5a-bf38-91dc577ed334.png)
+      - index.routing.allocation.total_shards_per_node：一个节点能分配的最大数量的分片
+    
   
