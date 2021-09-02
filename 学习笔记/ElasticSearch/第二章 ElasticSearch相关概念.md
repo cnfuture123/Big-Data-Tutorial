@@ -80,5 +80,27 @@
       - index.routing.rebalance.enable: 启用分片的负载均衡
         ![image](https://user-images.githubusercontent.com/46510621/131835633-28e9d62c-2e56-4a5a-bf38-91dc577ed334.png)
       - index.routing.allocation.total_shards_per_node：一个节点能分配的最大数量的分片
-    
+ 
+### 慢查询日志
+
+  - 搜索慢查询日志：
+    - 分片级别的慢查询日志可以写入特定的日志文件，慢查询日志包含query and fetch语句
+      ![image](https://user-images.githubusercontent.com/46510621/131873559-0a128d5a-b234-4d73-a8dc-d1f876945803.png)
+    - 搜索慢查询日志可以在log4j2.properties文件中配置
+  - 索引慢查询日志：
+    - 功能上类似于搜索慢查询日志，日志名以_index_indexing_slowlog.log结尾
+      ![image](https://user-images.githubusercontent.com/46510621/131875035-1d5587b1-1d50-4273-9d9c-deb1aa42f5d3.png)
+
+### 历史数据留存
+
+  - ES有时需要重新执行已经在分片上执行过的操作，ES使用叫做软删除（soft deletes）的特性保存最近索引上的删除操作，使得它们可以被重新执行
+  - ES只会保存某些近期删除的文档，因为软删除的文档依然会占据空间，最终ES会完全丢弃这些软删除文档来清理空间
+  - ES会使用分片历史保存租约（shard history retention leases）记录它期望将来需要重新执行的操作，每个需要重新执行操作的分片副本首先会创建一个自身的分片历史保存租约。每个保存租约会跟踪第一次操作的序列号，当分片副本接收到新的操作时，它会增加租约的序列号，表明未来不会重新执行这些操作。ES会丢弃那些不再被任何租约持有的操作
+  - 历史留存配置：
+    - index.soft_deletes.enabled：启用或禁用软删除
+    - index.soft_deletes.retention_lease.period：分片历史保存租约最大有效期，默认有效期是12h
+
+### 索引排序
+
+      
   
