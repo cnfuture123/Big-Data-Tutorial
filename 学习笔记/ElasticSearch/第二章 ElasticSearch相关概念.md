@@ -211,7 +211,22 @@
     - 排序搜索结果：
       - 默认搜索结果的命中文档通过_score（表示文档和查询语句的匹配程度）排序
   - 追踪所有的命中文档：
-    
+    - track_total_hits参数可以控制被追踪的总命中文档数
+      - 当设置为true时，搜索响应会追踪匹配查询数量的命中文档
+      - 当设置为整数时，指定命中文档的数量：
+        ![image](https://user-images.githubusercontent.com/46510621/132099600-31a4da3b-52d3-4405-b34c-59727edf9844.png)
+  - 过滤搜索结果
+    - 有2种方式可以过滤搜索结果：
+      - 使用带filter子句的布尔查询条件，搜索请求会将布尔过滤应用到搜索命中和聚合中
+      - 使用搜索API的post_filter参数，搜索请求会将post过滤应用到搜索命中，不包括聚合
+
+## Query DSL
+
+  - Query DSL(Domain Specific Language)是基于Json定义查询，包含2种类型的子句：
+    - 叶子查询子句：
+      - 搜索特定属性的特定值，例如： match, term or range queries
+    - 复合查询子句：
+      - 复合查询子句包裹其他叶子或复合查询，用于合并多个查询条件
     
     
      
