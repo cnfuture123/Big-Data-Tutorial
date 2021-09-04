@@ -155,3 +155,64 @@
     - 查看指定属性的映射：
       ![image](https://user-images.githubusercontent.com/46510621/132091947-e7a0aecb-1ea2-4770-88f0-f06d66e25214.png)
 
+## 文本分析
+
+  - ES在索引或搜索text类型属性时进行文本分析，它会进行全文检索，搜索结果包含所有相关的结果，不只是完全匹配的结果
+  - Tokenization:
+    - 全文检索可以通过令牌化进行分析，将一个text划分为更小的块，成为tokens。通常这些token就是独立的单词
+  - 标准化：
+    - Tokenization启用对独立的项(term)进行匹配，但是每一项依然按照字面做匹配，例如：搜索Quick不会匹配到quick
+    - 文本分析可以通过标准化将这些tokens转换为标准格式，因此可以匹配到相似格式，不是完全一致的内容
+  - 文本分析通过分析器完成，它是一系列控制整个过程的规则，ES包含一个默认的分析器
+
+### 简介
+
+  - 分析器：
+    - 分析器主要包括3部分：character filters, tokenizers, and token filters
+    - 字符过滤器：将接收到的原始文本作为字符流处理，可以添加，删除或更新字符
+    - Tokenizer：接收字符流，将它划分为tokens，并输出tokens流
+    - Token过滤器：接收token流，可以添加，删除或更新token
+  - 索引和搜索分析：
+    - 文本分析发生在2个时间：
+      - 索引时间：当文档被索引时，任意text类型属性值会被分析
+      - 搜索时间：当对text属性进行全文检索时，查询语句会被分析
+    - 分析过程：
+      - 一个文档包含如下text属性：
+        ![image](https://user-images.githubusercontent.com/46510621/132093661-1da9ef6e-134d-43b3-88c9-f2342dc66f5e.png)
+      - 索引分析器将值转换为tokens，并标准化。如下图：每个token是一个值，每个token都被索引
+        ![image](https://user-images.githubusercontent.com/46510621/132093720-e429a960-cf2d-45f9-82ab-9be69aa5a152.png)
+      - 当搜索"Quick fox"时，查询语句会被分析器转换为[quick, fox]，因此搜索命中
+
+## 搜索数据
+
+  - query是一次请求ES数据信息
+  - 一次search包含一个或多个query，匹配query的文档会在hits(搜索结果)中返回
+  - Search API:
+    ![image](https://user-images.githubusercontent.com/46510621/132093996-edfa83fd-55e2-4c4d-a178-b96e6c7c0c2b.png)
+  - 通用搜索选项：
+    - Query DSL: 
+      - 支持很多查询类型，包括：
+        - Boolean和其他复合查询：基于多个条件组合查询和匹配结果
+        - Term-level查询：过滤和查询完全匹配的数据
+        - 全文检索
+        - 地理和空间查询
+    - 聚合：
+      - 获取搜索结果的统计数据和其他分析数据
+    - 搜索多个数据流和指数：
+      - 可以使用逗号分隔的值和grep形式在同一个请求中搜索多个数据流和指数
+    - 分页搜索结果：
+      - 默认搜索时返回前10个匹配的结果，可以使用from和size参数分页比较大的结果集
+        - from参数指定忽略的命中数
+        - size参数定义返回的最大命中数
+    - 获取选择的属性：
+      - 默认搜索结果中的每个hit包含文档的_source，可以通过一下2种方式从查询中获取选择的属性：
+        - 使用fields选项取出索引映射中的属性值
+        - 使用_source选项获取在索引时间传递的原始值
+    - 排序搜索结果：
+      - 默认搜索结果的命中文档通过_score（表示文档和查询语句的匹配程度）排序
+  - 追踪所有的命中文档：
+    
+    
+    
+     
+  
