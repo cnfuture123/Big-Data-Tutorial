@@ -227,7 +227,37 @@
       - 搜索特定属性的特定值，例如： match, term or range queries
     - 复合查询子句：
       - 复合查询子句包裹其他叶子或复合查询，用于合并多个查询条件
+  - 查询和过滤语法：
+    - 相关性分数：
+      - ES根据相关性分数排序匹配的搜索结果
+      - 相关性分数是一个浮点数，用_score表示，值越大表示文档是越相关的
+    - 查询语法：
+      - 如果将查询子句传递给搜索API中的query参数，则查询语法就生效了
+    - 过滤语法：
+      - 如果将查询子句传递给filter参数，例如：布尔查询中的filter or must_not参数，或filter聚合
+  - 复合查询：
+    - bool query：用于组合多个叶子或复合查询子句，例如：must, should, must_not, or filter子句
+    - boosting query：返回匹配positive查询的文档，并降低匹配negative查询文档的相关性分数。可以使用boosting查询对某些文档降级，而不将它们从搜索结果中排除
+    - constant_score query：包裹其他查询的查询，在filter上下文中执行。所有匹配的文档有固定的_score
+    - dis_max query：接收多个查询的查询，返回匹配任意查询的文档。bool 查询结合了所有匹配查询的分数，而dis_max查询使用单个最佳匹配查询子句的分数
+    - function_score query：使用函数修改返回文档的分数，函数考虑流行度，新近度，距离，自定义算法等
+  - 全文检索：
+    - intervals query：允许对匹配项的排序和接近度进行细粒度控制的全文查询
+    - match query：全文检索的标准查询，返回匹配text, number, date or boolean value的文档
+      ![image](https://user-images.githubusercontent.com/46510621/132116324-6a765c32-dab7-4dde-a0a3-0c5d405f2521.png)
+    - match_bool_prefix query：创建一个bool查询：作为term查询匹配每一项，除了最后一项作为prefix查询匹配
+    - match_phrase query：类似于 match 查询，但用于匹配精确的短语或单词接近匹配
+    - match_phrase_prefix query：类似于 match_phrase 查询，但对最终单词进行通配符搜索
+    - multi_match query：match查询的多属性版本
+      ![image](https://user-images.githubusercontent.com/46510621/132116428-9047c1c4-5fc4-43c7-be74-a0320f701253.png)
+    - query_string query：
+      - 使用具有严格语法的解析器根据提供的查询字符串返回文档
+      - 可以使用 query_string 查询来创建包含通配符、跨多个字段的搜索等的复杂搜索
+      ![image](https://user-images.githubusercontent.com/46510621/132116546-4b24f738-fe3c-4011-a90a-bf89caedf8f9.png)
+    - simple_query_string query：一个更简单、更健壮的 query_string 语法版本，适合直接向用户公开
+  - 联合查询：
     
+      
     
      
   
