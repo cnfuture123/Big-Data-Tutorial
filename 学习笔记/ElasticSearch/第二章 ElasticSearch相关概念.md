@@ -256,8 +256,36 @@
       ![image](https://user-images.githubusercontent.com/46510621/132116546-4b24f738-fe3c-4011-a90a-bf89caedf8f9.png)
     - simple_query_string query：一个更简单、更健壮的 query_string 语法版本，适合直接向用户公开
   - 联合查询：
-    
+    - nested query：文档可能包含嵌套类型的属性，这些属性用于索引对象的数组，其中每个对象可以作为独立的文档索引
+      ![image](https://user-images.githubusercontent.com/46510621/132117491-e5a7da30-9c90-4500-90eb-7bea8d87c3e0.png)
+    - has_child and has_parent查询：
+      - has_child query：返回子文档匹配查询的父文档
+      - has_parent query：返回父文档匹配查询的子文档
+  - Match All查询：
+    - 匹配所有文档，_score为1.0
+      ![image](https://user-images.githubusercontent.com/46510621/132117577-d54beaca-8b0c-41e6-bc95-42fd002a9ffb.png)
+  - 专用的查询：
+    - script query: 基于提供的脚本过滤文档
+      ![image](https://user-images.githubusercontent.com/46510621/132117776-571083c9-f83d-40de-87d5-86f0fe0cac96.png)
+    - wrapper query：接收其他查询作为base64编码的字符串
+      ![image](https://user-images.githubusercontent.com/46510621/132117846-597579e1-0642-432b-8ca8-c5872d3501f3.png)
+  - Term-level查询
+    - term-level查询用于基于精确值去查询文档
+    - 不同于全文检索，term-level查询不会分析搜索项，相反是属性的完全匹配
+    - term-level查询类型：
+      - exists query：返回包含字段索引值的文档
+      - fuzzy query：返回包含与搜索项相似的文档，ES使用Levenshtein edit distance衡量相似性或模糊性
+        ![image](https://user-images.githubusercontent.com/46510621/132118078-7de8089a-fbd3-48c3-b0b6-4336f2f577b8.png)
+      - ids query：基于IDs返回文档，文档ID存在_id属性
+      - range query：返回包含特定范围项的文档
+        ![image](https://user-images.githubusercontent.com/46510621/132118252-9fc367d9-e201-47c3-a72d-c09b7b84c07a.png)
+      - regexp query：返回包含匹配正则表达式项的文档
+        ![image](https://user-images.githubusercontent.com/46510621/132118353-622b7cc1-c3be-4beb-97e9-379f7c31ba28.png)
+      - term query：返回属性包含确定项的文档
+        ![image](https://user-images.githubusercontent.com/46510621/132118402-978234ae-275f-4ebe-8251-af048a71e5d8.png)
+      - terms query：返回属性包含一个或多个确定项的文档
+        ![image](https://user-images.githubusercontent.com/46510621/132118442-961ec9f4-178b-4ccc-8191-c50849f80c60.png)
+      - wildcard query：返回包含匹配通配符项的文档
       
-    
-     
-  
+        
+      
