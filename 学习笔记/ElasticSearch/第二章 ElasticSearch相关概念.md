@@ -289,3 +289,33 @@
       
 ## 监控集群
       
+### 简介
+
+  - 在生产环境中，建议使用独立的监控集群。防止生产环境停止影响获取监控数据，也防止监控活动影响生产环境的性能
+  - 可以使用Metricbeat直接收集和传输ES, Kibana, Logstash, Beats的数据到监控集群，而不用通过生产环境路由
+    ![image](https://user-images.githubusercontent.com/46510621/132178858-9aa2669e-c2f1-4f5f-9456-f5f5ff202325.png)
+
+### 生产环境的监控
+
+  - 生产环境监控的主要流程：
+    - 创建ES集群作为监控集群，例如创建有2个节点的集群：es-mon-1 and es-mon-2
+      - 如果监控集群启用了ES安全特性，创建可以发送和获取监控数据的用户
+    - 配置生产集群收集数据，并发送到监控集群
+    - 可选项：配置Logstash收集数据，并发送到监控集群
+    - 可选项：配置Beats收集数据，并发送到监控集群
+    - 可选项：配置Kibana收集数据，并发送到监控集群
+    - 配置Kibana获取并展示监控数据
+
+### 使用Metricbeat收集ES监控数据
+
+  - 使用Metricbeat主要流程：
+    - 启用收集监控数据：
+      - 设置xpack.monitoring.collection.enabled为true，默认是false
+      - API操作：
+        ![image](https://user-images.githubusercontent.com/46510621/132189930-579e8c2a-0423-4178-994d-f75335085e69.png)
+    - 安装Metricbeat：
+      - 理想情况是安装一个独立的Metricbeat实例，配置scope: cluster，并配置hosts指向分发请求到节点的endpoint
+      - 或者生产集群的每个ES节点都安装一个Metricbeat实例，并使用默认配置scope: node
+    - 在每个ES节点上启用Metricbeat中的ES
+
+
