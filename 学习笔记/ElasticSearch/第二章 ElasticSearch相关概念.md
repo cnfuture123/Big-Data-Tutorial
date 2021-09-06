@@ -316,6 +316,18 @@
     - 安装Metricbeat：
       - 理想情况是安装一个独立的Metricbeat实例，配置scope: cluster，并配置hosts指向分发请求到节点的endpoint
       - 或者生产集群的每个ES节点都安装一个Metricbeat实例，并使用默认配置scope: node
-    - 在每个ES节点上启用Metricbeat中的ES
+    - 在每个ES节点上启用Metricbeat中的ES模块
+      ```
+      metricbeat modules enable elasticsearch-xpack
+      ```
+    - 配置Metricbeat中的ES模块
+      ![image](https://user-images.githubusercontent.com/46510621/132216001-afb7273e-8cb8-4a7a-a9d4-17eb0591fc93.png)
+    - 确认发送监控数据到的路径
+      - 例如：可以在Metricbeat配置文件metricbeat.yml指定ES输出信息的路径：
+        ![image](https://user-images.githubusercontent.com/46510621/132216654-766690ec-3f7f-4e9e-854a-bdddee2b2461.png)
+    - 启动每个节点的Mitricbeat
+    - 禁用默认的ES监控指标收集
+      ![image](https://user-images.githubusercontent.com/46510621/132217186-3a4cb2cd-9f91-4f09-a5d3-e8c7d974e84f.png)
+    - 在Kibana上查看监控数据
 
 
