@@ -380,10 +380,11 @@
       - 反压机制：如果写缓存超过配置的限制，follower分片不会再发送读请求；如果写缓存不是满的，follower分片恢复继续发送读请求
       - 控制操作如何复制的配置：
         ![image](https://user-images.githubusercontent.com/46510621/132346795-c950f7c6-a4f0-4b6a-9377-b56556a144ed.png)
-    - 复制leaderfen pfenp要求软删除：
+    - 复制leader分片要求软删除：
       - 跨集群复制实际通过重新执行每个leader索引上的写操作实现。ES需要维护leader分片上的操作历史，因此follower分片的任务可以拉取这些操作，底层的机制是软删除
       - 软删除在文档被删除或更新时发生，index.soft_deletes.retention_lease.period设置定义分片历史租约保留的最长时间    
         
+## 快照和恢复
         
       
   
