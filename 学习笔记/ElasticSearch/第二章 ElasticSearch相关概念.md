@@ -354,5 +354,36 @@
       - 默认可以恢复快照中所有数据流和索引，也可以选择只恢复集群状态或是特定的数据流和索引
   - 跨集群复制：
     - 跨集群复制的作用：
+      - 在数据中心断电时可以继续处理搜索请求
+      - 防止搜索量影响索引吞吐量
+      - 按照地理邻近性处理用户请求，减少搜索延迟
+    - 跨集群复制采用active-passive模型，索引使用leader索引，数据会被复制到一个或多个只读的follower索引
+    - 容灾和高可用：
+      - 单个容灾数据中心：数据从生产数据中心复制到容灾数据中心
+        ![image](https://user-images.githubusercontent.com/46510621/132322064-3ff4f31e-716d-4bc1-97d2-e74f0b96fee6.png)
+      - 多个容灾数据中心：数据可以从一个数据中心复制到多个数据中心，提供容灾和高可用
+        ![image](https://user-images.githubusercontent.com/46510621/132322429-4058ebf5-0c79-4ffd-8a21-d72b975b46f9.png)
+      - 链式复制：经过多个数据中心复制数据形成复制链
+        ![image](https://user-images.githubusercontent.com/46510621/132322648-6b02ff02-ad68-42e5-8a3a-b2da1b342675.png)
+      - 双向复制：所有集群可以查看全部数据，每个数据中心中应用可以写入到本地的索引，并可以读取多个索引查看全部数据
+        ![image](https://user-images.githubusercontent.com/46510621/132323375-dde7f2d4-8115-41f6-b9a8-571a7a64c202.png)
+    - 数据本地化：
+      - 数据本地化可以减少延时和响应时间，同样适用于ES复制数据
+        ![image](https://user-images.githubusercontent.com/46510621/132324191-288cb27a-6780-4f5d-bef3-5ad20fb822ae.png)
+    - 复制机制：
+      - 尽管在索引级别设置跨集群复制，但ES是在分片级别实现复制
+      - 当follower索引被创建，这个索引上的每个分片会从leader索引对应的分片上拉取变化的数据，follower和leader索引的分片数量是相同的
+      - leader索引上的所有操作会被复制到flower索引，这些操作包括：创建，更新，删除文档
+    - 更新处理：
+      - follower的索引是只读的，不能手动更新索引的映射或别名，如果需要修改必须更新leader索引
+      - 当follower分片接收到leader分片的操作，它将这些操作放在写缓存，然后用这些操作提交批量写请求
+      - 反压机制：如果写缓存超过配置的限制，follower分片不会再发送读请求；如果写缓存不是满的，follower分片恢复继续发送读请求
+      - 控制操作如何复制的配置：
+        ![image](https://user-images.githubusercontent.com/46510621/132346795-c950f7c6-a4f0-4b6a-9377-b56556a144ed.png)
+    - 复制leaderfen pfenp要求软删除：
+      - 跨集群复制实际通过重新执行每个leader索引上的写操作实现。ES需要维护leader分片上的操作历史，因此follower分片的任务可以拉取这些操作，底层的机制是软删除
+      - 软删除在文档被删除或更新时发生，index.soft_deletes.retention_lease.period设置定义分片历史租约保留的最长时间    
+        
+        
       
   
