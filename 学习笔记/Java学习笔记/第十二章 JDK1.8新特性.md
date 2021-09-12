@@ -141,6 +141,8 @@
     - Stream是Java 8中处理集合的关键抽象概念，可以执行复杂的查找、过滤和映射等操作。
     - 使用Stream API对集合数据进行操作，类似于使用SQL执行数据库查询。
     - Stream本质是数据流，用于操作数据源（集合、数组等）所生成的元素序列
+    - Stream接口继承：
+      ![image](https://user-images.githubusercontent.com/46510621/132973422-37e86273-1a8c-443a-b97d-1f7d2908e3a6.png)
   - Stream特点：
     - 集合讲的是数据，Stream讲的是计算
     - Stream本身不会存储元素
@@ -148,12 +150,12 @@
     - Stream是延迟操作的，等到需要结果时才执行
   - Stream操作步骤：
     - 创建Stream：通过数据源（集合、数组等）获取流
-      - 通过集合：
+      - 通过集合：Collection
         ```
         - default Stream<E> stream()：返回一个顺序流
         - default Stream<E> parallelStream()：返回一个并行流
         ```
-      - 通过数组：
+      - 通过数组：Arrays
         ```
         - static<T> Stream<T> stream(T[] array)
         - static IntStream stream(int[] array)
@@ -198,6 +200,10 @@
         ```
         - count()：返回元素总数
         - forEach(Consumer c)：迭代
+          ```
+          Stream<String> stream = Stream.of("I", "love", "you", "too");
+          stream.forEach(str -> System.out.println(str));
+          ```
         ```
       - 归约：
         ```
