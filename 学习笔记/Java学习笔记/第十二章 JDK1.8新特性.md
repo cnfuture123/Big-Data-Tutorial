@@ -180,18 +180,27 @@
               .forEach(str -> System.out.println(str));
         - distinct()：去重
           - 示例：
+            stream.distinct().forEach(str -> System.out.println(str));
         - limit(long maxSize)：限制元素个数
         - skip(long n)：返回跳过前n个元素的流
         ```
       - 映射：
         ```
         - map(Function f)：接收一个函数作为参数，该函数被应用到每个元素上，映射为一个新的元素
+          - 示例：
+            stream.map(str -> str.toUpperCase())
         - flatMap(Function f)：接收一个函数作为参数，将流中的每个值换成另一个流，然后将所有流连成一个流
+          - 示例：
+            Stream<List<Integer>> stream = Stream.of(Arrays.asList(1,2), Arrays.asList(3, 4, 5));
+            stream.flatMap(list -> list.stream())
+                .forEach(i -> System.out.println(i));
         ```
       - 排序：
         ```
         - sorted()：按自然顺序排序的新流
         - sorted(Comparator com)：按比较器顺序排序的新流
+          - 示例：
+            stream.sorted((str1, str2) -> str1.length() - str2.length())
         ```
     - 终止操作：执行中间操作链，并产生结果
       - 匹配和查找：
@@ -209,14 +218,22 @@
             Stream<String> stream = Stream.of("I", "love", "you", "too");
             stream.forEach(str -> System.out.println(str));
         ```
-      - 归约：
+      - 归约：3种重载方式
         ```
-        - reduce(T iden, BinaryOperator b)：可以将流中元素结合，得到一个值，返回T
-        - reduce(BinaryOperator b)：可以将流中元素结合，得到一个值，返回Optional<T>
+        - T reduce(T iden, BinaryOperator b)：可以将流中元素结合，得到一个值，返回T
+        - Optional<T> reduce(BinaryOperator b)：可以将流中元素结合，得到一个值，返回Optional<T>
+        - <U> U reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)
         ```
+        - 示例：
+          ```
+          Stream<String> stream = Stream.of("I", "love", "you", "too");
+          Integer lengthSum = stream.reduce(0, (sum, str) -> sum + str.length(), (a, b) -> a + b);
+          ```
       - 收集：
         ```
         - collect(Collector c)：流中的元素做汇总
+          - 示例：
+            List<String> list = stream.collect(Collectors.toList());
         ```
         
 ## Optional类
@@ -242,3 +259,6 @@
       - T orElseGet(Supplier<? extends T> other)：如果有值则返回，否则返回由Supplier接口实现提供的对象
       ```
 
+## 参考
+
+  - https://objcoding.com/2019/03/04/lambda/
