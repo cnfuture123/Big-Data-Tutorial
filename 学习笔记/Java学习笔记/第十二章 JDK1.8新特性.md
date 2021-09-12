@@ -174,7 +174,12 @@
       - 筛选和切片：
         ```
         - filter(Predicate p)：过滤元素
+          - 示例：
+            Stream<String> stream= Stream.of("I", "love", "you", "too");
+            stream.filter(str -> str.length() == 3)
+              .forEach(str -> System.out.println(str));
         - distinct()：去重
+          - 示例：
         - limit(long maxSize)：限制元素个数
         - skip(long n)：返回跳过前n个元素的流
         ```
@@ -200,10 +205,9 @@
         ```
         - count()：返回元素总数
         - forEach(Consumer c)：迭代
-          ```
-          Stream<String> stream = Stream.of("I", "love", "you", "too");
-          stream.forEach(str -> System.out.println(str));
-          ```
+          - 示例：
+            Stream<String> stream = Stream.of("I", "love", "you", "too");
+            stream.forEach(str -> System.out.println(str));
         ```
       - 归约：
         ```
