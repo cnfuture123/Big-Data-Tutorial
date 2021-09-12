@@ -45,6 +45,45 @@
           if (str.length > 3) System.out.println(str);         
         });
         ```
+    - replaceAll():
+      - 方法签名：
+        ```
+        void replaceAll(UnaryOperator<E> operator)
+        ```
+      - 示例：
+        ```
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("I", "love", "you", "too"));
+        list.replaceAll(str -> {
+          if (str.length() > 3) 
+            return str.toUpperCase();
+          return str;
+        }); 
+        ```
+    - sort():
+      - 方法签名：
+        ```
+        void sort(Comparator<? super E> c)
+        ```
+      - 示例：
+        ```
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("I", "love", "you", "too"));
+        list.sort((str1, str2) -> str1.length() - str2.length());
+        ```
+    - getOrDefault():
+      - 方法签名：
+        ```
+        V getOrDefault(Object key, V defaultValue)
+        ```
+      - 示例：
+        ```
+        HashMap<Integer, String> map = new HashMap<>();
+        String value = map.getOrDefault(4, "default");
+        ```
+    - putIfAbsent(): 
+      - 方法签名：
+        ```
+        V putIfAbsent(K key, V value): 只有在不存在key值的映射或映射值为null时，才将value指定的值放入到Map中，否则不对Map做更改
+        ```
       
 ## 函数式接口
 
