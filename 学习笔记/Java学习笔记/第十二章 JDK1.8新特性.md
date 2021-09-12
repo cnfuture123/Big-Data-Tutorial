@@ -6,8 +6,12 @@
     - Lambda是一个匿名函数，可以把Lambda表达式理解为一段可以传递的代码
     - 使用更简洁、更灵活
     - 使用"->"操作符，将Lambda表达式分为两个部分：
+      ```
+      (argument-list) -> {body}  
+      ```
       - 左侧：指定Lambda表达式需要的参数列表
       - 右侧：指定Lambda体，Lambda表达式实现的功能
+      - 
   - 语法：
     - 无参、无返回值：
       ```
@@ -28,6 +32,19 @@
         return Integer.compare(x, y);
       };
       ```
+  - Collection中的新方法：
+    - forEach():
+      - 方法签名：
+        ```
+        void forEach(Consumer<? super E> action)
+        ```
+      - 示例：
+        ```
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("I", "love", "you", "too"));
+        list.forEach(str -> {
+          if (str.length > 3) System.out.println(str);         
+        });
+        ```
       
 ## 函数式接口
 
@@ -40,6 +57,25 @@
     - Supplier<T>：供给型接口：返回类型为T的对象。包含方法：T get()
     - Function<T, R>：函数型接口：对类型为T的对象应用操作，并返回结果是R类型的对象。包含方法：R apply(T t)
     - Predicate<T>：断定型接口：确定类型为T的对象是否满足约束条件，并返回boolean值。包含方法：boolean test(T t)
+  - 自定义函数接口：编写一个只有一个抽象方法的接口即可
+    - 自定义接口：
+      ```
+      @FunctionalInterface
+      public interface ConsumerInterface<T> {
+        void accept(T t);
+      }
+      ```
+    - 调用接口：
+      ```
+      class MyStream<T> {
+        private List<T> list;
+        public void loopList(ConsumerInterface<T> consumer) {
+          for (T t : list) {
+            consumer.accept(t);
+          }
+        }
+      }
+      ```
 
 ## 方法引用和构造器引用
 
