@@ -76,22 +76,40 @@
         - 根据实际应用中涉及的实体确定对应的资源，例如：CatalogClient, CatalogImage, and CatalogMetaDatum
       - 创建一个资源模型
         - REST的基础概念是资源，所有的设计围绕资源
-        - 资源模型是描述各资源之间的关系
+        - 资源模型是描述各资源之间的关系，并且资源是分层的，因此REST接口应该反应这种层次
+          ![image](https://user-images.githubusercontent.com/46510621/132990550-88924be5-5716-427f-bc1e-defe6d4ced21.png)
+        - 对应的分层URIs:
+          ![image](https://user-images.githubusercontent.com/46510621/132990591-c551798d-159a-4864-b4ca-26af59a29b3a.png)
       - 将资源模型形式化为对象模型
         - 在确定资源及资源模型之后，使用对象模型建模
         - 每种资源创建一个对应的类
       - 创建资源的JSON模式（如果使用JSON）
-      - 编写对资源进行的操作
+        - JSON模式JSON文档校验，提供API中JSON数据的显示的描述
+      - 编写对资源进行的操作 
       - 将对象模型转换为URLs
+        - 资源URI模版：
+          ![image](https://user-images.githubusercontent.com/46510621/132991507-9fdcb1ea-6391-407d-9c89-6f1212283a3d.png)
       - 将操作映射为HTTP方法和查询参数
+        - 常用的请求方法：
+          ![image](https://user-images.githubusercontent.com/46510621/132990011-a917bdc2-3b40-49ce-9bfb-794162918e1f.png)  
       - 决定如何表示传输的数据（JSON, XML或其他格式）
       - 定义描述资源的模式
     - 设计规则：
       - 使用名词表示资源，复数表示集合，单数表示单个的资源
+        - 资源是对象，名词表示对象。
+        - URI是资源的标识符，URL是资源的标识符和位置
+        - 使用动词格式的RPC API和名词格式的RESTful API区别：
+          ```
+          // using a verb - RPC Style
+          http://www.nowhere.com/imageclient/getClientsById
+          // using a noun - RESTful
+          http://www.nowhere.com/imageClient/{client-id}
+          ```
       - HTTP请求方法定义对资源的操作
-      - 所有资源和通信是无状态的
+      - 所有资源和通信是无状态的，不需要使用本地缓存数据，URL参数，会话变量维护状态
       - 为API指定一个版本号
-      - /表示层次关系
+        - 通过使用版本号保证在更新API时，旧的API可以继续工作，并逐渐切换到新的API
+                - /表示层次关系
       - URIs中使用-代替_
       - URIs中使用小写字母
       - URIs中不要包含文件扩展名来表明文件类型
@@ -100,3 +118,6 @@
 ## 参考
 
   - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using
+  - https://rapidapi.com/blog/how-to-build-an-api-with-java/
+  - https://codeburst.io/spring-boot-rest-microservices-best-practices-2a6e50797115
+  - https://www.baeldung.com/rest-with-spring-series
