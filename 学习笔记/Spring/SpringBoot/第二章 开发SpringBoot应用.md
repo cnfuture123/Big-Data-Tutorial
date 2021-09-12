@@ -65,6 +65,9 @@
       ```
     - 如果类不在类路径上，可以使用excludeName属性，并指定该类的全限定名
 
+## Rest API设计
+
+
 ## 参考
 
   - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using
