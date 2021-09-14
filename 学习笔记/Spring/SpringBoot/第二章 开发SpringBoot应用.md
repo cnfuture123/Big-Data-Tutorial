@@ -125,6 +125,18 @@
             return BaseResponse.error(e.getCode(), e.getMessage());
         }
       ```
+    - 这种方式的主要缺点：@ExceptionHandler注解只对特定的Controller有效，不是全局有效。
+  - HandlerExceptionResolver：
+    - 处理应用抛出的任意异常，可以实现统一的异常处理机制
+    - ResponseStatusExceptionResolver：
+      - 在自定义异常上使用@ResponseStatus注解，并将这些异常映射到HTTP状态码
+        ```
+          @ExceptionHandler(CustomException.class)
+          @ResponseStatus(HttpStatus.BAD_REQUEST)
+          public BaseResponse<Void> handlerCustomException(CustomException e) {
+              return BaseResponse.error(e.getCode(), e.getMessage());
+          }
+        ```
 
 ## 参考
 
