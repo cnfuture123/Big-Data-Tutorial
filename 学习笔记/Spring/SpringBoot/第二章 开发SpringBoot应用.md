@@ -137,6 +137,32 @@
               return BaseResponse.error(e.getCode(), e.getMessage());
           }
         ```
+  - @ControllerAdvice：
+    - Spring 3.2支持带@ControllerAdvice注解的全局的@ExceptionHandler
+      ```
+      @Slf4j
+      @ControllerAdvice
+      public class GlobalExceptionHandler {
+      
+          @ResponseStatus(HttpStatus.BAD_REQUEST)
+          @ExceptionHandler(CustomException.class)
+          public BaseResponse<Void> handlerCustomException(CustomException e) {
+              return BaseResponse.error(e.getCode(), e.getMessage());
+          }
+          
+          @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+          @ExceptionHandler(Exception.class)
+          public BaseResponse<Void> handlerException(Exception e) {
+              log.error("Uncapped exception", e);
+              return BaseResponse.error(9999, e.getMessage());
+          }
+      }
+      ```
+    - @ControllerAdvice注解使多个，分散的@ExceptionHandlers成为一个全局的异常处理组件，这种机制简单并且灵活：
+      - 可以控制响应体和状态码
+      - 可以将几种异常映射到同一个方法，一起被处理
+      - 更好的利用RESTful ResposeEntity响应
+    
 
 ## 参考
 
