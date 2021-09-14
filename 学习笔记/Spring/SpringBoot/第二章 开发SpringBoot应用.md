@@ -115,6 +115,17 @@
       - URIs中不要包含文件扩展名来表明文件类型
       - URIs中使用查询变量过滤
 
+### 异常处理
+
+  - @ExceptionHandler：
+    - 用于@Controller级别，定义方法处理异常，并使用@ExceptionHandler注解
+      ```
+        @ExceptionHandler(CustomException.class)
+        public BaseResponse<Void> handlerCustomException(CustomException e) {
+            return BaseResponse.error(e.getCode(), e.getMessage());
+        }
+      ```
+
 ## 参考
 
   - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using
