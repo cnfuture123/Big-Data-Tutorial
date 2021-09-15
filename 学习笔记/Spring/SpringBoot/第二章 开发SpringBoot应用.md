@@ -162,6 +162,59 @@
       - 可以控制响应体和状态码
       - 可以将几种异常映射到同一个方法，一起被处理
       - 更好的利用RESTful ResposeEntity响应
+
+### 常用注解：
+
+  - @RequestBody：
+    - 将HttpRequest body映射到java对象
+      ```
+      @PostMapping
+      public BaseResponse<Boolean> create(@RequestBody StudentVO studentVO) {
+          log.info("create student {}", studentVO);
+          return BaseResponse.success(studentService.create(studentVO));
+      }
+      ```
+    - Spring会自动将JSON反序列化为Java类型，但是Java类型的格式需要和客户端传的JSON格式相匹配
+  - @ResponseBody：
+    - 将Controller返回的对象自动序列化JSON，并传递给HttpResponse对象
+    - @RestController注解默认包含了@ResponseBody
+    - 设置Content Type：
+      - 可以使用@RequestMapping的produce, consume属性指定Content Type
+        ```
+        // JSON
+        @PostMapping(value = "student", produces = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public BaseResponse<StudentVO> create(@RequestBody StudentVO studentVO) {
+            log.info("create student {}", studentVO);
+            return BaseResponse.success(studentService.create(studentVO));
+        }
+        
+        // XML
+        @PostMapping(value = "student", produces = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public BaseResponse<StudentVO> create(@RequestBody StudentVO studentVO) {
+            log.info("create student {}", studentVO);
+            return BaseResponse.success(studentService.create(studentVO));
+        }
+        ```
+      - 请求头设置不同的Accept参数会得到不同格式的响应
+        ```
+        // JSON
+        curl -i \ 
+        -H "Accept: application/json" \ 
+        -H "Content-Type:application/json" \ 
+        -X POST --data 
+          '{"username": "johnny", "password": "password"}' "https://localhost:8080/.../content"
+        response: {"text":"JSON Content!"}
+        
+        // XML
+        curl -i \
+        -H "Accept: application/xml" \
+        -H "Content-Type:application/json" \
+        -X POST --data
+          '{"username": "johnny", "password": "password"}' "https://localhost:8080/.../content"
+        response: <BaseResponse><text>XML Content!</text></BaseResponse>
+        ```
     
 
 ## 参考
