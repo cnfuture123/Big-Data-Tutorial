@@ -215,6 +215,24 @@
           '{"username": "johnny", "password": "password"}' "https://localhost:8080/.../content"
         response: <BaseResponse><text>XML Content!</text></BaseResponse>
         ```
+        
+### 重要概念
+
+  - ResponseEntity：
+    - 表示整个HTTP响应：status code, headers, and body
+    - ResponseEntity是泛型，可以使用任意类型作为响应体
+    - 示例：
+      ```
+      @GetMapping("/hello")
+      ResponseEntity<String> hello() {
+          return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+      }
+      ```
+    - 替代方式：
+      - @ResponseBody：返回的结果作为HTTP响应体
+      - @ResponseStatus：可以自定义HTTP状态
+  - HTTP状态码：
+    - HTTP状态码是
     
 
 ## 参考
