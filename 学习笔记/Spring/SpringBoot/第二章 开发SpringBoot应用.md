@@ -249,12 +249,12 @@
       - 500: 服务端内部错误，通常是服务端bug或没有捕获的异常
   - 实体相关概念：
     - Entity: 基本和数据表一一对应，一个实体一张表
-    - BO(Business Object): 业务对象，将业务逻辑封装为一个对象，通过调用Dao方法，结合Po或Vo进行业务操作
+    - BO(Business Object): 业务对象，将业务逻辑封装为一个对象，通过调用Dao方法，结合Po或Vo进行业务操作，复杂度高于VO和PO
     - VO(Value Object): 值对象，通常用于业务层之间的数据传递。主要体现在视图的对象，对于一个WEB页面将整个页面的属性封装成一个VO对象，在控制层与视图层进行传输交换
     - PO(Persistant Object): 持久层对象，数据库表中的记录在java对象中的显示状态，最形象的理解就是一个PO就是数据库中的一条记录
-    - DTO(Data Transfer Object): 数据传输对象，接口之间传递的数据封装，一是能提高数据传输的速度(减少了传输字段)，二能隐藏后端表结构
-    - POJO(Plain Ordinary Java Object): 简单无规则java对象，最基本的Java Bean，属性加上属性的get和set方法
-    - DAO(Data Access Object): 
+    - DTO(Data Transfer Object): 数据传输对象，接口之间传递的数据封装，DTO可以是对PO的封装，一是能提高数据传输的速度(减少了传输字段)，二能隐藏后端表结构
+    - POJO(Plain Ordinary Java Object): 简单无规则java对象，最基本的Java Bean，包含属性加上属性的get和set方法
+    - DAO(Data Access Object): 数据访问对象，负责持久层的操作，主要用来封装对数据的访问
 
 ## 参考
 
