@@ -215,6 +215,72 @@
           '{"username": "johnny", "password": "password"}' "https://localhost:8080/.../content"
         response: <BaseResponse><text>XML Content!</text></BaseResponse>
         ```
+  - @Async:
+    - 在配置类上添加@EnableAsync注解可以启用异步处理
+      ```
+      @Configuration
+      @EnableAsync
+      public class SpringAsyncConfig { ... }
+      ```
+    - @Async有一些局限：
+      - 只应用于public方法，因为public方法可以被代理
+      - 同一个类内部调用异步方法不生效，因为它绕过代理，直接调用底层方法
+    - @Async使用：
+      - 返回Void的方法：
+        ```
+        @Async
+        public void asyncMethodWithVoidReturnType() {
+            System.out.println("Execute method asynchronously. " 
+              + Thread.currentThread().getName());
+        }
+        ```
+      - 有返回值的方法：
+        ```
+        @Async
+        public Future<String> asyncMethodWithReturnType() {
+            System.out.println("Execute method asynchronously - " 
+              + Thread.currentThread().getName());
+            try {
+                Thread.sleep(5000);
+                return new AsyncResult<String>("hello world !!!!");
+            } catch (InterruptedException e) {
+                //
+            }
+            return null;
+        }
+        ```
+        - Spring提供实现了Future的AsyncResult类，可以用来跟踪异步方法执行的结果
+    - Executor：
+      - 默认Spring使用SimpleAsyncTaskExecutor异步地运行这些方法，我们可以在应用或方法级别覆盖默认的配置
+        - SimpleAsyncTaskExecutor不会重复使用线程，每次调用会创建一个新的线程。然而它支持并行度的限制，超过限制时会阻塞新的调用
+      - 在方法级别覆盖配置：
+        ```
+        @Configuration
+        @EnableAsync
+        public class SpringAsyncConfig {
+            @Bean(name = "threadPoolTaskExecutor")
+            public Executor threadPoolTaskExecutor() {
+                return new ThreadPoolTaskExecutor();
+            }
+        }
+        
+        @Async("threadPoolTaskExecutor")
+        public void asyncMethodWithConfiguredExecutor() {
+            System.out.println("Execute method with configured executor - "
+              + Thread.currentThread().getName());
+        }
+        ```
+      - 在应用级别覆盖配置：
+        ```
+        @Configuration
+        @EnableAsync
+        public class SpringAsyncConfig implements AsyncConfigurer {
+            @Override
+            public Executor getAsyncExecutor() {
+                return new ThreadPoolTaskExecutor();
+            }
+        }
+        ```
         
 ### 重要概念
 
