@@ -281,6 +281,38 @@
             }
         }
         ```
+  - @RequestParam:
+    - 从查询字符串中获取值
+    - 示例：
+      ```
+      Request: http://localhost:8080/foos?id=abc
+      
+      @GetMapping("/foos")
+      public String getFooByIdUsingQueryParam(@RequestParam String id) {
+          return "ID: " + id;
+      }
+      ```
+    - 可以指定别名，默认值，是否是可选的
+      ```
+      @GetMapping("/foos")
+      public String getFooByIdUsingQueryParam(
+                @RequestParam String id,
+                @RequestParam(value = "keyword", required = false) String keyword,
+                @RequestParam(value = "pageNumber", defaultValue = 0) Integer page) {
+          return "ID: " + id;
+      }
+      ```
+  - @PathVariable:
+    - 从URI路径中获取值
+    - 示例：
+      ```
+      Request: http://localhost:8080/foos/abc
+      
+      @GetMapping("/foos/{id}")
+      public String getFooById(@PathVariable String id) {
+          return "ID: " + id;
+      }
+      ```
         
 ### 重要概念
 
