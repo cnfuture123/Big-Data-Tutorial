@@ -74,6 +74,7 @@
   - List:
     - lpush/rpush key value1 value2 value3 ... : 从左边/右边插入一个或多个值
     - lpop/rpop key : 从左边/右边吐出一个值，并会从列表中删除这个值
+    - blpop/brpop key : 类似lpop/rpop，但如果列表为空则会阻塞，返回调用者，直到新元素加入列表才会继续处理
     - rpoplpush key1 key2 : 从key1列表右边吐出一个值，插到key2列表左边
     - lrange key start stop : 按照索引范围获得元素(从左到右)
     - lindex key index : 按照索引下标获得元素(从左到右)
