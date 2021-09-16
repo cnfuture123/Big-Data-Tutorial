@@ -2,7 +2,7 @@
 
   - Redis是一个开源的key-value存储系统，基于内存运行，分布式，并支持持久化的NoSQL数据库。
   - C语言编写，遵守BSD协议。
-  - Redis通常被称为数据结构服务器，因为值（value）可以是字符串(String)、哈希(Hash)、列表(list)、集合(sets)和有序集合(sorted sets)等类型。
+  - Redis通常被称为数据结构服务器，因为值（value）可以是字符串(String)、哈希(Hash)、列表(list)、集合(sets)和有序集合(sorted sets) 、位数组(Bit Arrays)、Streams等类型。
   
 ## Redis特点
 
