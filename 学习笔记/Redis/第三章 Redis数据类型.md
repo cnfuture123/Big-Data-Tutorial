@@ -42,75 +42,75 @@
 
   - Key:
     - keys * : 查询当前库的所有键
-    - exists <key> : 判断某个键是否存在
-    - type <key> : 查看值的类型
-    - del <key> : 删除某个键
-    - expire <key> <seconds> : 为键值设置过期时间，单位秒
-    - ttl <key> : 查看key还有多少秒过期，-1表示永不过期，-2表示已过期
-    - PEXPIRE <key> <milliseconds> : 为键值设置过期时间，单位毫秒
-    - PTTL <key> : 查看key还有多少毫秒过期
+    - exists key : 判断某个键是否存在
+    - type key : 查看值的类型
+    - del key : 删除某个键
+    - expire key seconds : 为键值设置过期时间，单位秒
+    - ttl key : 查看key还有多少秒过期，-1表示永不过期，-2表示已过期
+    - PEXPIRE key milliseconds : 为键值设置过期时间，单位毫秒
+    - PTTL key : 查看key还有多少毫秒过期
     - dbsize : 查看当前数据库的key的数量
     - flushdb : 清空当前库
     - flushall : 通杀全部库
   
   - String:
-    - set <key> <value> : 添加键值对
-    - get <key> : 查询对应键值
-    - append <key> <value> : 将给定的<value>追加到原值的末尾
-    - strlen <key> : 获得值的长度
-    - setnx <key> <value> : 只有在key不存在时设置key的值
-    - incr <key> : 将key中储存的数字值增1, 只能对数字值操作，如果为空，新增值为1
+    - set key value : 添加键值对
+    - get key : 查询对应键值
+    - append key value : 将给定的value追加到原值的末尾
+    - strlen key : 获得值的长度
+    - setnx key value : 只有在key不存在时设置key的值
+    - incr key : 将key中储存的数字值增1, 只能对数字值操作，如果为空，新增值为1
       - incr是原子性操作，执行read-increment-set操作，不会发生多个客户端同一时间执行命令
-    - decr <key> : 将key中储存的数字值减1, 只能对数字值操作，如果为空，新增值为-1
-    - incrby/decrby <key> <步长> : 将key中储存的数字值按步长增减
-    - mset <key1> <value1> <key2> <value2> ... : 同时设置一个或多个key-value对
-    - mget <key1> <key2> ... : 同时获取一个或多个value，返回的是值的数组
-    - msetnx <key1> <value1> <key2> <value2> ... : 同时设置一个或多个key-value对，当且仅当所有给定key都不存在。
-    - setrange <key> <起始位置> <value> : 用<value>覆写<key>所储存的字符串值，从<起始位置>开始
-    - getrange <key> <起始位置> <结束位置> : 获得值的范围，类似java中的substring
-    - setex <key> <过期时间> <value> : 设置键值的同时，设置过期时间，单位秒
-    - getset <key> <value> : 以新换旧，设置了新值同时获得旧值。
+    - decr key : 将key中储存的数字值减1, 只能对数字值操作，如果为空，新增值为-1
+    - incrby/decrby key 步长 : 将key中储存的数字值按步长增减
+    - mset key1 value1 key2 value2 ... : 同时设置一个或多个key-value对
+    - mget key1 key2 ... : 同时获取一个或多个value，返回的是值的数组
+    - msetnx key1 value1 key2 value2 ... : 同时设置一个或多个key-value对，当且仅当所有给定key都不存在。
+    - setrange key 起始位置 value : 用value覆写key所储存的字符串值，从起始位置开始
+    - getrange key 起始位置 结束位置 : 获得值的范围，类似java中的substring
+    - setex key 过期时间 value : 设置键值的同时，设置过期时间，单位秒
+    - getset key value : 以新换旧，设置了新值同时获得旧值。
       
   - List:
-    - lpush/rpush <key> <value1> <value2> <value3> ... : 从左边/右边插入一个或多个值
-    - lpop/rpop <key> : 从左边/右边吐出一个值，并会从列表中删除这个值
-    - rpoplpush <key1> <key2> : 从<key1>列表右边吐出一个值，插到<key2>列表左边
-    - lrange <key> <start> <stop> : 按照索引范围获得元素(从左到右)
-    - lindex <key> <index> : 按照索引下标获得元素(从左到右)
-    - llen <key> : 获得列表长度
-    - linsert <key> before/after <value> <new_value> : 在<value>的前面或者后面插入<new_value>
-    - lrem <key> <n> <value> : 从左边删除n个value(从左到右)
-    - ltrim <key> <start> <stop> : 截取指定范围的值后再赋值给key
+    - lpush/rpush key value1 value2 value3 ... : 从左边/右边插入一个或多个值
+    - lpop/rpop key : 从左边/右边吐出一个值，并会从列表中删除这个值
+    - rpoplpush key1 key2 : 从key1列表右边吐出一个值，插到key2列表左边
+    - lrange key start stop : 按照索引范围获得元素(从左到右)
+    - lindex key index : 按照索引下标获得元素(从左到右)
+    - llen key : 获得列表长度
+    - linsert key before/after value new_value : 在value的前面或者后面插入new_value
+    - lrem key n value : 从左边删除n个value(从左到右)
+    - ltrim key start stop : 截取指定范围的值后再赋值给key
   
   - Set:
-    - sadd <key> <value1> <value2> ... : 将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略
-    - smembers <key> : 取出该集合的所有值
-    - sismember <key> <value> : 判断集合<key>是否含有该<value>值，有返回1，没有返回0
-    - scard <key> : 返回该集合的元素个数
-    - srem <key> <value1> <value2> ... : 删除集合中的某个元素
-    - spop <key> : 随机从该集合中吐出一个值
-    - srandmember <key> <n> : 随机从该集合中取出n个值, 不会从集合中删除
-    - sinter <key1> <key2> : 返回两个集合的交集元素
-    - sunion <key1> <key2> : 返回两个集合的并集元素
-    - sdiff <key1> <key2> : 返回两个集合的差集元素
+    - sadd key value1 value2 ... : 将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略
+    - smembers key : 取出该集合的所有值
+    - sismember key value : 判断集合key是否含有该value值，有返回1，没有返回0
+    - scard key : 返回该集合的元素个数
+    - srem key value1 value2 ... : 删除集合中的某个元素
+    - spop key : 随机从该集合中吐出一个值
+    - srandmember key n : 随机从该集合中取出n个值, 不会从集合中删除
+    - sinter key1 key2 : 返回两个集合的交集元素
+    - sunion key1 key2 : 返回两个集合的并集元素
+    - sdiff key1 key2 : 返回两个集合的差集元素
   
   - Hash:
-    - hset <key> <field> <value> : 给<key>集合中的<field>键赋值<value>
-    - hget <key> <field> : 从<key>集合<field>取出value
-    - hmset <key> <field1> <value1> <field2> <value2> ... : 批量设置hash的值
-    - hexists <key> <field> : 查看哈希表key中，给定域field是否存在
-    - hkeys <key> : 列出该hash集合的所有field
-    - hvals <key> : 列出该hash集合的所有value
-    - hincrby <key> <field> <increment> : 为哈希表key中的域field的值加上增量increment
-    - hsetnx <key> <field> <value> : 将哈希表key中的域field的值设置为value ，当且仅当域field不存在
+    - hset key field value : 给key集合中的field键赋值value
+    - hget key field : 从key集合field取出value
+    - hmset key field1 value1 field2 value2 ... : 批量设置hash的值
+    - hexists key field : 查看哈希表key中，给定域field是否存在
+    - hkeys key : 列出该hash集合的所有field
+    - hvals key : 列出该hash集合的所有value
+    - hincrby key field increment : 为哈希表key中的域field的值加上增量increment
+    - hsetnx key field value : 将哈希表key中的域field的值设置为value ，当且仅当域field不存在
   - Zset:
-    - zadd <key> <score1> <value1> <score2> <value2> ... : 将一个或多个member元素及其score值加入到有序集key当中
-    - zrange <key> <start> <stop> [withscores] : 返回有序集key中，下标在<start> <stop>之间的元素, 带withscores，分数一起和值返回到结果集
-    - zrangebyscore <key> <min> <max> [withscores] : 返回有序集key中，所有score值介于min和max之间(包括等于min或max)的成员。有序集成员按score 值递增(从小到大)次序排列。
-    - zrevrangebyscore <key> <min> <max> [withscores] : 同上，改为从大到小排列。
-    - zincrby <key> <increment> <value> : 为元素的score加上增量
-    - zrem <key> <value> 删除该集合下，指定值的元素
-    - zcount <key> <min> <max> : 统计该集合，分数区间内的元素个数
-    - zrank <key> <value> : 返回该值在集合中的排名，从0开始
-    - zrevrank <key> <value> : 返回该值在集合中的逆序排名
+    - zadd key score1 value1 score2 value2 ... : 将一个或多个member元素及其score值加入到有序集key当中
+    - zrange key start stop [withscores] : 返回有序集key中，下标在start stop之间的元素, 带withscores，分数一起和值返回到结果集
+    - zrangebyscore key min max [withscores] : 返回有序集key中，所有score值介于min和max之间(包括等于min或max)的成员。有序集成员按score 值递增(从小到大)次序排列。
+    - zrevrangebyscore key min max [withscores] : 同上，改为从大到小排列。
+    - zincrby key increment value : 为元素的score加上增量
+    - zrem key value 删除该集合下，指定值的元素
+    - zcount key min max : 统计该集合，分数区间内的元素个数
+    - zrank key value : 返回该值在集合中的排名，从0开始
+    - zrevrank key value : 返回该值在集合中的逆序排名
   
