@@ -75,6 +75,7 @@
 ## JSON
   
   - Spring Boot集成3种JSON库：Gson, Jackson, JSON-B。Jackson是默认库
+  - 参考：https://juejin.cn/post/6844904166809157639
   
 ## 开发Web应用
 
