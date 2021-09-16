@@ -2,6 +2,13 @@
 
 ## Redis的五大数据类型
 
+  - Redis keys:
+    - 可以使用任意的二进制序列作为key，从"foo"的字符串到JPEG文件都是支持的，空字符串也是有效的
+    - 关于keys的一些规则：
+      - key的长度不要过长，因为会占用较多的内存，并且key的查找比较耗时
+      - key的长度不要过短，会造成可读性降低。例如："u1000flw"可以被写成"user:1000:followers"，牺牲较小的内存空间可以提升可读性，需要在两者之间寻找平衡
+      - 坚持一种符合业务逻辑的key设计，例如：userId:itemId:action
+      - 允许的最大key大小为512MB
   - String: 
     - String是Redis最基本的类型，一个key对应一个value。
     - String类型是二进制安全的。意味着Redis的string可以包含任何数据。比如jpg图片或者序列化的对象。
