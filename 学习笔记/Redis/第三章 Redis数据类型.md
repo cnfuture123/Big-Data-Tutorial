@@ -96,14 +96,14 @@
     - sdiff key1 key2 : 返回两个集合的差集元素
   
   - Hash:
-    - hset key field value : 给key集合中的field键赋值value
+    - hset key field value : 给key集合中的field赋值value
     - hget key field : 从key集合field取出value
-    - hmset key field1 value1 field2 value2 ... : 批量设置hash的值
-    - hexists key field : 查看哈希表key中，给定域field是否存在
+    - hmset key field1 value1 field2 value2 ... : 批量设置hash的键值
+    - hexists key field : 查看哈希表key中，field是否存在
     - hkeys key : 列出该hash集合的所有field
     - hvals key : 列出该hash集合的所有value
-    - hincrby key field increment : 为哈希表key中的域field的值加上增量increment
-    - hsetnx key field value : 将哈希表key中的域field的值设置为value ，当且仅当域field不存在
+    - hincrby key field increment : 为哈希表key中的field值加上增量increment
+    - hsetnx key field value : 将哈希表key中的field值设置为value ，当且仅当field不存在
   - Zset:
     - zadd key score1 value1 score2 value2 ... : 将一个或多个member元素及其score值加入到有序集key当中
     - zrange key start stop [withscores] : 返回有序集key中，下标在start stop之间的元素, 带withscores，分数一起和值返回到结果集
