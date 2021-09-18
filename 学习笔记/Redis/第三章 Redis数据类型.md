@@ -1,6 +1,6 @@
 # Redis数据类型
 
-## Redis的五大数据类型
+## Redis的数据类型
 
   - Redis keys:
     - 可以使用任意的二进制序列作为key，从"foo"的字符串到JPEG文件都是支持的，空字符串也是有效的
@@ -34,10 +34,16 @@
     - 是一个键值对集合。KV模式不变，但V是一个键值对；是一个string类型的field和value的映射表，适合用于存储对象。
     - Redis的Hash实际是内部存储的Value为一个HashMap，并提供了直接存取这个Map成员的接口
   - Zset(sorted set):
-    - zset与普通集合set非常相似，是一个没有重复元素的string集合。
-    - 不同之处是sorted set的所有成员都关联了一个评分（score），这个评分（score）被用来按照从最低分到最高分的方式排序集合中的成员。
-    - 集合的成员是唯一的，但是评分可以是重复。
-
+    - zset与普通集合set非常相似，是一个没有重复元素的string集合
+    - 不同之处是sorted set的所有成员都关联了一个浮点数值的评分（score），这个评分（score）被用来按照从最低分到最高分的方式排序集合中的成员
+      - 排序规则：
+        - 如果A.score > B.score，则A > B
+        - 如果A.score = B.score，则按字典顺序排序
+    - 集合的成员是唯一的，但是评分可以是重复
+    - 底层实现是包含跳表和哈希表
+    - 常用的用例：
+      - 排行榜：sorted set中元素的分数可以在任意时间通过zadd命令更新，并且时间复杂度是O(log(N))
+      
 ## 常用操作命令
 
   - Key:
@@ -107,10 +113,12 @@
   - Zset:
     - zadd key score1 value1 score2 value2 ... : 将一个或多个member元素及其score值加入到有序集key当中
     - zrange key start stop [withscores] : 返回有序集key中，下标在start stop之间的元素, 带withscores，分数一起和值返回到结果集
+    - zrevrange key start stop [withscores] : 倒序排序的结果
     - zrangebyscore key min max [withscores] : 返回有序集key中，所有score值介于min和max之间(包括等于min或max)的成员。有序集成员按score 值递增(从小到大)次序排列。
     - zrevrangebyscore key min max [withscores] : 同上，改为从大到小排列。
     - zincrby key increment value : 为元素的score加上增量
     - zrem key value 删除该集合下，指定值的元素
+    - zremrangebyscore key min max : 删除该集合分数在min和max之间的元素
     - zcount key min max : 统计该集合，分数区间内的元素个数
     - zrank key value : 返回该值在集合中的排名，从0开始
     - zrevrank key value : 返回该值在集合中的逆序排名
