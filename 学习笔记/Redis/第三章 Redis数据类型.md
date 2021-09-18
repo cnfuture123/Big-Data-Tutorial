@@ -131,5 +131,12 @@
     - zrevrank key value : 返回该值在集合中的逆序排名
     
   - Bitmap:
-    - setbit key offset value : 在
+    - setbit key offset bit : 在key的offset位置设置值为0或1。offset在0到2的32次幂之间
+    - getbit key offset : 获取key的offset位置上的值
+    - bitcount key [start end] : 返回bits设置为1的数量
+    - bitpos key bit [start [end]] : 返回第一个设置为0或1的bit位置
+    - bitop operation destkey key [key ...] : 对多个key进行按位操作，结果存在destkey中
+      - 支持AND, OR, XOR and NOT按位操作
+        ![image](https://user-images.githubusercontent.com/46510621/133881120-1e792315-f34e-499f-b26e-c831a91830b7.png)
+
   
