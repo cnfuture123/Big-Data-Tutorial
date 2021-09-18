@@ -43,6 +43,12 @@
     - 底层实现是包含跳表和哈希表
     - 常用的用例：
       - 排行榜：sorted set中元素的分数可以在任意时间通过zadd命令更新，并且时间复杂度是O(log(N))
+  - Bitmap:
+    - Bitmap不是实际的数据类型，而是对于string类型定义的一组位操作
+    - 位操作分为2组：
+      - 恒定时间的单个位操作
+      - 一组位操作
+    - Bitmap最大的优势是存储信息时节省大量空间
       
 ## 常用操作命令
 
@@ -110,6 +116,7 @@
     - hvals key : 列出该hash集合的所有value
     - hincrby key field increment : 为哈希表key中的field值加上增量increment
     - hsetnx key field value : 将哈希表key中的field值设置为value ，当且仅当field不存在
+    
   - Zset:
     - zadd key score1 value1 score2 value2 ... : 将一个或多个member元素及其score值加入到有序集key当中
     - zrange key start stop [withscores] : 返回有序集key中，下标在start stop之间的元素, 带withscores，分数一起和值返回到结果集
@@ -122,4 +129,7 @@
     - zcount key min max : 统计该集合，分数区间内的元素个数
     - zrank key value : 返回该值在集合中的排名，从0开始
     - zrevrank key value : 返回该值在集合中的逆序排名
+    
+  - Bitmap:
+    - setbit key offset value : 在
   
