@@ -101,3 +101,6 @@
       - 每天至少一次将RDB快照移动到数据中心外部，或者至少移动到运行当前Redis实例的物理机外部
   - 如果只使用AOF的持久化方式，也可以拷贝AOF文件来备份。AOF可能会缺少最后的部分，但Redis依然可以加载这个文件
   
+## 参考
+
+  - https://redis.io/topics/persistence
