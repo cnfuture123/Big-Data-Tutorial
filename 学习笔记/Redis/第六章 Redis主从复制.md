@@ -36,8 +36,9 @@
     - 从节点执行replicaof no one命令
     - 从节点断开复制后，不会删除已有的数据，只是不再接受主节点新的数据变化
   - 常用配置/命令：
-    - info replication: 打印主从复制的相关信息。
-    - replicaof <masterip> <masterport> : 成为某个实例的从实例。
+    - info replication: 打印主从复制的相关信息
+    - replicaof <masterip> <masterport> : 成为某个实例的从实例
+    - role : 返回当前实例的角色，master, slave, or sentinel，以及状态和偏移量信息
   - 主从复制原理：
     - 每个主实例有一个复制ID(一个假的随机字符串标识数据集)，还会维持一个偏移量：随着发送到从实例的复制数据每个字节的增加而累加。因此使用(Replication ID, offset)可以确认主实例数据集的版本
       - Replication ID说明：
