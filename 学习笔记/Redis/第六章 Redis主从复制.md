@@ -85,4 +85,8 @@
         - 选择runid最小的从服务，每个Redis实例启动后都会随机生成一个40位的runid。
       
       ![哨兵模式](./图片/哨兵模式.PNG)
+  
+## 参考
+  
+  - https://redis.io/topics/replication#replication-id-explained
       
