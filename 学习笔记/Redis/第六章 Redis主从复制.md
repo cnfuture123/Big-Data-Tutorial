@@ -77,6 +77,9 @@
 ## 哨兵模式：
   
   - 哨兵模式提供了高可用，可以抵抗某些失败的场景
+  
+    ![哨兵模式](./图片/哨兵模式.PNG)
+  
   - 其他的功能：
     - 监控：哨兵会不断地检查主实例和从实例是否运作正常
     - 通知：哨兵可以通过API通知系统管理员或其他程序被监控的实例出现了问题
@@ -90,8 +93,41 @@
     - 选择优先级靠前的，由slave-priority设置优先级。
     - 选择偏移量最大的，即已经复制数据量最大的从节点。
     - 选择runid最小的从服务，每个Redis实例启动后都会随机生成一个40位的runid。
+ 
+### 哨兵的使用
+  
+  - 运行哨兵：
+    ```
+    redis-sentinel /path/to/sentinel.conf
+    或者
+    redis-server /path/to/sentinel.conf --sentinel
+    ```
+    - 运行哨兵时配置文件是必须的，系统会使用它来保存当前的状态，然后在重启时加载。
+    - 哨兵默认监听26379 TCP端口
+  - 部署哨兵的注意事项：
+    - 至少3个哨兵实例，提高集群部署的健壮性
+    - 这些哨兵实例应该放置在不同的物理机上
+  - 配置哨兵：
+    - sentinel.conf配置文件示例：
+      ```
+      sentinel monitor mymaster 127.0.0.1 6379 2
+      sentinel down-after-milliseconds mymaster 60000
+      sentinel failover-timeout mymaster 180000
+      sentinel parallel-syncs mymaster 1
 
-  ![哨兵模式](./图片/哨兵模式.PNG)
+      sentinel monitor resque 192.168.1.3 6380 4
+      sentinel down-after-milliseconds resque 10000
+      sentinel failover-timeout resque 180000
+      sentinel parallel-syncs resque 5
+      ```
+      - 只需要指定需要监控的主实例，从实例是自动被发现的
+      - 哨兵会自动更新配置，获取关于从实例的额外信息
+      - 每次从实例在故障转移中升级为主实例，或者新的哨兵被发现时都会重写这个配置文件
+    - sentinel monitor语法解析：
+      ```
+      sentinel monitor <master-group-name> <ip> <port> <quorum>
+      ```
+      - quorum参数是
   
 ## 参考
   
