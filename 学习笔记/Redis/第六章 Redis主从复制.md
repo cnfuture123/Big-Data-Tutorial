@@ -135,6 +135,17 @@
       ```
       - quorum参数是对某个主实例不可用达成一致的哨兵的数量，这些哨兵决定标记该主实例为故障，并开始故障转移的流程
       - 开始故障转移之前，需要大多数哨兵进程投票选举出其中一个哨兵为leader，并授权它处理故障转移的操作
+    - 查看状态命令：
+      - sentinel master mymaster: 获取主实例的信息
+      - sentinel replicas mymaster: 获取连接该主实例的从实例的信息
+      - sentinel sentinels mymaster: 获取其他哨兵的信息
+      - sentinel get-master-addr-by-name mymaster: 获取主实例的地址
+    - 运行时重新配置哨兵：
+      - sentinel monitor name ip port quorum：监控特定名字的新实例
+      - sentinel remove name: 移除对主实例的监控
+      - sentinel set name [<option> <value> ...]: 可以修改在sentinel.conf配置的参数值
+    - 增加或移除哨兵
+      
   
 ## 参考
   
