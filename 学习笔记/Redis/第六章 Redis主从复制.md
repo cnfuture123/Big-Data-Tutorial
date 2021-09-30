@@ -90,9 +90,12 @@
       - 当多个哨兵进程对某个主实例不可用达成一致时，执行失败检测，这样可以降低假正例的概率
       - 如果不是所有哨兵进程有故障，哨兵依然可以工作，使系统对故障有健壮性
   - 选取新master的方式：
-    - 选择优先级靠前的，由slave-priority设置优先级。
-    - 选择偏移量最大的，即已经复制数据量最大的从节点。
-    - 选择runid最小的从服务，每个Redis实例启动后都会随机生成一个40位的runid。
+    - 和主实例断开连接的时间
+    - 选择优先级靠前的，由slave-priority设置优先级
+      - 如果slave-priority设置为0，该从实例不会被选举为master
+      - slave-priority值越小，优先级越高
+    - 选择偏移量最大的，即已经复制数据量最大的从实例。
+    - 选择runid最小的从实例，每个Redis实例启动后都会随机生成一个40位的runid。
  
 ### 哨兵的使用
   
@@ -146,10 +149,13 @@
       - sentinel set name [<option> <value> ...]: 可以修改在sentinel.conf配置的参数值
     - 增加或移除哨兵
       - 添加新的哨兵需要配置新的哨兵去监控当前活跃的主实例，在10秒之内这个哨兵会获取到其余哨兵的列表和连接主实例的从实例
+      - 移除哨兵的过程会复杂一些，因为哨兵不会忘记已经加入集群的哨兵，需要执行以下步骤：
+        - 停止需要移除的哨兵进程
+        - 发送sentinel reset * 命令到所有其他哨兵实例
+        - 检查所有哨兵是否对当前活跃的哨兵数量达成一致，每个哨兵可以通过检查sentinel master mastername的输出来确认
       
-      
-  
 ## 参考
   
   - https://redis.io/topics/replication#replication-id-explained
+  - https://redis.io/topics/sentinel
       
