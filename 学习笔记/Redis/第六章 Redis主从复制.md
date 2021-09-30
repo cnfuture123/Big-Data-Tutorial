@@ -145,6 +145,8 @@
       - sentinel remove name: 移除对主实例的监控
       - sentinel set name [<option> <value> ...]: 可以修改在sentinel.conf配置的参数值
     - 增加或移除哨兵
+      - 添加新的哨兵需要配置新的哨兵去监控当前活跃的主实例，在10秒之内这个哨兵会获取到其余哨兵的列表和连接主实例的从实例
+      
       
   
 ## 参考
