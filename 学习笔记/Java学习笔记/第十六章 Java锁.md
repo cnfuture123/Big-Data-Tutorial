@@ -38,4 +38,7 @@
       ![image](https://user-images.githubusercontent.com/46510621/145675162-8dd153e8-6a29-4665-9129-f9bba0056cce.png)
     - 锁状态标志位：
       ![image](https://user-images.githubusercontent.com/46510621/145675214-1c800366-dda1-4f89-a3d9-d4506acbda97.png)
+  - 大小端问题：
+    - 大端模式是指数据的高字节保存在内存的低地址中，而数据的低字节保存在内存的高地址中
+    - 小端模式是指数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中
 
