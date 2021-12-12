@@ -147,4 +147,25 @@
 
 ## JUC显式锁
 
+  - Lock接口是JUC显式锁的一个抽象，主要抽象方法包括：
+    - lock(): 阻塞抢锁
+    - lockInterruptibly(): 可中断抢锁，当前线程在抢锁过程中可以响应中断信号
+    - tryLock(): 尝试抢锁，线程为非阻塞模式，在调用tryLock()方法后立即返回。若抢锁成功则返回true，失败则返回false
+    - tryLock(long time, TimeUnit unit): 限时抢锁，达到超时时间返回false
+    - unlock(): 释放锁
+    - newCondition(): 获取与显式锁绑定的Condition对象，用于等待-通知方式的线程间通信
+  - 显式锁相比内置锁的优势：
+    - 可中断获取锁：lockInterruptibly()
+    - 可非阻塞获取锁：tryLock()
+    - 可限时抢锁：tryLock(long time, TimeUnit unit)
+  - 可重入锁ReentrantLock
+    - ReentrantLock是显式锁的实现类，是一个可重入的独占锁
+      - 可重入的含义：支持一个线程对资源的重复加锁，即一个线程可以多次进入同一个锁同步的临界区代码块
+      - 独占的含义：同一时刻只能有一个线程获取到锁，其他线程只能等待拥有锁的线程释放锁
+  - Condition接口的主要方法：等效于Object的wait, notify
+    - await(): 当前线程加入await等待队列
+    - signal(): 唤醒一个在await等待队列中的线程
+    - signalAll(): 唤醒在await等待队列中的所有线程
+    - await(long time, TimeUnit unit): 限时等待
+    
 
