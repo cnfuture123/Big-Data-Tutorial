@@ -68,3 +68,41 @@
     - 大端模式是指数据的高字节保存在内存的低地址中，而数据的低字节保存在内存的高地址中。所有网络协议都是采用大端模式传输数据
     - 小端模式是指数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中。小端模式是处理器的主流字节存放方式，JVM采用这种方式存放字节
 
+## CAS
+
+  - 操作系统层面的CAS是一条CPU的原子指令（cmpxchg指令）
+  - Unsafe提供的CAS方法包含4个操作数：字段所在的对象、字段内存位置、预期原值和新值。在执行Unsafe的CAS方法时，首先将内存位置的值与预期值比较，如果相匹配则CPU会自动将内存位置的值更新为新值，并返回true，否则不做任何操作并返回false
+  - 使用CAS进行无锁编程的步骤是：
+    - 获得字段的预期值
+    - 计算出需要替换的新值
+    - 通过CAS将新值放在字段的内存地址上，如果CAS失败就重复以上两步，直到CAS成功，也称为CAS自旋
+
+## JUC原子类
+
+  - JUC原子类分为4类：基本原子类、数组原子类、原子引用类和字段更新原子类
+    - 基本原子类：
+      - AtomicInteger: 整型原子类
+      - AtomicLong: 长整型原子类
+      - AtomicBoolean: 布尔型原子类
+      - 通过CAS自旋 + volatile实现线程安全，CAS用于保障变量操作的原子性，volatile用于保证变量的可见性
+    - 数组原子类：
+      - AtomicIntegerArray: 整型数组原子类
+      - AtomicLongArray: 长整型数组原子类
+      - AtomicReferenceArray: 引用类型数组原子类
+    - 引用原子类：
+      - AtomicReference: 引用类型原子类
+        - 如果需要同时保障对多个变量操作的原子性，可以把多个变量放在一个对象中进行操作
+      - AtomicMarkableReference: 带有更新标记位的原子引用类型
+      - AtomicStampedReference: 带有更新版本号的原子引用类型
+    - 字段更新原子类：
+      - AtomicIntegerFieldUpdater: 原子更新整型字段的更新器
+      - AtomicLongFieldUpdater: 原子更新长整型字段的更新器
+      - AtomicReferenceFieldUpdater: 原子更新引用类型字段的更新器
+  - ABA问题：
+    - 乐观锁的实现版本使用版本号解决ABA问题。乐观锁每次在执行数据的修改操作时都会带上一个版本号，版本号和数据的版本号一致就可以执行修改操作并对版本号执行+1操作，否则执行失败
+    - AtomicStampedReference在CAS的基础上增加了一个Stamp，使用这个时间戳判断数据是否发生变化，进行实效性检验
+    - AtomicMarkableReference只关心是否修改过，其标记属性mark是boolean类型，记录值是否修改过
+  - LongAdder: 以空间换时间的方式提升高并发场景下CAS操作的性能
+    - LongAdder的核心思想是热点分离，将value值分离成一个数组，当多线程访问时，通过Hash算法将线程映射到数组的一个元素进行操作，而获得最终的value结果时，则将数组的元素求和
+
+
