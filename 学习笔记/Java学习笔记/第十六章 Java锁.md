@@ -181,6 +181,14 @@
       - 公平锁指不同的线程抢占锁的机会平等，抢占的顺序是FIFO
       - 非公平锁指多个线程获取锁的顺序不一定是申请锁的顺序。默认情况ReentrantLock是非公平锁。非公平锁的优点是吞吐量比公平锁大，缺点是导致线程优先级反转或线程饥饿
     - 共享锁和独占锁
+      - synchronized内置锁和ReentrantLock都是独占锁
+      - JUC中共享锁包括：Semaphore(信号量)，ReadLock(读锁)，CountDownLatch(倒数闩)
+        - CountDownLatch: 可以指定一个计数值，在并发环境下由线程进行减一操作，当计数值变为0，被await方法阻塞的线程将会唤醒。通过CountDownLatch可以实现线程间的计数同步
     - 可中断锁和不可中断锁
+    - 读写锁：
+      - 读锁是共享锁，写锁是独占锁
+      - 锁升级是指读锁升级为写锁，锁降级指写锁降级为读锁
+      - ReentrantReadWriteLock只支持写锁降级为读锁，不支持读锁升级为写锁
+      - StampedLock(印戳锁)是对ReentrantReadWriteLock的一种改进：在没有写只有读的场景下，StampedLock支持不用加读锁而是直接进行读操作，只有在发生过写操作后，再加读锁才能进行读操作
     
 
