@@ -8,7 +8,7 @@
     - 优点：
       - 空间和时间的优势，布隆过滤器存储空间和插入/查询时间都是常数O(k)。
     - 缺点：
-      - 随着存入的元素数量增加，误算率随之增加。
+      - 随着存入的元素数量增加，误判率随之增加。
       
 ## 哈希函数
 
@@ -38,13 +38,14 @@
       - strategy: 实现Strategy的实例
   - 计算bit数组的长度以及哈希函数的个数:
     ```
+    // n为expectedInsertions，p为fpp
     static long optimalNumOfBits(long n, double p) {
       if (p == 0) {
         p = Double.MIN_VALUE;
       }
       return (long) (-n * Math.log(p) / (Math.log(2) * Math.log(2)));
     }
-    
+    // n为expectedInsertions，m为numBits
     static int optimalNumOfHashFunctions(long n, long m) {
       return Math.max(1, (int) Math.round((double) m / n * Math.log(2)));
     }
