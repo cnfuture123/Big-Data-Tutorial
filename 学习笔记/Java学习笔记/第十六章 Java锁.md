@@ -191,4 +191,7 @@
       - ReentrantReadWriteLock只支持写锁降级为读锁，不支持读锁升级为写锁
       - StampedLock(印戳锁)是对ReentrantReadWriteLock的一种改进：在没有写只有读的场景下，StampedLock支持不用加读锁而是直接进行读操作，只有在发生过写操作后，再加读锁才能进行读操作
     
+## AQS抽象同步器
 
+  - JUC并发包使用队列削峰的方案解决CAS的性能问题，并提供了基于双向队列的削峰基类-AbstractQueuedSynchronizer(抽象同步器类)
+  - AQS队列内部维护的是一个FIFO的双向链表，当线程争抢锁失败后会封装成节点加入AQS队列，当获取锁的线程释放锁后会唤醒队列中的一个节点
