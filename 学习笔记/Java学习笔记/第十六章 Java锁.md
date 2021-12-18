@@ -212,5 +212,43 @@
       - 如果AQS的队列非空，新节点入队的插入位置在队列的尾部，并且通过CAS的方式插入，插入之后AQS的tail指针指向新的尾节点
       - 如果AQS的队列为空，新节点入队时，AQS通过CAS方式将新节点设置为头节点head，并将tail指针指向新节点
     - 节点出队：
-       acquireQueued()不断在前驱节点上自旋，如果前驱节点是头节点并且当前线程使用钩子方法tryAcquire(arg)获得了锁，就移除头节点，将当前节点设置为头节点
+      - acquireQueued()不断在前驱节点上自旋，如果前驱节点是头节点并且当前线程使用钩子方法tryAcquire(arg)获得了锁，就移除头节点，将当前节点设置为头节点
+
+## JUC容器类
+
+  - JUC高并发容器是基于非阻塞算法（或无锁编程算法）实现的容器类，无锁编程通过CAS + Volatile组合实现，通过CAS保证操作的原子性，通过Volatile保证变量内存的可见性
+  - JUC包中提供了List, Set, Queue, Map各种类型的高并发容器：
+    - List:
+      - CopyOnWriteArrayList: 
+        - 实现了List接口，线程安全的ArrayList，在读多写少的场景性能远高于ArrayList的同步包装容器
+        - 写时复制（Copy On Write）核心思想是：如果有多个访问器访问同一个资源，它们会共同获取相同的指针指向相同的资源，只要有一个访问器需要修改该资源，系统就会复制一个副本给该访问器，而其他访问器资源不变，修改的过程对其他访问器是透明的。修改之后再将原来的指针指向新的资源副本，原来的资源被回收
+    - Set:
+      - CopyOnWriteArraySet:
+        - 继承AbstractSet类，对应HashSet，核心操作是基于CopyOnWriteArrayList实现的
+      - ConcurrentSkipListSet:
+        - 继承AbstractSet类，对应TreeSet，基于ConcurrentSkipListMap实现
+    - Map:
+      - ConcurrentHashMap:
+        - 对应HashMap，但是HashMap是不安全的。HashTable是线程安全的，但效率低。
+        - HashMap和HashTable区别：
+          - HashTable不允许key和value为null
+          - HashTable使用synchronized保证线程安全，操作时对Hash表进行锁定
+        - JDK 1.7版本的ConcurrentHashMap锁机制基于粒度更小的分段锁，将key分成一个一个小的Segment存储，然后给每一段数据配一段锁，当一个线程占用锁访问其中一段数据时，其他段的数据也能被其他线程访问，从而实现并发访问
+        - JDK 1.8版本中ConcurrentHashMap采用数组 + 链表/红黑树的组合方式，利用CAS + Synchronized保证并发更新的安全
+          - 当桶的节点数超过一定阈值（默认64）时，JDK 1.8将链表结构自动转换成红黑树结构，可以理解为将链式桶转换成树状桶
+          - 引入红黑树的原因是：链表查询的时间复杂度是O(n)，红黑树查询的时间复杂度为O(log(n))，在节点较多的情况下使用红黑树可以提升性能
+          - 核心原理：
+            - 通过一个Node<K, V>数组table保存添加到哈希表中的桶，而在同一个Bucket位置通过链表或红黑树的形式来保存
+            - 数组table是懒加载的，只有在第一次添加元素时才会初始化。第一次添加元素时默认初始长度是16，通过Hash值跟数组的长度决定放在数组的哪一个Bucket位置，如果出现在同一个位置，就先以链表的形式存储，在同一个位置的个数达到8之后，如果数组的长度小于64就会扩容数组。如果数组的长度大于64就会将该节点的链表转换成红黑树
+      - ConcurrentSkipListMap:
+        - 对应TreeMap，内部的Skip List(跳表)结构可以代替平衡树，默认是按照Key值升序
+    - Queue:
+      - ConcurrentLinkedQueue:
+        - 基于链表实现的单向队列，按照FIFO对元素进行排序和操作
+      - ConcurrentLinkedDeque:
+        - 基于链表实现的双向队列，该队列不允许null元素，可以当作栈来使用，并高效支持并发环境
+      - BlockingQueue:
+        - 阻塞队列和普通队列区别：
+          - 阻塞添加：当阻塞队列已满，队列会阻塞添加元素的线程，直到队列元素不满时，才重新唤醒线程执行元素添加操作
+          - 阻塞删除：当队列元素为空时，删除队列元素的线程将被阻塞，直到队列不为空时，才重新唤醒删除线程
 
