@@ -324,5 +324,18 @@
     - 和FutureTask异步调用的区别：
       - FutureTask是主动调用的模式，调用线程主动获得异步结果，在获取异步结果时处于阻塞状态，直到获取到异步线程的结果
       - Guava是异步回调模式，调用线程不会主动获得异步结果，而是准备好回调函数，并设置好回调钩子，回调函数的执行者是被调用线程，调用线程在执行完业务逻辑之后就结束了
-  
- 
+  - CompletableFuture异步回调：
+    - JDK 1.8引入，该类实现了Future和CompletionStage两个接口，该类的实例作为一个异步任务，可以在执行完成之后触发一些其他的异步任务，达到异步回调的效果
+    - CompletionStage代表某个同步或异步计算的一个阶段，或者一系列异步任务的一个子任务
+    - CompletableFuture定义了一组方法用于创建CompletionStage子任务（或阶段性任务），基础的方法包含：
+      ```
+      runAsync(Runnable runnable): 子任务包装一个Runnable实例，并调用ForkJoinPool.commonPool()线程池来执行
+      runAsync(Runnable runnable, Executor executor): 子任务包装一个Runnable实例，并调用指定的executor线程池来执行
+      supplyAsync(Supplier<U> supplier): 子任务包装一个Supplier实例，并调用ForkJoinPool.commonPool()线程池来执行
+      supplyAsync(Supplier<U> supplier, Executor executor): 子任务包装一个Supplier实例，并调用指定的executor线程池来执行
+      ```
+    - 异步任务的串行执行：通过CompletionStage接口的thenApply(), thenAccept(), thenRun(), thenCompose()四个方法来实现
+    - 异步任务的选择执行：
+      - applyToEither(): 两个CompletionStage谁返回结果的速度快，applyToEither()就用这个CompletionStage的结果进行下一步的回调操作
+    
+   
