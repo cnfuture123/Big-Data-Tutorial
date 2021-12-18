@@ -252,3 +252,77 @@
           - 阻塞添加：当阻塞队列已满，队列会阻塞添加元素的线程，直到队列元素不满时，才重新唤醒线程执行元素添加操作
           - 阻塞删除：当队列元素为空时，删除队列元素的线程将被阻塞，直到队列不为空时，才重新唤醒删除线程
 
+## 高并发设计模式
+
+  - 线程安全的单例模式：
+    - 饿汉式单例在类被加载时直接被初始化
+      ```
+      private static final Singleton1 single = new Singleton1();
+      public static Singleton1 getInstance() return single;
+      ```
+    - 懒汉式单例在使用的时候才会对单例进行初始化
+      ```
+      public static Singleton2 getInstance() {
+        if (instance == null) {
+          instance = new Singleton2();
+        }
+        return insatnce;
+      }
+      ```
+    - 使用内置锁保护懒汉式单例：
+      ```
+      public static synchronized Singleton3 getInstance() {
+         if (instance == null) {
+          instance = new Singleton3();
+        }
+        return insatnce;
+      }
+      ```
+      - 问题是每次执行getInstance()都需要同步，在竞争激烈的情况下内置锁会升级为重量级锁，开销大，性能差
+    - 双重检查锁单例模式：
+      ```
+      public static synchronized Singleton4 getInstance() {
+         if (instance == null) {
+          synchronized (Singleton4.class) {
+            if (instance == null) {
+              instance = new Singleton4();
+            }
+          }
+        }
+        return insatnce;
+      }
+      ```
+      - 在多个线程竞争的情况下，可能同时不止一个线程通过了第一次检查，在第一个线程实例化单例对象释放锁之后，其他线程可能获取到锁进入临界区，实际上单例已经实例化。双重检查避免单例对象在多线程场景中反复初始化
+  - Master-Worker模式：
+    - 核心思想是任务的调度和执行分离。调度任务的角色是Master，执行任务的角色是Worker
+    - Netty是基于Reactor模式的具体实现，体现了Master-Worker模式的思想。Netty的EventLoop对应Worker角色，EventLoopGroup轮询组对应Master角色
+  - ForkJoin模式：
+    - 分而治之就是把一个复杂的算法问题按一定的分解方法分为规模较小的若干部分，然后逐个解决，最后把各部分的解组成整个问题的解
+    - ForkJoin模式中只有Worker角色，将大的任务分割成小的任务，一直到任务的规模足够小，可以使用很简单的、直接的方式完成
+    - ForkJoin框架包含组件：
+      - ForkJoinPool: 执行任务的线程池
+      - ForkJoinWorkerThread: 执行任务的工作线程
+      - ForkJoinTask: 用于ForkJoinPool的任务抽象类，实现了Future接口
+      - RecursiveTask: 带返回结果的递归执行任务，是ForkJoinTask的子类
+      - RecursiveAction: 不返回结果的递归执行任务，是ForkJoinTask的子类
+    - 工作窃取算法：每个线程有一个双端队列，用于存放需要执行的任务，当自己的队列没有任务时，可以从其他线程的任务队列中获取一个任务继续执行
+    - ForkJoin适合调度的任务为CPU密集型任务
+  - 生产者-消费者模式：
+    - 数据缓冲区的作用是使生产者和消费者解耦
+  - Future模式：
+    - 核心思想是异步调用，它不是立即返回需要的数据，而是返回一个契约（或异步任务），可以凭借这个契约（或异步任务）获取结果
+
+## 异步回调模式
+
+  - join: 线程A调用线程B的join()，那么线程A进入阻塞状态，直到线程B执行完成
+  - FutureTask:
+    - 使用FutureTask方式进行异步调用时，涉及的重要组件为FutureTask类和Callable接口
+  - Guava的异步回调模式：
+    - FutureCallBack是一个新增的接口，用来填写异步任务执行完成后的监听逻辑，有两个回调方法：
+      - onSuccess(): 异步任务执行结果作为onSuccess方法的参数被传入
+      - onFailure(): 异步任务抛出的异常作为onFailure方法的参数被传入
+    - 和FutureTask异步调用的区别：
+      - FutureTask是主动调用的模式，调用线程主动获得异步结果，在获取异步结果时处于阻塞状态，直到获取到异步线程的结果
+      - Guava是异步回调模式，调用线程不会主动获得异步结果，而是准备好回调函数，并设置好回调钩子，回调函数的执行者是被调用线程，调用线程在执行完业务逻辑之后就结束了
+  
+ 
