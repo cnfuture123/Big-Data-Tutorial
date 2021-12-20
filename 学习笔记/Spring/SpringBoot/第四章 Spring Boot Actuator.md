@@ -92,4 +92,35 @@
   - Metrics Endpoint:
     - /actuator/metrics会展示可用的度量指标
     - 进一步查看具体的度量信息，例如：/actuator/metrics/jvm.memory.max
+
+## 集成Prometheus监控
+
+  - Prometheus基本概念：
+    - Prometheus是一个时序数据库，用于存储应用的指标和性能数据，并允许对指标进行时序分析
+      - 时间序列分析是从按时间顺序排列的点中提取有意义的摘要和统计信息，这样做是为了诊断过去的行为以及预测未来的行为
+    - Prometheus使用拉取的方式获得指标信息，它使用一系列的指示决定从哪些应用获取指标，以及如何处理数据。因此应用和Prometheus不是紧密耦合的，应用不需要关注Prometheus部署在哪里，甚至Prometheus服务是否挂了
+  - Micrometer基本概念：
+    - Micrometer可以获取应用的指标，并发布这些指标，使之可以由不同的工具获取到，包括Prometheus
+    - Micrometer作为中间层，在应用和一些监控工具之间，可以方便的发布指标到监控工具
+  - 使应用收集指标数据发送到Prometheus，需要增加一些依赖：
+    - Spring Boot Actuator：
+      ```
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+      </dependency>
+      ```
+    - Micrometer registry:
+      ```
+      <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-registry-prometheus</artifactId>
+      </dependency>
+      ```
+    - 在application.properties文件中配置需要暴露的endpoints:
+      ```
+      management.endpoints.web.exposure.include = env,health,info,loggers,metrics,prometheus
+      ```
+ 
+   
     
