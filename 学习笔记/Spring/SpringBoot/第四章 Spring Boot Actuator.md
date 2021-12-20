@@ -121,6 +121,55 @@
       ```
       management.endpoints.web.exposure.include = env,health,info,loggers,metrics,prometheus
       ```
+    - 访问接口：http://localhost:8080/actuator/prometheus
+  - Micrometer自定义指标：
+    - 基本概念：
+      - MeterRegistry：
+        - MeterRegistry是注册计量器的核心组件，我们可以循环访问注册表和每个计量器的指标，以便在后端生成一个时间序列，其中包含指标及其维度值
+        - 大多数情况下使用MeterRegistry，CompositeMeterRegistry允许加入多个注册表，可以同时向不同的监控系统发布指标数据
+      - Tags: 计量器的标识符，包含名称和标记
+      - Counter：计数器，统计应用某个属性的数量
+        ```
+        @Autowired
+        MeterRegistry meterRegistry;
+
+        Counter counter = Counter
+          .builder("counter instance")
+          .description("indicates instance count of the object")
+          .tag("sceneId", item.getSceneId())
+          .tag("action", item.getAction())
+          .tag("type", "filterCounter")
+          .register(meterRegistry)
+          .increment(items.size());
+        ```
+      - Timers: 计时器，测量系统中事件的延迟或频率
+        ```
+        Timer counter = Timer
+          .builder("timer instance")
+          .description("indicates instance timer of the object")
+          .tag("sceneId", item.getSceneId())
+          .tag("action", item.getAction())
+          .tag("type", "filterTimer")
+          .register(meterRegistry)
+          .publishPercentiles(0.5, 0.95) //用于发布在应用程序中计算的百分位数值，这些值在维度上不可聚合
+          .publishPercentileHistogram(true) //用于发布适用于计算Prometheus中可聚合（跨维度）百分位数近似值的直方图
+          .record(Duration.ofMillis(end - start));
+        ```
+      - Gauge: 获取当前值，典型应用是获取集合或映射的大小，或处于运行状态的线程数
+        ```
+        Gauge gauge = Gauge
+          .builder("cache.size", list, List::size)
+          .description("cache size gauge") // optional
+          .tags("cache", "test") // optional
+          .register(meterRegistry);
+        ```
+    - 指标的主要类型：
+      <img width="870" alt="image" src="https://user-images.githubusercontent.com/46510621/146731493-c4088a72-d0c0-4cb6-83e1-02e4c877eb37.png">
+
+## 参考
+
+  - https://www.tutorialworks.com/spring-boot-prometheus-micrometer
+  
  
    
     
