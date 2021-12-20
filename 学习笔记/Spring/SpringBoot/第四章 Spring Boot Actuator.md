@@ -165,10 +165,13 @@
         ```
     - 指标的主要类型：
       <img width="870" alt="image" src="https://user-images.githubusercontent.com/46510621/146731493-c4088a72-d0c0-4cb6-83e1-02e4c877eb37.png">
+      
+## 集成Grafana
 
 ## 参考
 
   - https://www.tutorialworks.com/spring-boot-prometheus-micrometer
+  - https://micrometer.io/docs/concepts#_gauges
   
  
    
