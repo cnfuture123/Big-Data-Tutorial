@@ -127,6 +127,7 @@
     - zrem key value 删除该集合下，指定值的元素
     - zremrangebyscore key min max : 删除该集合分数在min和max之间的元素
     - zcount key min max : 统计该集合，分数区间内的元素个数
+    - zcard key: 统计该集合中key包含的元素个数
     - zrank key value : 返回该值在集合中的排名，从0开始
     - zrevrank key value : 返回该值在集合中的逆序排名
     
