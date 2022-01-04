@@ -1,8 +1,6 @@
-# Jedis
-
-  - Java的Redis客户端
+# Java客户端
   
-## Jedis API 使用
+## Jedis
 
   - 需要的jar包：
     - jedis-3.1.0.jar
@@ -21,3 +19,4 @@
     
     ![交易示例](./代码/RedisTransaction.java)
   
+## JRedisBloom
