@@ -36,7 +36,60 @@
               
         - BF.ADD:
           - 格式：
-            
+            ```
+            BF.ADD {key} {item}
+            ```
+          - 描述：
+            - 添加元素到Bloom Filter，如果Filter不存在则创建
+        - BF.MADD:
+          - 格式：
+            ```
+            BF.MADD {key} {item ...}
+            ```
+          - 描述：
+            - 添加一个或多个元素到Bloom Filter，如果Filter不存在则创建
+        - BF.INSERT:
+          - 格式：
+            ```
+            BF.INSERT {key} [CAPACITY {cap}] [ERROR {error}] [EXPANSION {expansion}] [NOCREATE][NONSCALING] ITEMS {item ...}
+            ```
+          - 描述：
+            - BF.RESERVE and BF.ADD的组合，如果Filter不存在则创建
+        - BF.EXISTS:
+          - 格式：
+            ```
+            BF.EXISTS {key} {item}
+            ```
+          - 描述：
+            - 判断元素是否存在于Filter中
+        - BF.MEXISTS:
+          - 格式：
+            ```
+            BF.MEXISTS {key} {item ...}
+            ```
+          - 描述：
+            - 判断一个或多个元素是否存在于Filter中
+        - BF.SCANDUMP:
+          - 格式：
+            ```
+            BF.SCANDUMP {key} {iter}
+            ```
+          - 描述：
+            - Bloom Filter的增量保存，适用于大数据量的Bloom Filter
+        - BF.LOADCHUNK:
+          - 格式：
+            ```
+            BF.LOADCHUNK {key} {iter} {data}
+            ```
+          - 描述：
+            - 恢复之前通过SCANDUMP保存的Filter
+        - BF.INFO:
+          - 格式：
+            ```
+            BF.INFO {key}
+            ```
+          - 描述：
+            - 返回关于key的信息
     - count-min sketch：用于确定流中事件发生的频率
     - top-k：维护k个最常出现的项目
   - 参考：
