@@ -22,7 +22,7 @@
 ## RedisBloom
 
   - RedisBloom模块提供了4种数据结构：
-    - Bloom filter，cuckoo filter: 用于判断（很大概率）是否某个元素是集合中的成员
+    - Bloom filter: 用于判断（很大概率）是否某个元素是集合中的成员
       - Bloom filter在插入数据时有更好的性能和扩展性；Cuckoo filter进行检查操作时更快，并且支持删除
       - 命令行操作：
         - BF.RESERVE:
@@ -90,7 +90,59 @@
             ```
           - 描述：
             - 返回关于key的信息
+    - cuckoo filter: 类似Bloom Filter
     - count-min sketch：用于确定流中事件发生的频率
     - top-k：维护k个最常出现的项目
   - 参考：
     - https://oss.redis.com/redisbloom/
+
+## JRedisBloom
+
+  - 概述：
+    - RedisBloom的Java客户端库，包含RedisBloom Redis模块的API，实现了高性能的Bloom Filter
+    - 导入依赖：
+      ```
+        <dependencies>
+          <dependency>
+            <groupId>com.redislabs</groupId>
+            <artifactId>jrebloom</artifactId>
+            <version>2.1.0</version>
+          </dependency>
+        </dependencies>
+      ```
+  - 使用示例：
+    - 初始化客户端：
+      ```
+      //单个Redis实例
+      import io.rebloom.client.Client
+      Client client = new Client("localhost", 6379);
+      
+      //Redis集群
+      import io.rebloom.client.ClusterClient;
+      ClusterClient redisClient = new ClusterClient(new HostAndPort("localhost", 6379), jedisPool);
+      ```
+    - 添加元素：
+      ```
+      client.add("simpleBloom", "Mark");
+      ```
+    - 判断元素是否存在：
+      ```
+      client.exists("simpleBloom", "Mark");
+      ```
+    - 添加多个元素：
+      ```
+      client.addMulti("simpleBloom", "foo", "bar", "baz", "bat", "bag");
+      ```
+    - 判断多个元素是否存在：
+      ```
+      boolean[] rv = client.existsMulti("simpleBloom", "foo", "bar", "baz", "bat", "mark", "nonexist");
+      ```
+    - 创建一个Bloom Filter：
+      ```
+      client.createFilter("specialBloom", 10000, 0.0001);
+      ```
+    - 使用集群客户端的方式与使用单个实例客户端的方式相同，实际上都是调用Redis的相关操作
+  - 参考：
+    - https://github.com/RedisBloom/JRedisBloom
+    
+
