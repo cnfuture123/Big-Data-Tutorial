@@ -13,3 +13,42 @@
     - MySQL数据库是一个客户端/服务端系统，包含一个多线程的SQL服务器支持不同的后端，不同的客户端程序和类库，管理工具，以及大量的API
     - 也提供一个嵌入的，多线程的类库作为MySQL服务器，可以在应用中使用去构造一个更小，更快速，容易管理的独立产品
  
+## MySQL主要特性：
+
+  - 内部特性：
+    - 由C and C++编写的
+    - 可以在很多平台上工作
+    - 提供事务和非事务的存储引擎
+    - 使用快速的，支持索引压缩的B-tree磁盘表(MyISAM)
+    - 使用一个快速的，基于线程的内存分配系统
+    - 使用嵌套循环join，提高join速度
+    - 实现了内存中的哈希表，用于临时表
+  - 数据类型：
+    - 数字类型：
+      - 整数类型（精确值）：INTEGER, INT, SMALLINT, TINYINT, MEDIUMINT, BIGINT
+        <img width="868" alt="image" src="https://user-images.githubusercontent.com/46510621/148359515-b08250e0-0f90-4b52-9ed9-a63be56a2680.png">
+      
+      - 定点类型（精确值）：DECIMAL, NUMERIC
+        - 在MySQL中，NUMERIC等同于DECIMAL，以二进制格式存储DECIMAL值，可以指定精度和小数位数
+        - 示例：
+          ```
+          salary DECIMAL(5,2) //5是精度，表示有效位数；2是小数位数，表示可在小数点后存储的位数
+          ```
+      - 浮点类型（近似值）：FLOAT, DOUBLE
+        - FLOAT：单精度，4字节
+        - DOUBLE：双精度，8字节
+      - 位值类型：BIT
+        - 用于存储bit数据，范围是1-64
+      - 超出范围和溢出处理：
+        - 如果启用了严格SQL模式，MySQL会拒绝超出范围的值并报错，插入会失败
+        - 如果没有启用限制模式，MySQL将值截断到该列数据类型的合理范围
+    - 时间类型：
+      - DATE, DATETIME, and TIMESTAMP类型：
+        - DATE类型：值只有日期部分，没有时间部分。格式为'YYYY-MM-DD'，范围是'1000-01-01' to '9999-12-31'
+        - DATETIME类型：值包含日期和时间。格式为'YYYY-MM-DD hh:mm:ss'，范围是'1000-01-01 00:00:00' to '9999-12-31 23:59:59'
+        - TIMESTAMP类型：值包含日期和时间。范围是'1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC
+          - TIMESTAMP值在存储时从当前时区转换为UTC时区，取值时从UTC时区转换为当前时区。
+        - DATETIME和TIMESTAMP可以包含小数秒的部分（微秒，6位），格式为'YYYY-MM-DD hh:mm:ss[.fraction]'
+        
+        
+        
