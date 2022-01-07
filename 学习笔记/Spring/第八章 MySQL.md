@@ -67,7 +67,35 @@
         - 用一个字节表示年份值，YYYY格式
         - 范围是1901 to 2155，和0000
     - String类型：
-      
+      - CHAR and VARCHAR类型
+        - CHAR和VARCHAR是类似的，区别在于存值和取值
+        - CHAR和VARCHAR类型会声明一个长度，表示存储的最大字符长度，例如：CHAR(30)可以存储最多30个字符
+        - 两者区别：
+          - CHAR类型的列长度是固定的，范围是0-255，存储时用空格向右填充到指定长度，取值时填充的空格会被删除
+          - VARCHAR类型的列是长度可变的，范围是0-65535，存储时会有1字节或2字节的前缀加上数据，前缀表示实际值的字节数。VARCHAR类型的值存储时不会被填充
+          - 示例：
+            <img width="643" alt="image" src="https://user-images.githubusercontent.com/46510621/148506023-fca66bf3-0c72-4c7f-9339-74ce9f43bb6d.png">
+
+      - BINARY and VARBINARY类型
+        - BINARY and VARBINARY存储二进制字子节符串
+        - BINARY最大长度是255字节，VARBINARY最大长度是65535字节
+        - 两者区别：
+          - BINARY值存储时用0x00(zero byte)向右填充到指定长度，取值时不会删除填充的值
+          - VARBINARY类型在存储时不会填充值，并且在取值时也不会删除前后的字节
+      - BLOB and TEXT类型
+        - BLOB是一个二进制大对象，可以存储可变数量的数据，4种BLOB类型是TINYBLOB, BLOB, MEDIUMBLOB, and LONGBLOB，区别在存储数据的最大长度
+        - 4种TEXT类型是TINYTEXT, TEXT, MEDIUMTEXT, and LONGTEXT，长度和BLOB类型相对应
+        - 两者区别：
+          - BLOB值是二进制字符串，TEXT是非二进制字符串
+          - BLOB可以看作是足够大的VARBINARY列，TEXT可以看作足够大的VARBINARY列
+      - ENUM类型
+        - ENUM是一个字符串对象，它的值是来自于创建表时该列规范中预定义的枚举值列表
+        - ENUM类型优缺点：
+          - 优点：
+            - 当一个列的可能值是一个有限的集合，数据存储时的结构更紧凑，输入值会自动编码为数字
+            - 查询和输出是可读的，在查询结果中数字会转换为相应的字符串
+          - 缺点：
+            
         
         
         
