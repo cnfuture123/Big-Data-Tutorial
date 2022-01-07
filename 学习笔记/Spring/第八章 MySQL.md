@@ -47,8 +47,27 @@
         - DATE类型：值只有日期部分，没有时间部分。格式为'YYYY-MM-DD'，范围是'1000-01-01' to '9999-12-31'
         - DATETIME类型：值包含日期和时间。格式为'YYYY-MM-DD hh:mm:ss'，范围是'1000-01-01 00:00:00' to '9999-12-31 23:59:59'
         - TIMESTAMP类型：值包含日期和时间。范围是'1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC
-          - TIMESTAMP值在存储时从当前时区转换为UTC时区，取值时从UTC时区转换为当前时区。
+          - TIMESTAMP值在存储时从当前时区转换为UTC时区，取值时从UTC时区转换为当前时区，默认当前的时区是服务器的时间
         - DATETIME和TIMESTAMP可以包含小数秒的部分（微秒，6位），格式为'YYYY-MM-DD hh:mm:ss[.fraction]'
+          ```
+          CREATE TABLE t1 (t TIME(3), dt DATETIME(6));
+          ```
+        - 无效的DATE, DATETIME, or TIMESTAMP值会转换成zero值，例如：'0000-00-00' or '0000-00-00 00:00:00'
+        - DATETIME和TIMESTAMP列可以自动初始化，并更新为当前的日期和时间
+          ```
+          CREATE TABLE t1 (
+            ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            dt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          );
+          ```
+      - TIME类型：
+        - 格式为hh:mm:ss'，范围是'-838:59:59' to '838:59:59'
+        - 可以包含小数秒的部分（微秒，6位），格式为'-838:59:59.000000' to '838:59:59.000000'
+      - YEAR类型：
+        - 用一个字节表示年份值，YYYY格式
+        - 范围是1901 to 2155，和0000
+    - String类型：
+      
         
         
         
