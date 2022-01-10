@@ -437,6 +437,25 @@
             }
           }
           ```
+  - Mockito框架：
+    - 概述：
+      - Java单元测试的模拟框架
+    - Mockito特性：
+      - 可以模拟具体的类和接口
+      - 校验的错误是很简洁的
+      - 支持按顺序的灵活校验
+      - 支持精确次数和至少一次校验
+    - Mockito使用：
+      - 引入依赖：
+        ```
+         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.11.2</version>
+            <scope>test</scope>
+        </dependency>
+        ```
+     
           
 ## 自定义自动配置
 
