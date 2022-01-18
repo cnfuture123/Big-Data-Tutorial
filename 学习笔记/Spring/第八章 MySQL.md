@@ -252,4 +252,33 @@
         ```
         SELECT UTC_TIME(), UTC_TIME() + 0;
         ```
+  - 字符串函数和操作符：
+    - CONCAT(str1,str2,...)：
+      - 将参数串联在一起的字符串返回，如果任意参数为NULL则返回NULL
+      - 示例：
+        ```
+        SELECT CONCAT('My', 'S', 'QL');
+        SELECT CONCAT('My', NULL, 'QL');
+        ```
+    - CONCAT_WS(separator,str1,str2,...):
+      - 基于separator分隔符串联参数
+      - 示例：
+        ```
+        SELECT CONCAT_WS(',','First name','Second name','Last Name');
+        ```
+    - LOWER(str)/UPPER(str):
+      - 将str转换为小写/大写
+    - REVERSE(str)：
+      - 将str顺序反转
+  - 转换函数和操作符：
+    - BINARY expr：
+      - 将expr转换为二进制字符串
+    - CAST(expr AS type [ARRAY])：
+      - 将expr转换为type类型
+      - 示例：
+        ```
+        SELECT CAST(1944.35 AS YEAR), CAST(1944.50 AS YEAR);
+        ```
+  - 聚合函数：
+    
    
