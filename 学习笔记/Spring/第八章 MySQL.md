@@ -127,8 +127,14 @@
         - 对于某列或者某行表数据可能被压缩
       - 数字类型存储要求：
         <img width="560" alt="image" src="https://user-images.githubusercontent.com/46510621/149889748-d96ec441-0569-4782-8199-aac242c99c6b.png">
+        
       - 时间类型存储要求：
         <img width="669" alt="image" src="https://user-images.githubusercontent.com/46510621/149890305-e8b6e776-89ad-49e0-b821-d5bf94052ecb.png">
 
-        
+        - 秒的小数精度：
+          <img width="469" alt="image" src="https://user-images.githubusercontent.com/46510621/149890772-a7cf0241-804a-489f-90fb-651922f88a80.png">
+  
+      - 字符串类型存储要求：
+        <img width="877" alt="image" src="https://user-images.githubusercontent.com/46510621/149891168-daab6e63-0933-408d-b637-bc9a673bda43.png">
+
         
