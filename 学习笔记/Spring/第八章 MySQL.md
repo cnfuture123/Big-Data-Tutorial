@@ -100,7 +100,35 @@
           SET('one', 'two')
           ```
         - SET列最多有64个不重复的元素，重复值会导致告警或报错
-            
-        
+    - 数据类型默认值：
+      - 显示的默认值：
+        - 通过DEFAULT子句指定默认值，可以是一个文本常量或表达式
+        - 示例：
+          ```
+          CREATE TABLE t1 (
+            -- literal defaults
+            i INT         DEFAULT 0,
+            c VARCHAR(10) DEFAULT '',
+            -- expression defaults
+            f FLOAT       DEFAULT (RAND() * RAND()),
+            b BINARY(16)  DEFAULT (UUID_TO_BIN(UUID())),
+            d DATE        DEFAULT (CURRENT_DATE + INTERVAL 1 YEAR)
+          );
+          ```
+        - BLOB, TEXT, GEOMETRY, and JSON类型只有在值用表达式时才能被指定默认值
+        - 在MySQL 8.0.13之前，DEFAULT子句必须是文本常量，不能是函数或表达式
+      - 隐式的默认值：
+        - 如果没有使用DEFAULT显示指定默认值，则MySQL按照以下方式确定默认值：
+          - 如果该列的值可以为NULL，则指定DEFAULT NULL
+          - 如果该列的值不能为NULL，则不指定DEFAULT子句
+    - 数据类型存储要求：
+      - 表数据在磁盘上的存储要求取决于几个因素：
+        - 不同的存储引擎表示和存储数据的方式不同
+        - 对于某列或者某行表数据可能被压缩
+      - 数字类型存储要求：
+        <img width="560" alt="image" src="https://user-images.githubusercontent.com/46510621/149889748-d96ec441-0569-4782-8199-aac242c99c6b.png">
+      - 时间类型存储要求：
+        <img width="669" alt="image" src="https://user-images.githubusercontent.com/46510621/149890305-e8b6e776-89ad-49e0-b821-d5bf94052ecb.png">
+
         
         
