@@ -141,4 +141,36 @@
       
         <img width="877" alt="image" src="https://user-images.githubusercontent.com/46510621/149891168-daab6e63-0933-408d-b637-bc9a673bda43.png">
 
-        
+## 函数和操作符
+
+  - 流程控制函数：
+    - CASE:
+      - 格式：
+        ```
+        CASE value WHEN compare_value THEN result [WHEN compare_value THEN result ...] [ELSE result] END
+        示例：
+        SELECT CASE 1 WHEN 1 THEN 'one' WHEN 2 THEN 'two' ELSE 'more' END；
+        ```
+        ```
+        CASE WHEN condition THEN result [WHEN condition THEN result ...] [ELSE result] END
+        示例：
+        SELECT CASE WHEN 1>0 THEN 'true' ELSE 'false' END;
+        ```
+    - IF(expr1,expr2,expr3)：
+      - if expr1 is true, then return expr2, else return expr3
+      - 示例：
+        ```
+        SELECT IF(1<2,'yes','no');
+        ```
+    - IFNULL(expr1,expr2):
+      - If expr1 is not NULL, IFNULL() returns expr1; otherwise it returns expr2
+      - 示例：
+        ```
+        SELECT IFNULL(NULL,10);
+        ```
+    - NULLIF(expr1,expr2):
+      - Returns NULL if expr1 = expr2 is true, otherwise returns expr1
+      - 示例：
+        ```
+        SELECT NULLIF(1,1);
+        ```
