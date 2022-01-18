@@ -174,3 +174,82 @@
         ```
         SELECT NULLIF(1,1);
         ```
+  - 日期时间函数：
+    - CURDATE()/CURRENT_DATE()：当前日期，格式为'YYYY-MM-DD' or YYYYMMDD
+    - CURTIME()：当前时间，格式为'hh:mm:ss' or hhmmss
+    - DATE(expr)：获取expr表达式的日期部分值
+    - DATEDIFF(expr1,expr2)：expr1 − expr2，表示两者相差的天数
+    - DATE_ADD(date,INTERVAL expr unit)/DATE_SUB(date,INTERVAL expr unit)：
+      - date参数指定开始日期
+      - expr表达式指定距开始日期需要加或减的时间间隔
+      - unit是表达式的单位
+      - 示例：
+        ```
+        SELECT DATE_ADD('2018-05-01',INTERVAL 1 DAY);
+        SELECT DATE_SUB('2018-05-01',INTERVAL 1 YEAR);
+        SELECT DATE_SUB('1998-01-02', INTERVAL 31 DAY);
+        ```
+    - DATE_FORMAT(date,format)：
+      - 根据format格式化date日期
+      - 示例：
+        ```
+        SELECT DATE_FORMAT('2007-10-04 22:23:00', '%H:%i:%s');
+        SELECT DATE_FORMAT('2009-10-04 22:23:00', '%W %M %Y');
+        ```
+    - STR_TO_DATE(str,format):
+      - 根据format格式从str字符串中提取日期或时间部分值
+      - 示例：
+        ```
+        SELECT STR_TO_DATE('01,5,2013','%d,%m,%Y');
+        SELECT STR_TO_DATE('a09:30:17','a%h:%i:%s');
+        ```
+    - TIME(expr):
+      - 提取表达式中时间部分的值
+      - 示例：
+        ```
+        SELECT TIME('2003-12-31 01:02:03.000123');
+        ```
+    - TIMEDIFF(expr1,expr2):
+      - expr1 − expr2，两者相差的时间值
+      - 示例：
+        ```
+        SELECT TIMEDIFF('2008-12-31 23:59:59.000001', '2008-12-30 01:01:01.000002');
+        ```
+    - TIMESTAMP(expr):
+      - 将expr表示为一个datetime值
+      - 示例：
+        ```
+        SELECT TIMESTAMP('2003-12-31');
+        ```
+    - TIMESTAMP(expr1,expr2):
+      - 将expr2的时间加到expr1，返回datetime值
+      - 示例：
+        ```
+        SELECT TIMESTAMP('2003-12-31 12:00:00','12:00:00');
+        ```
+    - TIMESTAMPADD(unit,interval,datetime_expr):
+      - 将interval加到datetime_expr，unit表示interval的单位
+      - 示例：
+        ```
+        SELECT TIMESTAMPADD(MINUTE,1,'2003-01-02');
+        SELECT TIMESTAMPADD(WEEK,1,'2003-01-02');
+        ```
+    - TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2):
+      - datetime_expr2 − datetime_expr1, unit指定返回结果的单位
+      - 示例：
+        ```
+        SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01');
+        ```
+    - UTC_DATE, UTC_DATE():
+      - 当前的UTC日期，格式为'YYYY-MM-DD' or YYYYMMDD
+      - 示例：
+        ```
+        SELECT UTC_DATE(), UTC_DATE() + 0;
+        ```
+    - UTC_TIME, UTC_TIME([fsp]):
+      - 当前的UTC时间，格式为'hh:mm:ss' or hhmmss
+      - 示例：
+        ```
+        SELECT UTC_TIME(), UTC_TIME() + 0;
+        ```
+   
