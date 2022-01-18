@@ -280,5 +280,41 @@
         SELECT CAST(1944.35 AS YEAR), CAST(1944.50 AS YEAR);
         ```
   - 聚合函数：
-    
+    - AVG([DISTINCT] expr) [over_clause]：返回expr的平均值
+    - COUNT(expr) [over_clause]：返回SELECT查询结果行中expr的非NULL值的数量
+      - COUNT(*)返回结果中包含NULL值
+    - COUNT(DISTINCT expr,[expr...])：返回匹配expr不同的非NULL的行数
+    - MAX([DISTINCT] expr) [over_clause]：返回expr的最大值
+    - MIN([DISTINCT] expr) [over_clause]：返回expr的最小值
+    - STD(expr) [over_clause]：返回总体标准差
+    - SUM([DISTINCT] expr) [over_clause]：返回expr的和
+    - VARIANCE(expr) [over_clause]：返回总体标准方差
+    - GROUP BY：
+      - 支持按照某些列维度计算统计信息，产生摘要
+      - 示例：
+        ```
+        SELECT year, SUM(profit) AS profit FROM sales
+        GROUP BY year;
+        ```
+  - 窗函数：
+    - DENSE_RANK() over_clause：
+      - 返回当前行在其分区的排名，没有间隔
+      - 相同值的行排名相同，并且排名是连续的
+    - RANK() over_clause：
+      - 返回当前行在其分区的排名，有间隔
+      - 相同值的行排名相同，排名是不连续的
+    - ROW_NUMBER() over_clause：
+      - 返回当前行在其分区的行数
+      - 不同行的行数是不相同的
+    - DENSE_RANK(), RANK(), ROW_NUMBER()的区别：
+      
+      <img width="803" alt="image" src="https://user-images.githubusercontent.com/46510621/149930623-4fed95f9-0802-42bf-ae17-b4e1e461dc00.png">
+
+    - LAG(expr [, N[, default]]) [null_treatment] over_clause:
+      - 返回当前行在其分区内之前N行的expr值
+    - LEAD(expr [, N[, default]]) [null_treatment] over_clause：
+      - 返回当前行在其分区内之后N行的expr值
+      - 示例：
+        <img width="697" alt="image" src="https://user-images.githubusercontent.com/46510621/149932269-42136103-7a9c-497c-88e4-7eaccdeff4a1.png">
+
    
