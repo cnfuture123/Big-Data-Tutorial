@@ -531,6 +531,11 @@
     - 临时表：
       - 创建表时可以使用TEMPORARY关键字
       - 临时表只在当前会话中是可见的，会话结束时自动被删除
+      - 临时表和数据库的关系是松耦合的，删除数据库不会自动删除临时表
+      - 示例：
+        ```
+        CREATE TEMPORARY TABLE new_tbl SELECT * FROM orig_tbl LIMIT 0;
+        ```
     - 表的克隆和拷贝：
       - CREATE TABLE ... LIKE:
         - 基于另一个表的定义创建一个空表，包含列的属性和索引
@@ -558,15 +563,47 @@
       - COMMENT：
         - 用于指定列的注释，最多1024个字符
     - 索引，外键，CHECK约束：
-      - CONSTRAINT symbol：
-        - SQL标准指定所有类型的约束，包括：primary key, unique index, foreign key, check属于同一个命名空间。在MySQL中每种约束类型有自己的命名空间
-      - PRIMARY KEY：
-        - 唯一索引，并且所有主键列是NOT NULL
-        - 一个表只能有一个主键
-        - 主键可以是一个多列的索引，使用PRIMARY KEY(key_part, ...)子句定义
-      - KEY | INDEX：
-        - KEY和INDEX语义相同
-      - UNIQUE：
+      - 索引：
+        - CONSTRAINT symbol：
+          - SQL标准指定所有类型的约束，包括：primary key, unique index, foreign key, check属于同一个命名空间。在MySQL中每种约束类型有自己的命名空间
+        - PRIMARY KEY：
+          - 唯一索引，并且所有主键列是NOT NULL
+          - 一个表只能有一个主键
+          - 主键可以是一个多列的索引，使用PRIMARY KEY(key_part, ...)子句定义
+        - KEY | INDEX：
+          - KEY和INDEX语义相同
+        - UNIQUE：唯一索引
+        - FOREIGN KEY：
+          - 用于跨表交叉引用相关数据，使分散的数据保持一致性
+          - 外键关系包含一个父表保存初始的列值，一个子表保存的列值引用父表的列值，而外键是在子表中定义的
+          - 语法：
+            ```
+            [CONSTRAINT [symbol]] FOREIGN KEY
+                [index_name] (col_name, ...)
+                REFERENCES tbl_name (col_name,...)
+                [ON DELETE reference_option]
+                [ON UPDATE reference_option]
+            ```
+          - 删除外键：
+            ```
+            ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol;
+            ```
+          - 二级索引：
+      - CHECK：
+        - 创建约束检查表中数据
+        - 语法：
+          ```
+          [CONSTRAINT [symbol]] CHECK (expr) [[NOT] ENFORCED]
+          ```
+          - expr指定约束条件为一个布尔表达式，用于检查表的每一行数据
+        - CHECK约束可以是表约束或列约束
+    - 存储引擎分类：
+    
+      <img width="862" alt="image" src="https://user-images.githubusercontent.com/46510621/150126470-b3c40be7-12dc-47db-a6d5-07c1900ae3d2.png">
+  
+    - 表分区：
+      - 参考：https://dev.mysql.com/doc/refman/8.0/en/partitioning.html
+    
         
     
             
