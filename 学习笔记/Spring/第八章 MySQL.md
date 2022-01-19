@@ -315,6 +315,36 @@
     - LEAD(expr [, N[, default]]) [null_treatment] over_clause：
       - 返回当前行在其分区内之后N行的expr值
       - 示例：
+      
         <img width="697" alt="image" src="https://user-images.githubusercontent.com/46510621/149932269-42136103-7a9c-497c-88e4-7eaccdeff4a1.png">
 
-   
+    - 窗口函数概念：
+      - 窗口函数在一组行数据上执行类聚合的操作，区别是聚合操作将多行数据聚合产生单个结果行，然而窗口函数是为每一行都产生一个结果
+      - OVER子句：
+        - 语法：
+          ```
+          {OVER (window_spec) | OVER window_name}
+          ```
+        - OVER (window_spec)语法：
+          ```
+          window_spec:
+            [window_name] [partition_clause] [order_clause] [frame_clause]
+          ```
+          - window_name: WINDOW子句定义的窗口名称
+          - partition_clause: PARTITION BY子句指定如何对查询的行进行分组，如果没有指定PARTITION BY，则包含所有的查询行
+            ```
+            PARTITION BY expr [, expr] ...
+            ```
+          - order_clause: ORDER BY子句指定在分区内如何对行数据进行排序
+            ```
+            ORDER BY expr [ASC|DESC] [, expr [ASC|DESC]] ...
+            ```
+          - frame_clause: frame是当前分区的一个子集，frame子句用于指定如何定义子集
+        - 示例：
+          
+          <img width="675" alt="image" src="https://user-images.githubusercontent.com/46510621/150061330-08aac27a-e2a6-4ec1-96fb-a18a85621df5.png">
+
+        
+         
+            
+            
