@@ -350,7 +350,149 @@
           - DISTINCT用于聚合窗口函数
           - 嵌套的窗口函数
           - 依赖当前行值的动态frame endpoint
-          
+
+## SQL语句
+
+  - 数据定义语句：
+    - ALTER DATABASE Statement:
+      - 用于修改数据库的整体特性，需要对数据库有ALTER权限
+      - 语法：
+        ```
+        ALTER {DATABASE | SCHEMA} [db_name]
+            alter_option ...
+
+        alter_option: {
+            [DEFAULT] CHARACTER SET [=] charset_name
+          | [DEFAULT] COLLATE [=] collation_name
+          | [DEFAULT] ENCRYPTION [=] {'Y' | 'N'}
+          | READ ONLY [=] {DEFAULT | 0 | 1}
+        }
+        ```
+        - CHARACTER SET: 修改默认的数据库字符集
+        - COLLATE: 修改默认的数据库校验
+        - ENCRYPTION: 
+          - 数据库的加密方式，会被数据库中的表继承。
+          - 可选值为'Y' (encryption enabled) and 'N' (encryption disabled)
+        - READ ONLY: 
+          - 控制是否允许对数据库的修改
+          - 可选值为DEFAULT or 0 (not read only) and 1 (read only)
+    - ALTER PROCEDURE Statement：
+      - 用于修改存储过程的特性
+      - 语法：
+        ```
+        ALTER PROCEDURE proc_name [characteristic ...]
+
+        characteristic: {
+            COMMENT 'string'
+          | LANGUAGE SQL
+          | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA }
+          | SQL SECURITY { DEFINER | INVOKER }
+        }
+        ```
+    - ALTER TABLE Statement:
+      - 用于修改表结构，例如：可以增删列，创建或销毁索引，修改已有列的类型，重命名列名等
+      - 语法：
+        ```
+        ALTER TABLE tbl_name
+            [alter_option [, alter_option] ...]
+            [partition_options]
+        ```
+      - 表可选项：
+        - ENGINE, AUTO_INCREMENT, AVG_ROW_LENGTH, MAX_ROWS, ROW_FORMAT, or TABLESPACE等
+        - 常用示例：
+          - 修改存储引擎：
+            ```
+            ALTER TABLE t1 ENGINE = InnoDB;
+            ```
+          - 修改行存储的格式：
+            ```
+            ALTER TABLE t1 ROW_FORMAT = COMPRESSED;
+            ```
+          - 重置当前的自动自增值：
+            ```
+            ALTER TABLE t1 AUTO_INCREMENT = 13;
+            ```
+          - 修改表的字符集：
+            ```
+            ALTER TABLE t1 CHARACTER SET = utf8;
+            ```
+          - 修改表的注释：
+            ```
+            ALTER TABLE t1 COMMENT = 'New table comment';
+            ```
+      - 并发控制：
+        - 可以使用LOCK子句控制表在被修改时并发读写的程度
+        - LOCK子句的参数：DEFAULT, NONE, SHARED, EXCLUSIVE
+      - 增删列：
+        - ADD：增加列，默认是在最后添加列
+        - DROP：删除列
+      - 重命名，重定义，重排序列
+        - CHANGE: 
+          - 可以重命名列或者改变列定义
+          - 使用 FIRST or AFTER可以改变列的顺序
+        - MODIFY: 改变列定义
+        - RENAME COLUMN: 重命名列
+        - 示例：
+          ```
+          ALTER TABLE t1 CHANGE a b BIGINT NOT NULL;
+          ALTER TABLE t1 MODIFY b INT NOT NULL;
+          ALTER TABLE t1 RENAME COLUMN b TO a;
+          ```
+      - 增删外键：
+        - 语法：
+          ```
+          ADD CONSTRAINT name FOREIGN KEY (....) ...
+          ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol;
+          ```
+      - 修改分区：
+        - 设置分区：
+          ```
+          //Hash分区
+          ALTER TABLE t1 PARTITION BY HASH(id) PARTITIONS 8;
+          //Range分区
+          CREATE TABLE t1 (
+              id INT,
+              year_col INT
+          )
+          PARTITION BY RANGE (year_col) (
+              PARTITION p0 VALUES LESS THAN (1991),
+              PARTITION p1 VALUES LESS THAN (1995),
+              PARTITION p2 VALUES LESS THAN (1999)
+          );
+          ALTER TABLE t1 ADD PARTITION (PARTITION p3 VALUES LESS THAN (2002));
+          ```
+        - 删除分区：DROP PARTITION
+          ```
+          ALTER TABLE t1 DROP PARTITION p0, p1;
+          ```
+        - 删除某个分区数据：
+          ```
+          ALTER TABLE t1 TRUNCATE PARTITION p0;
+          ```
+        - 合并分区，减少分区数：
+          ```
+          ALTER TABLE t2 COALESCE PARTITION 2;
+          ```
+      - 增加索引：
+        ```
+        ALTER TABLE t2 ADD INDEX (d), ADD UNIQUE (a);
+        ```
+  - CREATE DATABASE Statement:
+    - 语法：
+      ```
+      CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
+          [create_option] ...
+
+      create_option: [DEFAULT] {
+          CHARACTER SET [=] charset_name
+        | COLLATE [=] collation_name
+        | ENCRYPTION [=] {'Y' | 'N'}
+      }
+      ```
+    - 概念：
+      - MySQL中的数据库对应一个目录，包含的文件对应数据库中的表
+      - MySQL对于数据库的数量没有限制，但是底层的文件系统对于目录的数量是有限制的
+  - CREATE INDEX Statement：
          
             
             
