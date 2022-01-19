@@ -344,7 +344,13 @@
           
           <img width="675" alt="image" src="https://user-images.githubusercontent.com/46510621/150061330-08aac27a-e2a6-4ec1-96fb-a18a85621df5.png">
 
-        
+      - 窗口函数的限制：
+        - SQL标准规定窗口函数不能用于UPDATE or DELETE语句中
+        - MySQL不支持以下窗口函数特性：
+          - DISTINCT用于聚合窗口函数
+          - 嵌套的窗口函数
+          - 依赖当前行值的动态frame endpoint
+          
          
             
             
