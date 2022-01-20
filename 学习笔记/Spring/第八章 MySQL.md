@@ -557,6 +557,7 @@
       - DEFAULT：给列指定默认值
       - VISIBLE, INVISIBLE：
         - 指定列的可见性，表中至少有一个可见的列
+        - 不可见的列对查询是隐藏的
       - AUTO_INCREMENT：
         - 整型或浮点型的列可以指定AUTO_INCREMENT属性
         - AUTO_INCREMENT序列值从1开始，通常值是自增的，被设置为当前值+1
@@ -589,6 +590,7 @@
             ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol;
             ```
           - 二级索引：
+            - InnoDB支持在虚拟生成的列上使用二级索引，也称为虚拟索引
       - CHECK：
         - 创建约束检查表中数据
         - 语法：
@@ -604,6 +606,53 @@
     - 表分区：
       - 参考：https://dev.mysql.com/doc/refman/8.0/en/partitioning.html
     
-        
+  - DROP DATABASE Statement：
+    - 语法：
+      ```
+      DROP {DATABASE | SCHEMA} [IF EXISTS] db_name
+      ```
+  - DROP INDEX Statement：
+    - 语法：
+      ```
+      DROP INDEX index_name ON tbl_name
+          [algorithm_option | lock_option] ...
+
+      algorithm_option:
+          ALGORITHM [=] {DEFAULT | INPLACE | COPY}
+
+      lock_option:
+          LOCK [=] {DEFAULT | NONE | SHARED | EXCLUSIVE}
+      ```
+    - 示例：
+      ```
+      DROP INDEX `PRIMARY` ON t;
+      ```
+  - DROP TABLE Statement:
+    - 语法：
+      ```
+      DROP [TEMPORARY] TABLE [IF EXISTS]
+        tbl_name [, tbl_name] ...
+        [RESTRICT | CASCADE]
+      ```
+  - RENAME TABLE Statement:
+    - 语法：
+      ```
+      RENAME TABLE
+          tbl_name TO new_tbl_name
+          [, tbl_name2 TO new_tbl_name2] ...
+      ```
+    - 示例：
+      ```
+      RENAME TABLE 
+             old_table1 TO new_table1,
+             old_table2 TO new_table2,
+             old_table3 TO new_table3;
+      ```
+  - TRUNCATE TABLE Statement:
+    - 语法：
+      ```
+      TRUNCATE [TABLE] tbl_name
+      ```
+    - 删除表中所有数据
     
             
