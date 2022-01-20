@@ -654,5 +654,8 @@
       TRUNCATE [TABLE] tbl_name
       ```
     - 删除表中所有数据
+    - TRUNCATE TABLE和DELETE区别：
+      - Truncate操作是先drop然后重建表，删除的效率更高
+      
     
             
