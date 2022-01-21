@@ -852,4 +852,32 @@
         - ROLLBACK TO [SAVEPOINT]语句回滚事务到某个保存点，并且不会终止事务，当前事务在保存点之后的修改会被回滚
         - RELEASE SAVEPOINT语句删除保存点
         - 执行COMMIT或ROLLBACK语句后，当前事务所有的保存点都会被删除
-            
+    - LOCK INSTANCE FOR BACKUP and UNLOCK INSTANCE Statements：
+      - 语法：
+        ```
+        LOCK INSTANCE FOR BACKUP
+        UNLOCK INSTANCE
+        ```
+        - LOCK INSTANCE FOR BACKUP: 
+          - 获取一个实例级别的备份锁，允许在备份过程中的DML操作，但是阻止会造成不一致快照的操作
+          - 多个会话可以使用同一个备份锁
+        - UNLOCK INSTANCE：
+          - 释放当前会话持有的备份锁
+          - 会话终止时会自动释放
+    - LOCK TABLES and UNLOCK TABLES Statements：
+      - 语法：
+        ```
+        LOCK TABLES
+            tbl_name [[AS] alias] lock_type
+            [, tbl_name [[AS] alias] lock_type] ...
+
+        lock_type: {
+            READ [LOCAL]
+          | [LOW_PRIORITY] WRITE
+        }
+
+        UNLOCK TABLES
+        ```
+        
+        
+        
