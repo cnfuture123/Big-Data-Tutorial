@@ -818,5 +818,38 @@
         ```
         UPDATE t1 SET col1 = col1 + 1, col2 = col1;
         ```
-    
+  - 事务和锁语句
+    - START TRANSACTION, COMMIT, and ROLLBACK Statements：
+      - 语法：
+        ```
+        START TRANSACTION
+            [transaction_characteristic [, transaction_characteristic] ...]
+
+        transaction_characteristic: {
+            WITH CONSISTENT SNAPSHOT
+          | READ WRITE
+          | READ ONLY
+        }
+
+        BEGIN [WORK]
+        COMMIT [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
+        ROLLBACK [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
+        SET autocommit = {0 | 1}
+        ```
+        - START TRANSACTION or BEGIN：开始一个新的事务
+        - COMMIT：提交当前的事务，使修改持久化
+        - ROLLBACK：回滚当前的事务
+          - 有些语句不能回滚，例如DDL语句：create or drop databases, those that create, drop, or alter tables
+        - SET autocommit：禁用或启用当前会话默认的自动提交模式
+    - SAVEPOINT, ROLLBACK TO SAVEPOINT, and RELEASE SAVEPOINT Statements：
+      - 语法：
+        ```
+        SAVEPOINT identifier
+        ROLLBACK [WORK] TO [SAVEPOINT] identifier
+        RELEASE SAVEPOINT identifier
+        ```
+        - SAVEPOINT语句设置一个事务的保存点
+        - ROLLBACK TO [SAVEPOINT]语句回滚事务到某个保存点，并且不会终止事务，当前事务在保存点之后的修改会被回滚
+        - RELEASE SAVEPOINT语句删除保存点
+        - 执行COMMIT或ROLLBACK语句后，当前事务所有的保存点都会被删除
             
