@@ -785,8 +785,38 @@
             ```
             SELECT * FROM t1 UNION SELECT * FROM t2;
             ```
-          
-     
-      
+    - 子查询：
+      - 子查询的优点：
+        - 允许结构化的查询来将语句的每一部分隔离
+        - 子查询相比joins和unions可读性更好，可以作为一种替代方式
+      - 示例：
+        ```
+        SELECT * FROM t1 WHERE column1 = (SELECT column1 FROM t2);
+        ```
+    - TABLE Statement：
+      - MySQL 8.0.19引入的语句，查询表中所有数据
+      - 语法：
+        ```
+        TABLE table_name [ORDER BY column_name] [LIMIT number [OFFSET number]]
+        ```
+      - 示例：
+        ```
+        TABLE t;
+
+        SELECT * FROM t;
+        ```
+    - UPDATE Statement：
+      - 语法：
+        ```
+        UPDATE [LOW_PRIORITY] [IGNORE] table_reference
+            SET assignment_list
+            [WHERE where_condition]
+            [ORDER BY ...]
+            [LIMIT row_count]
+        ```
+      - 示例：
+        ```
+        UPDATE t1 SET col1 = col1 + 1, col2 = col1;
+        ```
     
             
