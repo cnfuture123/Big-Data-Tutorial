@@ -1067,9 +1067,19 @@
           
             ![image](https://user-images.githubusercontent.com/46510621/150635088-ebe42708-24e9-4537-baec-175ebe7be2ea.png)
 
-    - HELP语句
+    - USE语句
       - 语法：
-            
+        ```
+        USE db_name
+        ```
+      - 使用指定的数据库用于后续的语句
+      - 示例：
+        ```
+        USE db1;
+        SELECT COUNT(*) FROM mytable;   # selects from db1.mytable
+        USE db2;
+        SELECT COUNT(*) FROM mytable;   # selects from db2.mytable
+        ```
             
           
       
