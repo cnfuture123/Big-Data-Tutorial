@@ -1018,6 +1018,60 @@
               statement_list
           END WHILE [end_label]
           ```
+  - 工具语句：
+    - DESCRIBE语句/EXPLAIN语句：
+      - DESCRIBE和EXPLAIN语句是同义的，通常DESCRIBE用于获取表结构信息，EXPLAIN用于查询执行计划
+      - 语法：
+        ```
+        {EXPLAIN | DESCRIBE | DESC}
+            tbl_name [col_name | wild]
+
+        {EXPLAIN | DESCRIBE | DESC}
+            [explain_type]
+            {explainable_stmt | FOR CONNECTION connection_id}
+
+        {EXPLAIN | DESCRIBE | DESC} ANALYZE [FORMAT = TREE] select_statement
+
+        explain_type: {
+            FORMAT = format_name
+        }
+
+        format_name: {
+            TRADITIONAL
+          | JSON
+          | TREE
+        }
+
+        explainable_stmt: {
+            SELECT statement
+          | TABLE statement
+          | DELETE statement
+          | INSERT statement
+          | REPLACE statement
+          | UPDATE statement
+        }
+        ```
+      - EXPLAIN语句提供MySQL如何执行语句的信息：
+        - 获取执行计划信息：
+          - EXPLAIN适用于SELECT, DELETE, INSERT, REPLACE, UPDATE, TABLE等语句
+          - MySQL会显示如何处理语句，包括：如何以及按照什么顺序join表
+          - 通过EXPLAIN，可以发现在什么地方加索引使语句执行更快；也可以查看是否join的执行是最优的顺序
+        - EXPLAIN ANALYZE语句：
+          - EXPLAIN ANALYZE会执行语句，并提供以下信息：
+            - 预估的执行花销
+            - 预估的返回行数
+            - 返回第一行的时间
+            - 返回所有数据的时间
+            - 循环次数
+          - 示例：
+          
+            ![image](https://user-images.githubusercontent.com/46510621/150635088-ebe42708-24e9-4537-baec-175ebe7be2ea.png)
+
+    - HELP语句
+      - 语法：
+            
+            
+          
       
         
      
