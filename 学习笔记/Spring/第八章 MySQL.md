@@ -878,6 +878,52 @@
 
         UNLOCK TABLES
         ```
+      - 获取表锁：
+        - LOCK TABLES语句可以获取到当前会话的表锁
+          - READ [LOCAL] lock: 读锁
+            - 持有锁的的会话可以从表中读数据，不能写数据
+            - 多个会话可以同时获取表的读锁
+          - WRITE lock: 写锁
+            - 持有锁的的会话可以从表中读数据和写数据
+            - 只有持有锁的可以访问表数据，其他的会话在释放锁之前不能访问表数据
+          - 示例：
+            ```
+            LOCK TABLE t READ;
+            ```
+      - 释放表锁：
+        - 会话可以使用UNLOCK TABLES语句显式地释放锁
+        - 在获取新锁之前，已经存在的锁会隐式地释放
+    - SET TRANSACTION Statement：
+      - 语法：
+        ```
+        SET [GLOBAL | SESSION] TRANSACTION
+            transaction_characteristic [, transaction_characteristic] ...
+
+        transaction_characteristic: {
+            ISOLATION LEVEL level
+          | access_mode
+        }
+
+        level: {
+             REPEATABLE READ
+           | READ COMMITTED
+           | READ UNCOMMITTED
+           | SERIALIZABLE
+        }
+
+        access_mode: {
+             READ WRITE
+           | READ ONLY
+        }
+        ```
+      - 用于定义事务的特性，例如：事务的隔离界别和访问模式
+        - 事务隔离级别：
+          - 使用ISOLATION LEVEL指定
+          - 可选值包括：READ COMMITTED, READ UNCOMMITTED, REPEATABLE READ, SERIALIZABLE; 默认值是REPEATABLE READ
+        - 事务访问模式：
+          - 使用READ WRITE or READ ONLY指定
+          - 默认是READ WRITE模式，在事务操作时允许对表数据进行读写
+          - READ ONLY模式不允许写操作
         
         
         
