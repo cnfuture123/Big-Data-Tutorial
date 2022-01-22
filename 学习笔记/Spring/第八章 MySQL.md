@@ -924,6 +924,100 @@
           - 使用READ WRITE or READ ONLY指定
           - 默认是READ WRITE模式，在事务操作时允许对表数据进行读写
           - READ ONLY模式不允许写操作
+  - Prepared Statements：
+    - 预准备的语句优势：
+      - 执行时解析语句的开销更小
+      - 防止SQL注入攻击
+    - PREPARE, EXECUTE, and DEALLOCATE PREPARE Statements：
+      - PREPARE：准备要执行的语句
+        - 语法：
+          ```
+          PREPARE stmt_name FROM preparable_stmt
+          ```
+      - EXECUTE：执行预准备的语句
+        - 语法：
+          ```
+          EXECUTE stmt_name
+            [USING @var_name [, @var_name] ...]
+          ```
+      - DEALLOCATE PREPARE：释放预准备的语句
+        - 语法：
+          ```
+          {DEALLOCATE | DROP} PREPARE stmt_name
+          ```
+  - 复合语句：
+    - BEGIN ... END语句：
+      - 语法：
+        ```
+        [begin_label:] BEGIN
+            [statement_list]
+        END [end_label]
+        ```
+      - 用于写复合语句，多个语句可以写在BEGIN and END关键字之间
+    - DECLARE语句：
+      - DECLARE用在BEGIN ... END语句中，定义一些局部的变量，条件和处理器，或游标
+      - 示例：
+        ```
+        DECLARE var_name [, var_name] ... type [DEFAULT value]
+        ```
+    - 流程控制语句：
+      - CASE语句：
+        - 语法：
+          ```
+          CASE case_value
+              WHEN when_value THEN statement_list
+              [WHEN when_value THEN statement_list] ...
+              [ELSE statement_list]
+          END CASE
+          
+          CASE
+              WHEN search_condition THEN statement_list
+              [WHEN search_condition THEN statement_list] ...
+              [ELSE statement_list]
+          END CASE
+          ```
+      - IF语句：
+        - 语法：
+          ```
+          IF search_condition THEN statement_list
+              [ELSEIF search_condition THEN statement_list] ...
+              [ELSE statement_list]
+          END IF
+          ```
+      - ITERATE语句：
+        - 语法：
+          ```
+          ITERATE label
+          ```
+        - ITERATE只能出现在LOOP, REPEAT, and WHILE语句
+      - LEAVE语句：
+        - 语法：
+          ```
+          LEAVE label
+          ```
+        - 退出流程控制语句
+      - LOOP语句：
+        - 语法：
+          ```
+          [begin_label:] LOOP
+              statement_list
+          END LOOP [end_label]
+          ```
+      - REPEAT语句：
+        - 语法：
+          ```
+          [begin_label:] REPEAT
+              statement_list
+          UNTIL search_condition
+          END REPEAT [end_label]
+          ```
+      - WHILE语句：
+        - 语法：
+          ```
+          [begin_label:] WHILE search_condition DO
+              statement_list
+          END WHILE [end_label]
+          ```
+      
         
-        
-        
+     
