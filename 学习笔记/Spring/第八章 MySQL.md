@@ -1080,7 +1080,29 @@
         USE db2;
         SELECT COUNT(*) FROM mytable;   # selects from db2.mytable
         ```
-            
+        
+## 存储引擎
+
+  - InnoDB存储引擎
+    - InnoDB概述：
+      - InnoDB的优势：
+        - DML操作遵循ACID模型，支持事务，回滚，容灾的能力去保护用户数据
+        - 行级别锁和Oracle风格的一致性读增强多用户的并发性和性能
+        - InnoDB表在磁盘上组织数据，基于主键优化查询，减少主键查找的I/O
+        - InnoDB支持外键约束来保证数据完整性，inserts, updates, and deletes会被检查确保他们不会导致关联表的不一致
+      - InnoDB表的最佳实践：
+        - 指定最常查询的列（多个列）为表的主键
+        - 基于相同的ID值从多个表中拉取数据时使用join；在join列上定义外键，确保被引用的列加上索引，可以提高join性能；外键也可以将deletes and updates传播到所有受影响的表
+        - 关闭自动提交，由于存储设备的写速度，提交次数过多会限制性能
+        - 使用START TRANSACTION and COMMIT将相关的DML操作分组到事务中
+        - 不要使用 LOCK TABLES语句，为了保证写操作的互斥性，使用SELECT ... FOR UPDATE语法仅给要更新的行加锁
+        - 启用innodb_file_per_table变量，或使用普通的表空间将表的数据和索引放到不同的文件中而不是系统表空间
+        - 评估是否需要压缩数据，压缩InnoDB表数据可以不牺牲读写能力
+      - 查看MySQL默认的存储引擎：
+        ```
+        mysql> SHOW ENGINES;
+        ```
+    - InnoDB和ACID模型：
           
       
         
