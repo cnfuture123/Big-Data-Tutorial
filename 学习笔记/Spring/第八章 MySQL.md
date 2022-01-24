@@ -1108,6 +1108,26 @@
           - autocommit设置
           - COMMIT语句
           - ROLLBACK语句
+        - C: consistency，一致性，相关的MySQL特性包含：
+          - InnoDB双写缓冲区
+          - InnoDB容灾恢复
+        - I: isolation，隔离性主要包括InnoDB事务，相关的MySQL特性包含：
+          - autocommit设置
+          - 事务隔离级别和SET TRANSACTION语句
+          - InnoDB锁的底层细节
+        - D: durability，持久性，涉及硬件的配置：CPU，网络，存储设备等，相关的MySQL特性包含：
+          - InnoDB双写缓冲区
+          - innodb_flush_log_at_trx_commit，sync_binlog，innodb_file_per_table变量
+          - 存储设备的写缓冲区
+          - 备份策略，例如：备份的类型，频率，保留期等
+          - 运行MySQL服务的操作系统，特别是对fsync()调用的支持
+    - InnoDB多版本：
+      - 概述：
+        - InnoDB是一个多版本的存储引擎，它会保存修改数据的旧版本信息以支持并发和回滚等事务特性，这些信息存储在一个叫回滚段的undo表空间
+        - InnoDB会在每行添加3个属性：
+          - 6-byte DB_TRX_ID：上一个插入或更新事务的ID
+          - 7-byte DB_ROLL_PTR：回滚指针，指向回滚段中的一条undo日志记录，它包含足够的信息重建更新之前的数据
+          - 6-byte DB_ROW_ID：包含一个行ID，该ID在插入新行时递增
           
       
         
