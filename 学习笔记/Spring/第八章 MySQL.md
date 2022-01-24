@@ -1103,6 +1103,11 @@
         mysql> SHOW ENGINES;
         ```
     - InnoDB和ACID模型：
+      - ACID模型：
+        - A: atomicity，原子性主要包括InnoDB事务，相关的MySQL特性包含：
+          - autocommit设置
+          - COMMIT语句
+          - ROLLBACK语句
           
       
         
