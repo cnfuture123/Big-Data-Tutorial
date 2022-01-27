@@ -1158,16 +1158,62 @@
               ```
               CREATE TABLE t1 (a INT, b CHAR (20), PRIMARY KEY (a)) ENGINE=InnoDB;
               ```
-          - Row Formats:
-            - Row Format决定行数据如何存储在磁盘上，InnoDB支持4种格式：REDUNDANT, COMPACT, DYNAMIC, and COMPRESSED
-          - 主键：
-            - 选择作为主键的列应该有如下特性：
-              - 该列被大部分重要的查询引用
-              - 该列不会为空
-              - 该列不会有重复值
-              - 插入后该列值很少更改
-        
-                
+            - Row Formats:
+              - Row Format决定行数据如何存储在磁盘上，InnoDB支持4种格式：REDUNDANT, COMPACT, DYNAMIC, and COMPRESSED
+            - 主键：
+              - 选择作为主键的列应该有如下特性：
+                - 该列被大部分重要的查询引用
+                - 该列不会为空
+                - 该列不会有重复值
+                - 插入后该列值很少更改
+          - 移动或拷贝InnoDB表：
+            - 拷贝数据文件：
+              - InnoDB的数据和日志文件都是有相同浮点数格式，并在所有平台二进制格式兼容的
+              - 可以使用RENAME TABLE语句将表数据的.ibd文件从一个数据库移动到另一个
+                ```
+                RENAME TABLE db1.tbl_name TO db2.tbl_name;
+                ```
+            - 从.ibd文件恢复数据：
+              - 拷贝.ibd文件的过程中不能drop or truncate表，因为这些修改会更新表ID
+              - 删除当前的.ibd文件：
+                ```
+                ALTER TABLE tbl_name DISCARD TABLESPACE;
+                ```
+              - 拷贝备份的.ibd文件到合适的数据库目录
+              - 使用新的.ibd文件重建表：
+                ```
+                ALTER TABLE tbl_name IMPORT TABLESPACE;
+                ```
+            - 从逻辑备份中恢复数据：
+              - mysqldump：数据库备份工具，它会生成一系列SQL语句用来重建原来数据库对象定义和表数据
+                - 性能和扩展性：
+                  - mysqldump的优势在于可以方便和灵活的查看或编辑输出，可以克隆数据库用于开发或DBA，或在当前数据库基础上修改用于测试
+                  - 但是mysqldump备份大量数据时的性能和扩展性并不好，因为重新执行SQL语句涉及插入，建索引等I/O操作；因此对于大规模数据的备份和恢复，通过拷贝数据文件的物理备份方式更好一些
+                  - mysqldump在转储之前会把表数据缓存在内存中，在数据量大时可能会造成内存压力
+                - 使用方式：
+                  - 语法：
+                    ```
+                    mysqldump [options] db_name [tbl_name ...]
+                    mysqldump [options] --databases db_name ...
+                    mysqldump [options] --all-databases
+                    ```
+                - 参考：https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-performance
+        - 索引：
+          - 聚集索引和二级索引：
+            - 概述：
+              - 每个InnoDB表都有一个称为聚集索引的特殊索引用来存储行数据，通常聚集索引和主键是同义的
+              - 当定义表的主键时，InnoDB使用它作为聚集索引；当没有指定主键时，InnoDB使用第一个NOT NULL的UNIQUE索引作为聚集索引
+              - 每个表都应该定义一个主键，如果没有唯一且非null的列作为主键，则添加一个自增列，插入一行数据时自增列值会自动增加
+              - 如果表没有主键和合适的UNIQUE索引，InnoDB会在包含row ID值的列上生成一个隐式的称为GEN_CLUST_INDEX的聚集索引
+            - 聚集索引可以加快查询速度原因：
+              - 索引直接搜索包含行数据的分页，可以减少磁盘I/O操作
+            - 二级索引和聚集索引的关系：
+              - 在InnoDB中，二级索引中的每条记录都包含行的主键列，以及为二级索引指定的列，它使用主键值在聚集索引中搜索该行
+              - 如果主键很长，则二级索引会占用更多空间，因此使用短主键是有利的
+          - InnoDB索引的物理结构：
+            
+            
+              
       
         
      
