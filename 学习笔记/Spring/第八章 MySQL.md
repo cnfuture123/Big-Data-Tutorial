@@ -1264,9 +1264,38 @@
             - 概述：
               - Undo表空间包含undo日志，它是包含如何撤销一个事务对聚集索引记录的最新修改信息的记录集合
             - 默认的Undo表空间：
-              
-         
-            
+              - 两个默认的undo表空间在MySQL实例初始化时创建，由innodb_undo_directory参数指定表空间路径
+              - undo日志在长期运行的事务中会变大，此时需要创建额外的undo表空间
+                ```
+                CREATE UNDO TABLESPACE tablespace_name ADD DATAFILE 'file_name.ibu';
+                ```
+              - 删除undo表空间：
+                ```
+                ALTER UNDO TABLESPACE tablespace_name SET INACTIVE;
+                DROP UNDO TABLESPACE tablespace_name;
+                ```
+        - 双写缓冲区：
+          - 双写缓冲区是一块InnoDB将缓冲池的数据刷写到分页，然后将分页数据写入到InnoDB数据文件的合适位置的存储区域
+          - 尽管数据写了2次，但是双写缓冲区不需要2倍的I/O开销；数据以大序列化块的形式写入双写缓冲区，只向操作系统调用一次fsync()
+          - 双写缓冲区配置：
+            - innodb_doublewrite：控制是否启用双写缓冲区
+            - innodb_doublewrite_dir：指定创建双写缓冲区文件的目录
+            - innodb_doublewrite_files：指定双写缓冲区文件的数量
+            - innodb_doublewrite_pages：控制每个线程双写分页的最大数量
+            - innodb_doublewrite_batch_size：一个批次双写分页的数量
+        - Redo日志：
+          - 概述：
+            - redo日志用于容灾时纠正未完成事务的数据
+            - 默认redo日志由磁盘上ib_logfile0 and ib_logfile1的2个文件表示；redo日志中的数据将被改动的记录进行编码，数据通过重做日志的传递由不断增加的LSN值表示
+          - 更改redo日志文件的数量和大小：
+            - innodb_log_file_size：日志文件大小
+            - innodb_log_files_in_group：日志文件数量
+          - redo日志的组提交：
+            - InnoDB在事务提交之前会刷写事务的redo日志，它使用组提交的功能将多个刷写请求分成一组，一次写入到日志文件
+        - Undo日志：
+          - 概述：
+            - undo日志读写事务关联的undo日志记录的集合，一条undo日志记录包含如何撤消事务对聚集索引记录的最新更改的信息
+            - undo日志存在于回滚段的undo日志段
               
       
         
