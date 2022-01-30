@@ -1296,7 +1296,54 @@
           - 概述：
             - undo日志读写事务关联的undo日志记录的集合，一条undo日志记录包含如何撤消事务对聚集索引记录的最新更改的信息
             - undo日志存在于回滚段的undo日志段
-              
-      
-        
+            - 一个事务最多分配4个undo日志，支持的操作类型如下：
+              - 用户表的INSERT操作
+              - 用户表的UPDATE and DELETE操作
+              - 用户临时表的INSERT操作
+              - 用户临时表的UPDATE and DELETE操作
+      - InnoDB锁和事务模型：
+        - InnoDB锁：
+          - 共享锁和独占锁：
+            - 共享锁允许持有锁的事务读取数据
+            - 独占锁允许持有锁的事务更新或删除数据
+          - 意向锁：
+            - InnoDB支持多粒度锁，允许行锁和表锁同时存在
+            - 有2种类型的意向锁：
+              - 意向共享锁表明事务将会对表中各行设置共享锁
+                ```
+                SELECT ... FOR SHARE
+                ```
+              - 意向独占锁表明事务将会对表中各行设置独占锁
+                ```
+                SELECT ... FOR UPDATE 
+                ```
+          - 记录锁：
+            - 记录锁是在索引记录上的锁
+              ```
+              SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; //防止其他事务插入，更新，删除t.c1是10的行
+              ```
+          - 间隙锁：
+            - 间隙锁是对索引之间间隙的锁
+              ```
+              SELECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE;
+              ```
+          - 插入意向锁：
+            - 插入意向锁是一种间隙锁，由插入行数据之前的INSERT操作设置
+          - AUTO-INC锁：
+            - AUTO-INC锁是一种特殊的表级锁，由插入到具有AUTO_INCREMENT列表中事务使用
+        - InnoDB事务模型：
+          - 事务隔离级别：
+            - REPEATABLE READ：
+              - InnoDB默认的隔离级别，在同一个事务中执行多次SELECT语句，结果应该是一致的
+              - 对于读锁（SELECT with FOR UPDATE or FOR SHARE），UPDATE, and DELETE语句：
+                - 如果该语句使用唯一索引作为唯一搜素条件，InnoDB只锁定索引记录
+                - 如果使用其他搜索条件，InnoDB锁定索引范围，使用间隙锁或next-key锁阻塞其他会话对这段范围的插入数据
+            - READ COMMITTED：
+              - 每次一致读取（即使在同一事务中）都会设置并读取自己的新快照
+              - 对于读锁（SELECT with FOR UPDATE or FOR SHARE），UPDATE, and DELETE语句，InnoDB只锁定索引记录，因此允许在锁定记录之后插入新记录
+            - READ UNCOMMITTED：
+              - SELECT语句以非锁的方式执行，但可能读取的是早期版本的行数据，因此读到的数据不是一致的，也称为脏数据
+            - SERIALIZABLE：
+              - 类似于REPEATABLE READ，但是如果禁用了autocommit，InnoDB隐式地将SELECT语句转换成SELECT ... FOR SHARE；如果启用了autocommit，SELECT自身是一个事务
+              - 因此它是只读的，如果作为一致性读可以被序列化并且不需要阻塞其他的事务
      
