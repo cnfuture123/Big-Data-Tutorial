@@ -1433,5 +1433,39 @@
           - 事务死锁会导致InnoDB回滚整个事务，然后可以重试事务
           - 如果执行语句时没有指定IGNORE参数，则会在duplicate-key错误时回滚SQL语句
           - 行太长错误会回滚SQL语句
+  - 设置存储引擎：
+    - 在创建表时可以通过ENGINE参数指定使用的存储引擎，默认使用的是InnoDB
+      ```
+      CREATE TABLE t1 (i INT) ENGINE = INNODB;
+      -- Simple table definitions can be switched from one to another.
+      CREATE TABLE t2 (i INT) ENGINE = CSV;
+      CREATE TABLE t3 (i INT) ENGINE = MEMORY;
+      ```
+    - 可以通过以下的方式指定默认的存储引擎：
+      - 在服务器启动时使用--default-storage-engine参数
+      - my.cnf配置文件中设置default-storage-engine 
+        ```
+        SET default_storage_engine=NDBCLUSTER;
+        ```
+  - MyISAM存储引擎：
+    - 概述：
+      - 每个MyISAM表在磁盘上存储为2个文件，数据文件有.MYD（MYData）扩展名，索引文件有.MYI (MYIndex)扩展名
+      - 显示指定MyISAM表
+        ```
+        CREATE TABLE t (i INT) ENGINE = MYISAM;
+        ```
+      - 可以通过mysqlcheck和myisamchk检查和修复MyISAM表、
+      - 使用myisampack压缩MyISAM表，减少占用空间
+    - MyISAM表特性：
+      - 所有数据值都首先以低字节存储
+      - 所有数字键值都首先以高字节存储，以便更好地压缩索引
+      - 每个MyISAM最大索引数是64，每个索引最大列数是16
+      - 键的最大长度是1000字节
+      - BLOB and TEXT列可以被索引
+      - 索引列可以为NULL值
+
+## 副本
+      
+    
           
         
