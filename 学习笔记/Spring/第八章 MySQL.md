@@ -1361,5 +1361,28 @@
             - 保持事务足够小，并且持续时间短，使其不易发生冲突
             - 在进行一组相关更改后立即提交事务，以使其不易发生冲突；不要将有未提交事务的mysql会话长时间保持打开状态
             - 修改事务中的多个表或同一表中的不同行集时，每次都以一致的顺序执行这些操作
-            
-     
+      - InnoDB表和分页压缩：
+        - InnoDB表压缩：
+          - 数据压缩通过很小的CPU利用率代价可以实现更小的数据库大小，减少I/O，提高吞吐量
+          - 压缩对于读取密集型应用程序特别有价值，这些应用程序具有足够的RAM以将常用数据保存在内存中的系统
+          - 指定ROW_FORMAT=COMPRESSED创建的InnoDB表，使用磁盘上更小的分页大小，更小的分页使得磁盘读写的I/O更少，对于SSD设备很重要
+        - InnoDB分页压缩：
+          - InnoDB支持对于单表表空间中的表分页级别的压缩，这个特性也称为透明分页压缩
+          - 使用CREATE TABLE or ALTER TABLE语句时可以通过指定COMPRESSION属性启用分页压缩，支持的压缩算法包括Zlib and LZ4
+            ```
+            CREATE TABLE t1 (c1 INT) COMPRESSION="zlib";
+            ```
+      - InnoDB行格式
+        - 概述：
+          - 表的行格式决定行数据的物理存储方式，进而影响查询和DML操作的性能
+          - 每个表的数据划分为分页，分页存在于B-tree索引的数据结构中，表数据和二级索引都使用这种结构
+        - InnoDB支持4种行格式：REDUNDANT, COMPACT, DYNAMIC, and COMPRESSED
+
+          <img width="1000" alt="image" src="https://user-images.githubusercontent.com/46510621/151922623-b094766c-dbea-443d-8dff-d85767cfa859.png">
+
+          - 定义表的行格式：
+            ```
+            CREATE TABLE t1 (c1 INT) ROW_FORMAT=DYNAMIC;
+            ```
+      - InnoDB备份和恢复：
+        
