@@ -1612,11 +1612,112 @@
           );
           ```
     - HASH分区：
-      
-          
+      - 概述：
+        - HASH分区主要用于保证数据在预定数量的分区之间均匀分布
+        - 使用HASH分区时需要指定要哈希的列值或基于列值的表达式，以及分区数
+      - 语法：
+        ```
+        PARTITION BY HASH (expr)
+        PARTITIONS num
+        ```
+      - 示例：
+        ```
+        PARTITION BY HASH(store_id)
+        PARTITIONS 4;
+        ```
+      - 线性哈希分区；
+        - 和哈希分区的区别是：线性哈希分区利用线性二次幂算法，而哈希分区采用哈希函数值的模
+        - 示例：
+          ```
+          PARTITION BY LINEAR HASH( YEAR(hired) )
+          PARTITIONS 4;
+          ```
+    - KEY分区：
+      - 类似于哈希分区，区别是哈希分区使用的是用户定义的表达式，而key分区使用的哈希函数由MySQL服务器提供
+      - KEY采用包含零个或多个列名的列表，用作分区键的任何列都必须包含表的部分或全部主键；当没有指定分区键时，使用主键
+      - 示例：
+        ```
+        PARTITION BY KEY()
+        PARTITIONS 2;
+        ```
+    - 子分区：
+      - 子分区也称为复合分区，是对分区的进一步划分
+      - 示例：
+        ```
+        CREATE TABLE ts (id INT, purchased DATE)
+            PARTITION BY RANGE( YEAR(purchased) )
+            SUBPARTITION BY HASH( TO_DAYS(purchased) )
+            SUBPARTITIONS 2 (
+                PARTITION p0 VALUES LESS THAN (1990),
+                PARTITION p1 VALUES LESS THAN (2000),
+                PARTITION p2 VALUES LESS THAN MAXVALUE
+            );
+        ```
+        - 表有3个RANGE分区，每一个分区又划分2个子分区，这样整个表划分为6个分区
+  - 分区管理：
+    - RANGE and LIST分区的管理：
+      - 删除分区及数据：
+        - 语法：
+          ```
+          ALTER TABLE ... DROP PARTITION
+          ```
+        - 示例：
+          ```
+          ALTER TABLE tr DROP PARTITION p2;
+          ```
+      - 添加分区：
+        - 语法：
+          ```
+          ALTER TABLE ... ADD PARTITION
+          ```
+        - 示例：
+          ```
+          ALTER TABLE members ADD PARTITION (PARTITION p3 VALUES LESS THAN (2010));
+          ```
+    - HASH and KEY分区的管理：
+      - 合并分区：
+        - 语法：
+          ```
+          ALTER TABLE ... COALESCE PARTITION
+          ```
+        - 示例：
+          ```
+          ALTER TABLE clients COALESCE PARTITION 4; //减少4个分区
+          ```
+  - 分区维护：
+    - 重建分区：
+      - 重建分区的过程是删除分区所有的记录，然后重新插入
+      - 示例：
+        ```
+        ALTER TABLE t1 REBUILD PARTITION p0, p1;
+        ```
+    - 优化分区：
+      - 用于回收任何未使用的空间并对分区数据文件进行碎片整理
+      - 等于执行CHECK PARTITION, ANALYZE PARTITION, and REPAIR PARTITION
+      - 示例：
+        ```
+        ALTER TABLE t1 OPTIMIZE PARTITION p0, p1;
+        ```
+    - 分析分区：
+      - 这将读取并存储分区的键分布
+      - 示例：
+        ```
+        ALTER TABLE t1 ANALYZE PARTITION p3;
+        ```
+    - 修复分区：
+      - 修复损坏的分区
+      - 示例：
+        ```
+        ALTER TABLE t1 REPAIR PARTITION p0,p1;
+        ```
+    - 检查分区：
+      - 检查分区中的错误，分区数据或索引是否损坏
+      - 示例：
+        ```
+        ALTER TABLE trb3 CHECK PARTITION p1;
+        ```
+  - 获取分区信息：
     
-      
-      
-    
-          
-        
+
+
+
