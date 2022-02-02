@@ -1532,8 +1532,90 @@
         SELECT * FROM t PARTITION (p0,p1) WHERE c < 5
         ```
   - 分区类型：
+    - RANGE分区：
+      - RANGE分区指的是每个分区包含分区表达式值位于给定范围内的行，范围应该是连续，但不重叠的
+      - 示例：
+        ```
+        PARTITION BY RANGE (store_id) (
+            PARTITION p0 VALUES LESS THAN (6),
+            PARTITION p1 VALUES LESS THAN (11),
+            PARTITION p2 VALUES LESS THAN (16),
+            PARTITION p3 VALUES LESS THAN (21)
+        );
+        ```
+      - Range分区适用的情况：
+        - 需要删除旧数据，删除分区数据的方式比DELETE语句更有效
+          ```
+          ALTER TABLE employees DROP PARTITION p0;
+          ```
+        - 使用包含日期或时间的列
+        - 经常执行依赖于分区表列的查询语句，MySQL可以通过匹配WHERE子句快速确定需要扫描的分区
+    - LIST分区：
+      - List分区类似于Range分区，主要区别是List分区中每个分区都是根据一组值列表中的列值的成员身份来定义和选择的，而不是一组连续范围的值
+      - 语法：
+        ```
+        PARTITION BY LIST(expr)
+        ```
+        - expr是一个列值或基于列值的表达式，并且返回一个整数值
+      - 示例：
+        ```
+        PARTITION BY LIST(store_id) (
+            PARTITION pNorth VALUES IN (3,5,6,9,17),
+            PARTITION pEast VALUES IN (1,2,10,11,19,20),
+            PARTITION pWest VALUES IN (4,12,13,14,18),
+            PARTITION pCentral VALUES IN (7,8,15,16)
+        );
+        ```
+    - COLUMNS分区：
+      - COLUMNS分区是RANGE and LIST分区的变体，COLUMNS分区允许在分区键中使用多个列
+      - RANGE COLUMNS分区：
+        - RANGE COLUMNS分区类似于RANGE分区，但可以使用基于多个列值的范围来定义分区
+        - RANGE COLUMNS分区和RANGE分区主要的区别：
+          - RANGE COLUMNS不支持表达式，只允许列名
+          - RANGE COLUMNS允许一个或多个列的列表
+          - RANGE COLUMNS分区列不局限于整数列，string, DATE and DATETIME列也支持
+        - 语法：
+          ```
+          CREATE TABLE table_name
+          PARTITION BY RANGE COLUMNS(column_list) (
+              PARTITION partition_name VALUES LESS THAN (value_list)[,
+              PARTITION partition_name VALUES LESS THAN (value_list)][,
+              ...]
+          )
+
+          column_list:
+              column_name[, column_name][, ...]
+
+          value_list:
+              value[, value][, ...]
+          ```
+          - column_list是一个或多个列的列表
+          - value_list是值列表
+          - 分区列列表和定义每个分区的值列表中的元素必须以相同的顺序出现
+        - 示例：
+          ```
+           PARTITION BY RANGE COLUMNS(a,d,c) (
+               PARTITION p0 VALUES LESS THAN (5,10,'ggg'),
+               PARTITION p1 VALUES LESS THAN (10,20,'mmm'),
+               PARTITION p2 VALUES LESS THAN (15,30,'sss'),
+               PARTITION p3 VALUES LESS THAN (MAXVALUE,MAXVALUE,MAXVALUE)
+          ```
+      - LIST COLUMNS分区：
+        - LIST COLUMNS分区类似于LIST分区，允许使用多个列作为分区键，分区键支持的类型包括：integer，string types, DATE, and DATETIME
+        - 示例：
+          ```
+          PARTITION BY LIST COLUMNS(city) (
+              PARTITION pRegion_1 VALUES IN('Oskarshamn', 'Högsby', 'Mönsterås'),
+              PARTITION pRegion_2 VALUES IN('Vimmerby', 'Hultsfred', 'Västervik'),
+              PARTITION pRegion_3 VALUES IN('Nässjö', 'Eksjö', 'Vetlanda'),
+              PARTITION pRegion_4 VALUES IN('Uppvidinge', 'Alvesta', 'Växjo')
+          );
+          ```
+    - HASH分区：
+      
+          
     
-      - 
+      
       
     
           
