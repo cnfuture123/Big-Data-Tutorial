@@ -1684,40 +1684,42 @@
           ```
           ALTER TABLE clients COALESCE PARTITION 4; //减少4个分区
           ```
-  - 分区维护：
-    - 重建分区：
-      - 重建分区的过程是删除分区所有的记录，然后重新插入
-      - 示例：
-        ```
-        ALTER TABLE t1 REBUILD PARTITION p0, p1;
-        ```
-    - 优化分区：
-      - 用于回收任何未使用的空间并对分区数据文件进行碎片整理
-      - 等于执行CHECK PARTITION, ANALYZE PARTITION, and REPAIR PARTITION
-      - 示例：
-        ```
-        ALTER TABLE t1 OPTIMIZE PARTITION p0, p1;
-        ```
-    - 分析分区：
-      - 这将读取并存储分区的键分布
-      - 示例：
-        ```
-        ALTER TABLE t1 ANALYZE PARTITION p3;
-        ```
-    - 修复分区：
-      - 修复损坏的分区
-      - 示例：
-        ```
-        ALTER TABLE t1 REPAIR PARTITION p0,p1;
-        ```
-    - 检查分区：
-      - 检查分区中的错误，分区数据或索引是否损坏
-      - 示例：
-        ```
-        ALTER TABLE trb3 CHECK PARTITION p1;
-        ```
-  - 获取分区信息：
-    
-
-
+    - 分区维护：
+      - 重建分区：
+        - 重建分区的过程是删除分区所有的记录，然后重新插入
+        - 示例：
+          ```
+          ALTER TABLE t1 REBUILD PARTITION p0, p1;
+          ```
+      - 优化分区：
+        - 用于回收任何未使用的空间并对分区数据文件进行碎片整理
+        - 等于执行CHECK PARTITION, ANALYZE PARTITION, and REPAIR PARTITION
+        - 示例：
+          ```
+          ALTER TABLE t1 OPTIMIZE PARTITION p0, p1;
+          ```
+      - 分析分区：
+        - 这将读取并存储分区的键分布
+        - 示例：
+          ```
+          ALTER TABLE t1 ANALYZE PARTITION p3;
+          ```
+      - 修复分区：
+        - 修复损坏的分区
+        - 示例：
+          ```
+          ALTER TABLE t1 REPAIR PARTITION p0,p1;
+          ```
+      - 检查分区：
+        - 检查分区中的错误，分区数据或索引是否损坏
+        - 示例：
+          ```
+          ALTER TABLE trb3 CHECK PARTITION p1;
+          ```
+    - 获取分区信息：
+      - 使用SHOW CREATE TABLE语句可以查看创建分区表时的分区子句
+      - 使用SHOW TABLE STATUS语句可以确定一个表是否有分区
+      - 使用EXPLAIN SELECT语句查看指定的SELECT语句使用了哪个分区
+      - 查询INFORMATION_SCHEMA.PARTITIONS表
+  
 
