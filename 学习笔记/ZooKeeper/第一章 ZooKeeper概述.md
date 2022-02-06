@@ -84,7 +84,11 @@
     - 特性：
       - 全局唯一
       - 高可用
-    - ID生成器的方案：
+    - 分布式ID生成器的方案：
+      - Java的UUID
+      - 利用分布式缓存Redis的原子操作INCR和INCRBY生成全局唯一的ID
+      - Twitter的Snowflake算法，生成的ID是一个64位的长整数类型数据
+      - 利用ZK的顺序节点生成全局唯一的ID
       
    
              
