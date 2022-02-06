@@ -3,6 +3,17 @@
   - Redis是一个开源的key-value存储系统，基于内存运行，分布式，并支持持久化的NoSQL数据库。
   - C语言编写，遵守BSD协议。
   - Redis通常被称为数据结构服务器，因为值（value）可以是字符串(String)、哈希(Hash)、列表(list)、集合(sets)和有序集合(sorted sets) 、位数组(Bit Arrays)、Streams等类型。
+  - 在开发高并发系统时，有三把利器来保护系统：缓存、降级和限流
+
+## Redis安装和配置
+
+  - 有2种方式查看和修改配置：
+    - 通过配置文件redis.conf修改Redis的配置项
+    - 通过命令来查看或修改Redis的配置项：
+      ```
+      CONFIG GET SETTING_NAME
+      CONFIG SET SETTING_NAME SETTING_VALUE
+      ```
   
 ## Redis特点
 
@@ -25,8 +36,9 @@
   - select命令切换数据库。
   - dbsize查看当前数据库的key的数量。
   - flushdb：清空当前库。
-  - flushall；通杀全部库。
+  - flushall；清空0-15全部库。
   - 统一密码管理，16个库都是同样密码，要么都OK要么一个也连接不上。
   - Redis索引都是从零开始。
-  - 默认端口是6379。
+  - 默认端口是6379
+  - Redis键的命名建议使用冒号作为上级和下级之间的分隔符，例如：superkey:subkey
   
