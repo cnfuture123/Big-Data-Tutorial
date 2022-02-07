@@ -76,7 +76,7 @@
   - 语法格式：
     ```
     switch(表达式) {
-      case 常量1;
+      case 常量1:
         语句1；
         break;
       case 常量2：
