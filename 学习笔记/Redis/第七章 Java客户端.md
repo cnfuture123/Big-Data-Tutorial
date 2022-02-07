@@ -35,6 +35,20 @@
       - 创建一个JedisPoolConfig配置实例
       - 以JedisPoolConfig实例、Redis IP、Redis Port和其他可选项为参数，构造一个JedisPool连接池实例
     - JedisPool的使用：
+      - 调用pool.getResource()从连接池获取连接
+      - JedisPool的池化连接连接在使用完后需要调用close()关闭连接，将其归还给连接池
+
+## Spring的Redis缓存注解
+
+  - Spring的三个缓存注解：
+    - @CachePut: 设置缓存，先执行方法，然后将执行结果缓存起来
+    - @CacheEvict: 删除缓存，在执行方法前删除缓存
+    - @Cacheable: 查询缓存，首先检查注解中的key是否在缓存中，如果是则返回key的缓存值，不再执行方法；否则执行方法并将结果缓存起来
+
+## SpEL
+
+  - SpEL表达式可以在运行期间执行，其值可以动态装配到Spring Bean属性火构造函数中
+  - JSP页面的表达式使用${}声明，SpEL表达式使用#{}声明
   
 ## RedisBloom
 
