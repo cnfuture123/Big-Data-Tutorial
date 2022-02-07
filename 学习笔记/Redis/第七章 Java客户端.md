@@ -2,6 +2,8 @@
   
 ## Jedis
 
+  - 概述：
+    - 使用时需要构建Jedis对象，一个Jedis对象代表一条和Redis服务进行连接的Socket通道
   - 需要的jar包：
     - jedis-3.1.0.jar
     - commons-pool-1.6.jar
@@ -18,6 +20,21 @@
     - 交易示例：
     
     ![交易示例](./代码/RedisTransaction.java)
+    
+## JedisPool
+
+  - JedisPoolConfig配置类：
+    - 负责配置JedisPool参数，其中重要的参数包括：
+      - maxTotal: 资源池中最大的连接数，默认值是8
+        - 在并发量不大时，maxTotal设置过高会导致不必要的连接资源的浪费。可以根据实际总QPS和node节点数合理评估每个节点使用的最大连接数
+      - maxIdel: 资源池允许最大空闲的连接数，默认值是8
+        - maxIdel实际是业务可用的最大连接数，使得连接池达到最佳性能的设置是maxIdel = maxTotal
+      - minIdel: 资源池确保最少空闲的连接数，默认值是0
+  - JedisPool的创建和预热：
+    - 创建JedisPool连接池的步骤：
+      - 创建一个JedisPoolConfig配置实例
+      - 以JedisPoolConfig实例、Redis IP、Redis Port和其他可选项为参数，构造一个JedisPool连接池实例
+    - JedisPool的使用：
   
 ## RedisBloom
 
