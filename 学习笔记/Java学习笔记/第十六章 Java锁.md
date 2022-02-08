@@ -57,7 +57,7 @@
         - JVM中每个对象会有一个监视器，监视器和对象一起创建和销毁。监视器的作用是保证同一时间只有一个线程可以访问被保护的临界区代码块
         - 在Hotspot虚拟机中，监视器由ObjectMonitor实现，包含WaitSet、Cxq、EntryList三个队列：
           - Cxq: 竞争队列，所有请求锁的线程首先被放在这个队列中
-          - EntryList: Cxq中有资格成为候选资源的线程被移动到EntryList中
+          - EntryList: Cxq中有资格获取资源的候选线程被移动到EntryList中
           - WaitSet: 某个拥有ObjectMonitor的线程调用Object.wait()方法后将被阻塞，然后被放到这个队列
         - 进程从用户态到内核态切换的三种方式：硬件中断，系统调用，异常
     - 64位Mark Word结构：
