@@ -99,7 +99,7 @@
       - AtomicLongFieldUpdater: 原子更新长整型字段的更新器
       - AtomicReferenceFieldUpdater: 原子更新引用类型字段的更新器
   - ABA问题：
-    - 乐观锁的实现版本使用版本号解决ABA问题。乐观锁每次在执行数据的修改操作时都会带上一个版本号，版本号和数据的版本号一致就可以执行修改操作并对版本号执行+1操作，否则执行失败
+    - 乐观锁使用版本号解决ABA问题。乐观锁每次在执行数据的修改操作时都会带上一个版本号，版本号和数据的版本号一致就可以执行修改操作并对版本号执行+1操作，否则执行失败
     - AtomicStampedReference在CAS的基础上增加了一个Stamp，使用这个时间戳判断数据是否发生变化，进行实效性检验
     - AtomicMarkableReference只关心是否修改过，其标记属性mark是boolean类型，记录值是否修改过
   - LongAdder: 以空间换时间的方式提升高并发场景下CAS操作的性能
