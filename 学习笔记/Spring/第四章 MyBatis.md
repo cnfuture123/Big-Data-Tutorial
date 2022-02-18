@@ -49,7 +49,7 @@
       
 ## XML配置
 
-  - MyBatis的配置文件包含了会深深影响MyBatis行为的设置和属性信息，顶层结构如下：
+  - MyBatis的配置文件包含影响MyBatis行为的设置和属性信息，顶层结构如下：
   
     ![image](https://user-images.githubusercontent.com/46510621/111865610-0f0b3780-89a3-11eb-9e3f-1a206092b544.png)
 
