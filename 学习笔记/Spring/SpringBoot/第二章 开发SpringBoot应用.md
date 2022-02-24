@@ -158,7 +158,7 @@
           }
       }
       ```
-    - @ControllerAdvice注解使多个，分散的@ExceptionHandlers成为一个全局的异常处理组件，这种机制简单并且灵活：
+    - @ControllerAdvice注解使多个分散的@ExceptionHandlers成为一个全局的异常处理组件，这种机制简单并且灵活：
       - 可以控制响应体和状态码
       - 可以将几种异常映射到同一个方法，一起被处理
       - 更好的利用RESTful ResposeEntity响应
