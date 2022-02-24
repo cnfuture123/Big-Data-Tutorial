@@ -31,8 +31,8 @@
 
   - 外部Application属性；
     - Spring Boot自动从如下路径加载application.properties和application.yaml：
-      - 类路径，类路径/config包下
-      - 当前目录，当前目录/config及其子目录
+      - 类路径：类路径/config包下
+      - 当前目录：当前目录/config及其子目录
     - 属性占位符：${name}
       ```
       app.name=MyApp
