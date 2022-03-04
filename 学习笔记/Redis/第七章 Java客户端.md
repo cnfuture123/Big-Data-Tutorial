@@ -130,7 +130,7 @@
 ## JRedisBloom
 
   - 概述：
-    - RedisBloom的Java客户端库，包含RedisBloom Redis模块的API，实现了高性能的Bloom Filter
+    - RedisBloom的Java客户端库，包含RedisBloom模块的API，实现了高性能的Bloom Filter
     - 导入依赖：
       ```
         <dependencies>
