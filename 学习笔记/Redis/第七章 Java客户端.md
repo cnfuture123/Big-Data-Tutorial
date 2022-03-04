@@ -47,7 +47,7 @@
 
 ## SpEL
 
-  - SpEL表达式可以在运行期间执行，其值可以动态装配到Spring Bean属性火构造函数中
+  - SpEL表达式可以在运行期间执行，其值可以动态装配到Spring Bean属性或构造函数中
   - JSP页面的表达式使用${}声明，SpEL表达式使用#{}声明
   
 ## RedisBloom
