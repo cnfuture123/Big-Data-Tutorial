@@ -75,7 +75,7 @@
       - index.search.idle.after：分片不能被搜索或请求的搜索空闲时间，默认是30秒
       - index.refresh_interval：多久刷新一次，将最近对索引的修改对搜索和查询可见，默认是1秒，设置为-1会禁用刷新操作。
       - index.max_terms_count：Terms Query中terms数量的最大值，默认是65536
-      - index.routing.allocation.enable：控制索引的分配分配
+      - index.routing.allocation.enable：控制索引的分配
         ![image](https://user-images.githubusercontent.com/46510621/131835485-c0e9a23b-26f2-4af7-935f-9d08fbd78346.png)
       - index.routing.rebalance.enable: 启用分片的负载均衡
         ![image](https://user-images.githubusercontent.com/46510621/131835633-28e9d62c-2e56-4a5a-bf38-91dc577ed334.png)
