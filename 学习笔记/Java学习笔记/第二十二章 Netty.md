@@ -92,8 +92,21 @@
     - position: 读写位置，缓冲区下一个要被读或写元素的索引
     - mark: 调用mark()设置mark=position，再调用reset()让position恢复到mark标记的位置，即position=mark
   - NIO Buffer的重要方法：
-      
+    - flip(): 将写模式翻转成读模式
+    - clear(): 将缓冲区转换为写模式，作用是：
+      - 将position清零
+      - limit设置为capacity最大容量值
+    - rewind(): 已经读完的数据，可以调用rewind()再读一遍
+  - 使用Buffer类的基本步骤：
+    - 使用创建子类实例对象的allocate()创建一个Buffer类的实例对象
+    - 调用put()将数据写入缓冲区
+    - 写入完成后，在开始读取数据前调用Buffer.flip()，将缓冲区转换为读模式
+    - 调用get()可以从缓冲区读取数据
+    - 读取完成后，调用Buffer.clear()或Buffer.compact()，将缓冲区转换为写模式，可以继续写入
 
+### NIO Channel
+    
+  - 四种
 
     
       
