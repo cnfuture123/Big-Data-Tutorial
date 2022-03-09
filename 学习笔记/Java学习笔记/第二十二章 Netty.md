@@ -106,9 +106,36 @@
 
 ### NIO Channel
     
-  - 四种
+  - FileChannel: 
+    - 概述：
+      - 文件通道，既可以从文件中读取数据，也可以将数据写入文件中
+      - FileChannel为阻塞模式
+    - 读取FileChannel：
+      - channel.read(buf)读取通道的数据时，对于通道是读模式，对于缓冲区是写入数据，这是ByteBuffer缓冲区处于写模式
+    - 写入FileChannel：
+      - write(buf)作用是从ByteBuffer缓冲区中读取数据，然后写入通道，返回值是写入成功的字节数
+    - 关闭通道：
+      - channel.close()
+    - 强制刷新到磁盘：
+      - channel.force(true)
+  - SocketChannel:
+    - 概述：
+      - 网络连接的通道，一个是SocketChannel，负责连接的数据传输；另一个是ServerSocketChannel，负责连接的监听
+      - ServerSocketChannel仅应用于服务端，SocketChannel同时处于服务端和客户端。对于一个连接，两端都有一个负责传输的SocketChannel
+    - 模式设置：
+      - socketChannel.configureBlocking(false)设置为非阻塞模式
+      - socketChannel.configureBlocking(true)设置为阻塞模式
+  - DatagramChannel:
+    - 概述：
+      - 处理UDP的数据传输
 
-    
+### NIO Selector
+
+  - 概述：
+    - 选择器的使命是完成IO的多路复用，主要工作是通道的注册、监听、事件查询。一个通道代表一条连接通路，通过选择器可以同时监控多个通道的IO状况
+    - 在NIO编程中，一般是一个单线程处理一个选择器，通过选择器，一个单线程可以处理成百上千的的通道
+    - 调用通道的Channel.register(Selector sel, int ops)可以将通道实例注册到选择器中
+  
       
         
       
