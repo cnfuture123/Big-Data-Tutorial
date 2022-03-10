@@ -135,6 +135,37 @@
     - 选择器的使命是完成IO的多路复用，主要工作是通道的注册、监听、事件查询。一个通道代表一条连接通路，通过选择器可以同时监控多个通道的IO状况
     - 在NIO编程中，一般是一个单线程处理一个选择器，通过选择器，一个单线程可以处理成百上千的的通道
     - 调用通道的Channel.register(Selector sel, int ops)可以将通道实例注册到选择器中
+  - 可供选择器监控的通道IO事件类型包括：这里的IO事件不是对通道的的IO操作，而是通道处于某个IO操作的就绪状态
+    - 可读：SelectionKey.OP_READ
+    - 可写：SelectionKey.OP_WRITE
+    - 连接：SelectionKey.OP_CONNECT
+    - 接收：SelectionKey.OP_ACCEPT
+  - SelectableChannel: 一个通道如果能被选择，必须继承SelectableChannel类
+  - SelectionKey就是那些被选择器选中的IO事件
+  - 选择器使用流程：
+    - 获取选择器实例
+      ```
+      Selector selector = Selector.open();
+      ```
+    - 将通道注册到选择器实例
+      ```
+      serverSocketChannel.bind(new InetSocketAddress(11111));
+      serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+      ```
+    - 选出感兴趣的IO就绪事件（选择键集合）：通过Selector的select()选出已经注册的、就绪的IO事件，并且保存到SelectionKey集合中
+
+## Reactor模式
+
+  - 概述：
+    - Reactor模式由Reactor线程、Handlers处理器两个角色组成：
+      - Reactor线程职责：负责查询IO事件，当检测到一个IO事件时将其发送给相应的Handler处理器去处理
+      - Handlers处理器职责：非阻塞的执行业务处理逻辑，与IO事件绑定，负责IO事件的处理，完成连接建立、通道的读取、处理业务逻辑、负责将结果写到通道等
+
+## Netty核心原理
+
+  
+      
+    
   
       
         
