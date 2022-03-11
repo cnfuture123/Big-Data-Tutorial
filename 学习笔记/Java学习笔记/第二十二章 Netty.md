@@ -163,12 +163,28 @@
 
 ## Netty核心原理
 
-  
-      
-    
-  
-      
-        
-      
-    
+  - 概述：
+    - Netty是一个Java NIO客户端/服务端框架，是为快速开发可维护的高性能、高可用的网络服务器和客户端程序而提供的异步事件驱动基础框架和工具
+    - Netty的出站可以理解为从Handler传递到Channel的操作，入站为从Channel传递到Handler的操作
+  - Netty的通道类型：
+    - NioSocketChannel: 异步非阻塞TCP Socket传输通道
+    - NioServerSocketChannel: 异步非阻塞TCP Socket服务端监听通道
+    - NioDatagramChannel: 异步非阻塞UDP传输通道
+    - OioSocketChannel: 同步阻塞TCP Socket传输通道
+    - OioServerSocketChannel: 同步阻塞TCP Socket服务端监听通道
+    - OioDatagramChannel: 同步阻塞UDP传输通道
+  - Netty的Reactor模式：
+    - 在Reactor模式中，一个反应器会由一个事件处理线程负责事件查询和分发。该线程不断进行轮询，通过Selector选择器不断查询注册过的IO事件（选择键）。如果查询到IO事件，就分发给Handler业务处理器
+    - Netty中的反应器组件有多个实现类，与其通道类型相匹配。对于NioSocketChannel, 反应器类型为NioEventLoop。一个EventLoop反应器和NettyChannel通道是一对多的关系
+  - Netty的Handler:
+
+
+
+
+## HTTP原理与Web框架
+
+
+
+
+
     
