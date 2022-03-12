@@ -81,7 +81,7 @@
     - putIfAbsent(): 
       - 方法签名：
         ```
-        V putIfAbsent(K key, V value): 只有在不存在key值的映射或映射值为null时，才将value指定的值放入到Map中，否则不对Map做更改
+        V putIfAbsent(K key, V value): 只有不存在key值的映射或映射值为null时，才将value指定的值放入到Map中，否则不对Map做更改
         ```
       
 ## 函数式接口
