@@ -257,7 +257,7 @@
       - 第一次握手：Client进入SYN_SENT状态，发送一个SYN帧打开传输通道，该帧的SYN标志位设置为1，同时带上SN序列号
       - 第二次握手：Server收到SYN帧之后，进入SYN_RCVD状态，同时返回SYN和ACK帧，标志位都被设置为1，其确认序号AN值被设置为Client的SN+1，SN值为Server生成的SN序列号
       - 第三次握手：Client收到SYN+ACK确认帧之后，首先将状态变成ESTABLISHED。然后Client发送ACK帧给Server，其ACK标志位被设置为1，其确认序号AN被设置为Server的SN+1。Server在收到Client的ACK帧之后从SYN_RCVD状态进入ESTABLISHED状态
-  - TCP四次握手：
+  - TCP四次挥手：
     - 第一次挥手：主动断开方向对方发送一个FIN结束请求报文，FIN标志位被设置为1，并设置SN序列号和ACK确认号
     - 第二次挥手：在收到FIN断开请求报文后，被动断开方会发送一个ACK响应报文，AcK确认号值为请求报文序列号SN+1，被动断开方进入CLOSE_WAIT状态，TCP服务通知高层的应用进程对方的连接已关闭
     - 第三次挥手：在发送ACK报文后，被动连接方继续完成业务数据的发送，完成后发送一个FIN + ACK结束响应报文
