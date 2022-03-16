@@ -69,8 +69,19 @@
     - 通讯方式：
       - RPC和REST对比：
 
-        
+        <img width="685" alt="image" src="https://user-images.githubusercontent.com/46510621/158583524-513d1445-1f8b-4352-a746-919cb68acc37.png">
 
+    - 监控预警：
+      - 一般监控分为如下层次：
+        
+        <img width="528" alt="image" src="https://user-images.githubusercontent.com/46510621/158583797-92d2329e-7620-4dfc-9eb7-53b2d38b0dd4.png">
+
+      - 微服务可分为5个监控点：
+        - 日志监控
+        - Metrics监控
+        - 健康检查
+        - 调用链检查
+        - 告警系统
 
 ## 特点
 
