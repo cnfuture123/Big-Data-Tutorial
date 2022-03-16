@@ -38,7 +38,7 @@
   - Sring Boot支持使用Maven, Gradle, Ant构建项目
   - Starters：
     - 一组方便使用的依赖描述，它包括很多项目中需要使用的依赖。例如：如果使用Spring和JPA访问数据库，可以使用spring-boot-starter-data-jpa依赖描述
-    - 官方Starters命名规则是```spring-boot-starter-*，* ```表示特定类型的应用
+    - 官方Starters命名规则是```spring-boot-starter-* ```表示特定类型的应用
     - 常用的Starter:
       - spring-boot-starter: Core starter, including auto-configuration support, logging and YAML
       - spring-boot-starter-test: Starter for testing Spring Boot applications with libraries including JUnit Jupiter, Hamcrest and Mockito
