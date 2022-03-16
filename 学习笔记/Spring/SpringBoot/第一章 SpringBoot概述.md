@@ -61,6 +61,16 @@
             - 利用Nginx配置负载控制
             - 使用http头信息判断+权重（灰度值）：需要分析ip地址段，用户代理，Cookie中的信息。根据Cookie查询version值，如果该version值为v1转发到host1，为v2转发到host2，都不匹配的情况下转发到默认配置
             - 使用灰度发布工具：阿里acm、NepxionDiscovery、Istio
+    - 配置中心：
+      - 示例图：
+
+        <img width="780" alt="image" src="https://user-images.githubusercontent.com/46510621/158564963-e0f2ebad-4141-4009-9bca-ad4c38253471.png">
+        
+    - 通讯方式：
+      - RPC和REST对比：
+
+        
+
 
 ## 特点
 
