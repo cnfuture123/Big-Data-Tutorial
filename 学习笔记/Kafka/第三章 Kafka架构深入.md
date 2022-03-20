@@ -51,9 +51,9 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
   
   - Kafka选择了第二种方案, 因为Kafka的每个分区都有大量的数据，第一种方案会造成大量数据的冗余。虽然第二种方案的网络延迟会比较高，但网络延迟对Kafka的影响较小。
   - ISR(in-sync replica set): 
-    - Leader维护了一个动态的in-sync replica set (ISR)，意为和leader保持同步的follower集合。
-    - 当ISR中的follower完成数据的同步之后，就会给leader发送ack。
-    - 如果follower长时间未向leader同步数据 ， 则该follower将被踢出ISR， 该时间阈值由replica.lag.time.max.ms 参数设定。
+    - Leader维护了一个动态的in-sync replica set(ISR)，意为和leader保持同步的follower集合。
+    - Follower从Leader拉取数据，当ISR中的follower完成数据的同步之后，就会给leader发送ack。
+    - 如果follower长时间未向leader同步数据，则该follower将被踢出ISR，该时间阈值由replica.lag.time.max.ms参数设定。
     - Leader发生故障之后，就会从ISR中选举新的leader。
   - ack应答机制：
     - Kafka为用户提供了三种可靠性级别，用户根据对可靠性和延迟的要求进行权衡。
@@ -63,6 +63,8 @@ producer收到ack，就会进行下一轮的发送，否则重新发送数据。
       - -1(all): producer等待broker的ack，partition的leader和follower全部落盘成功后才返回ack。但是如果在follower同步完成后，broker发送ack之前，leader发生故障，那么会造成数据重复。
     - 故障处理细节:
       - Log文件中的HW和LEO:
+        - LEO（Log End Offset）：表示每个partition的log最后一条Message的位置
+        - HW（High Watermark）：表示partition各个副本数据间同步且一致的offset位置，即表示所有副本已经commit位置，每个Broker缓存中维护此信息，并不断更新
       
       ![Log文件中的HW和LEO](./图片/Log文件中的HW和LEO.PNG)
       
