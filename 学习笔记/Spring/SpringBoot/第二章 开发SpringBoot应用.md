@@ -64,7 +64,7 @@
       </dependency>
       ```
   - 自动装配原理：
-    - @EnableAutoConfiguration是实现自动装配的核心注解，EnableAutoConfiguration是通过AutoConfigurationImportSelector类实现自动装配核心功能
+    - @EnableAutoConfiguration是开启自动装配的核心注解，EnableAutoConfiguration是通过AutoConfigurationImportSelector类实现自动装配核心功能
     - AutoConfigurationImportSelector类实现ImportSelector接口，并实现了这个接口中的selectImports方法，该方法主要用于获取所有符合条件的类的全限定类名，这些类需要被加载到IoC 容器中
     - getAutoConfigurationEntry方法调用链：
     
