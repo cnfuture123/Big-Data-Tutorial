@@ -155,9 +155,10 @@
     - unlock(): 释放锁
     - newCondition(): 获取与显式锁绑定的Condition对象，用于等待-通知方式的线程间通信
   - 显式锁相比内置锁的优势：
-    - 可中断获取锁：lockInterruptibly()
+    - 可中断获取锁：lockInterruptibly()，Lock是可中断锁，可以手动开启和关闭锁；Synchronized是非中断锁，必须等待线程执行完成释放锁
     - 可非阻塞获取锁：tryLock()
     - 可限时抢锁：tryLock(long time, TimeUnit unit)
+    - Synchronized是关键字，Lock是接口
   - 可重入锁ReentrantLock
     - ReentrantLock是显式锁的实现类，是一个可重入的独占锁
       - 可重入的含义：支持一个线程对资源的重复加锁，即一个线程可以多次进入同一个锁同步的临界区代码块
@@ -189,7 +190,7 @@
       - 读锁是共享锁，写锁是独占锁
       - 锁升级是指读锁升级为写锁，锁降级指写锁降级为读锁
       - ReentrantReadWriteLock只支持写锁降级为读锁，不支持读锁升级为写锁
-      - StampedLock(印戳锁)是对ReentrantReadWriteLock的一种改进：在没有写只有读的场景下，StampedLock支持不用加读锁而是直接进行读操作，只有在发生过写操作后，再加读锁才能进行读操作
+      - StampedLock(印戳锁)是对ReentrantReadWriteLock的一种改进：在只有读的场景下，StampedLock支持不用加读锁而是直接进行读操作，只有在发生过写操作后，再加读锁才能进行读操作
     
 ## AQS抽象同步器
 
