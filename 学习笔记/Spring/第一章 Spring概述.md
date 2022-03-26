@@ -229,7 +229,7 @@
     - @Service：业务逻辑层组件
     - @Repository：持久化层组件
     - 注意：事实上Spring并没有能力识别一个组件到底是不是它所标记的类型，即使将@Respository注解用在一个表述层控制器组件上面也不会产生任何错误，所以@Respository、@Service、@Controller这几个注解仅仅是为了让开发人员自己明确当前的组件扮演的角色。
-  - 扫描组件：
+  - 扫描组件（重要）：
     - 指定被扫描的包：
       ```
       <context:component-scan base-package="com.cn.component"/>
