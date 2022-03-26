@@ -36,7 +36,7 @@
 
 ## IOC容器
 
-### IOC和DI
+### IOC和DI（重要）
 
   - IOC(Inversion of Control)：反转控制
     - 在应用程序的组件需要获取资源时，传统的方式是组件主动从容器中获取所需的资源
