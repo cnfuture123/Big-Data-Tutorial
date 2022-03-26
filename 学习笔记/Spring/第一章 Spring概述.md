@@ -172,7 +172,7 @@
     - request：每次HTTP请求都会创建一个新的Bean，该作用域仅适用于WebApplicationContext环境
     - session：同一个HTTP Session共享一个Bean，不同的HTTP Session使用不同的Bean。该作用域仅适用于WebApplicationContext环境
 
-### bean的生命周期
+### bean的生命周期（重要）
 
   - Spring IOC容器对bean的生命周期进行管理的过程：
     - 通过构造器或工厂方法创建bean实例
