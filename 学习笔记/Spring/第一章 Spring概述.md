@@ -243,7 +243,7 @@
           base-package="com.cn.component" 
           resource-pattern="autowire/*.class"/>
         ```
-  - 组件装配：
+  - 组件装配（重要）：
     - Controller组件中往往需要用到Service组件的实例，Service组件中往往需要用到Repository组件的实例。Spring可以通过注解的方式帮我们实现属性的装配。
     - 在指定要扫描的包时，<context:component-scan> 元素会自动注册一个bean的后置处理器：AutowiredAnnotationBeanPostProcessor的实例。该后置处理器可以自动装配标记了@Autowired、@Resource或@Inject注解的属性。
       - @Autowired注解：
