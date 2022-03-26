@@ -120,7 +120,7 @@
     - 查询单行：JdbcTemplate.queryForObject(String, RowMapper<Department>, Object...)
     - 查询多行：JdbcTemplate.query(String, RowMapper<Department>, Object...)
     
-## 事务管理
+## 事务管理（重要）
 
   - 事务概述：
     - 定义：事务是逻辑上的一组操作，要么都执行，要么都不执行。所谓事务管理，其实就是“按照给定的事务规则来执行提交或者回滚操作”。
@@ -132,7 +132,7 @@
   - Spring事务管理接口：
     - PlatformTransactionManager：（平台）事务管理器
       - Spring并不直接管理事务，而是提供了多种事务管理器 ，他们将事务管理的职责委托给Hibernate或者JTA等持久化机制所提供的相关平台框架的事务来实现。
-      - Spring事务管理器的接口是PlatformTransactionManager，通过这个接口，Spring为各个平台如JDBC、Hibernate等都提供了对应的事务管理器，但是具体的实现就是各个平台自己的事情了。
+      - Spring事务管理器的接口是PlatformTransactionManager，通过这个接口，Spring为各个平台如JDBC、Hibernate等都提供了对应的事务管理器，但是具体的实现由各平台控制。
       - PlatformTransactionManager根据不同持久层框架所对应的接口实现类：
         
         ![image](https://user-images.githubusercontent.com/46510621/111726501-10a20600-88a4-11eb-994e-ed55df5d97ee.png)
