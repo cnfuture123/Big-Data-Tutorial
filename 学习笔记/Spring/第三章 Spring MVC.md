@@ -13,7 +13,7 @@
     - 支持灵活的URL到页面控制器的映射
     - 支持灵活的数据验证、格式化和数据绑定机制
 
-## Spring MVC工作流程
+## Spring MVC工作流程（重要）
 
   - Spring MVC框架主要组件：
     - DispatcherServlet：前端控制器，Spring MVC所有的请求都经过DispatcherServlet来统一分发
