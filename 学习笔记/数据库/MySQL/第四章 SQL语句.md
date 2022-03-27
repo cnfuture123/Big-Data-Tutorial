@@ -371,7 +371,7 @@
       ```
       LOAD DATA INFILE 'data.txt' INTO TABLE db2.my_table;
       ```
-  - SELECT Statement:
+  - SELECT Statement:（重要）
     - 语法：
       ```
       SELECT
