@@ -35,7 +35,7 @@
         | SQL SECURITY { DEFINER | INVOKER }
       }
       ```
-  - ALTER TABLE Statement:
+  - ALTER TABLE Statement:（重要）
     - 用于修改表结构，例如：可以增删列，创建或销毁索引，修改已有列的类型，重命名列名等
     - 语法：
       ```
