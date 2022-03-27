@@ -671,7 +671,7 @@
         END WHILE [end_label]
         ```
         
-## 工具语句
+## 工具语句（重要）
 
   - DESCRIBE语句/EXPLAIN语句：
     - DESCRIBE和EXPLAIN语句是同义的，通常DESCRIBE用于获取表结构信息，EXPLAIN用于查询执行计划
