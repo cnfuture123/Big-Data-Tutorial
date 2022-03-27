@@ -66,7 +66,7 @@
     - 4种TEXT类型是TINYTEXT, TEXT, MEDIUMTEXT, and LONGTEXT，长度和BLOB类型相对应
     - 两者区别：
       - BLOB值是二进制字符串，TEXT是非二进制字符串
-      - BLOB可以看作是足够大的VARBINARY列，TEXT可以看作足够大的VARBINARY列
+      - BLOB可以看作是足够大的BINARY列，TEXT可以看作足够大的VARBINARY列
 
 ## ENUM类型
 
