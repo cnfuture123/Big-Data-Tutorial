@@ -147,7 +147,7 @@
     
       ![image](https://user-images.githubusercontent.com/46510621/111861815-1ecb5180-898c-11eb-9c93-359f9290b19f.png)
 
-## 转发与重定向(forward/redirect)
+## 转发与重定向(forward/redirect)（重要）
 
   - 两者区别：
     - 转发是将用户对当前处理的请求转发给另一个视图或处理请求，以前的request中存放的信息不会失效
