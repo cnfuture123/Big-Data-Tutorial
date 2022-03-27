@@ -166,7 +166,7 @@
 
         <img width="621" alt="image" src="https://user-images.githubusercontent.com/46510621/150103330-6f7e70f3-7533-4a75-8796-507f7ddde758.png">
 
-  - CREATE TABLE Statement:
+  - CREATE TABLE Statement:（重要）
     - 语法：
       ```
       CREATE [TEMPORARY] TABLE [IF NOT EXISTS] tbl_name
