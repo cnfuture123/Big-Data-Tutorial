@@ -196,8 +196,7 @@
 
   - 拦截器的执行流程：
     - 单个拦截器的执行流程：程序将首先执行拦截器类中的preHandle方法，如果该方法返回true，程序将继续执行控制器中处理请求的方法，否则中断执行。如果preHandle方法返回true，并且控制器中处理请求方法执行后、返回视图前将执行postHandle方法，返回视图后才执行afterCompletion方法。
-  - 多个拦截器的执行流程：
-    - 在Web应用中通常需要有多个拦截器同时工作，这时它们的preHandle方法将按照配置文件中拦截器的配置顺序执行，而它们的postHandle方法和afterCompletion方法则按照配置顺序的反序执行
+    - 多个拦截器的执行流程：在Web应用中通常需要有多个拦截器同时工作，这时它们的preHandle方法将按照配置文件中拦截器的配置顺序执行，而它们的postHandle方法和afterCompletion方法则按照配置顺序的反序执行
 
 ## Hibernate-Validator数据验证
 
