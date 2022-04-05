@@ -315,9 +315,18 @@
             .take(1); 
         ```
     - 重试：retry
-      
-
-
+      - 重新订阅上游的Flux，原来的序列已经终止，产生的是一个不同的序列
+      - 示例：
+        ```
+        Flux.interval(Duration.ofMillis(250))
+          .map(input -> {
+              if (input < 3) return "tick " + input;
+              throw new RuntimeException("boom");
+          })
+          .retry(1)
+          .elapsed() 
+          .subscribe(System.out::println, System.err::println); 
+        ```
 
 ## 参考
 
