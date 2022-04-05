@@ -259,15 +259,64 @@
 ### 错误处理
 
   - 错误处理操作符：
-    - 静态保底值：
+    - 静态保底值：onErrorReturn
       ```
       Flux.just(10)
         .map(this::doSomethingDangerous)
         .onErrorReturn("RECOVERED");
       ```
-    - 保底方法：
+    - 保底方法：onErrorResume
+      - 捕获异常，并执行替代的保底方法
+      - 示例：
+        ```
+        Flux.just("timeout1", "unknown", "key2")
+          .flatMap(k -> callExternalService(k)
+              .onErrorResume(error -> { 
+                  if (error instanceof TimeoutException) 
+                      return getFromCache(k);
+                  else if (error instanceof UnknownKeyException)  
+                      return registerNewEntry(k, "DEFAULT");
+                  else
+                      return Flux.error(error); 
+              })
+          );
+        ```
+    - 捕获并重新抛出异常：
+      ```
+      Flux.just("timeout1")
+        .flatMap(k -> callExternalService(k))
+        .onErrorMap(original -> new BusinessException("oops, SLA exceeded", original));
+      ```
+    - 计数或打印日志：
+      ```
+      LongAdder failureStat = new LongAdder();
+      Flux<String> flux =
+      Flux.just("unknown")
+          .flatMap(k -> callExternalService(k) 
+              .doOnError(e -> {
+                  failureStat.increment();
+                  log("uh oh, falling back, service failed for key " + k); 
+              })
+
+          );
+      ```
+    - 使用Finally子句：doFinally
+      - doFinally是在序列终止或被取消时执行的语句
+      - 示例：
+        ```
+        Flux<String> flux =
+        Flux.just("foo", "bar")
+            .doOnSubscribe(s -> stats.startTimer())
+            .doFinally(type -> { 
+                stats.stopTimerAndRecordTiming();
+                if (type == SignalType.CANCEL) 
+                  statsCancel.increment();
+            })
+            .take(1); 
+        ```
+    - 重试：retry
       
-        
+
 
 
 ## 参考
