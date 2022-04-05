@@ -93,7 +93,68 @@
 
 ### Mono
 
-   
+  - Mono转换流程：
+    
+    <img width="892" alt="image" src="https://user-images.githubusercontent.com/46510621/161704035-b4ac27fd-8beb-4c3f-a5e8-01781dfd1d7c.png">
+    
+  - ```Mono<T>```是一种专用的```Publisher<T>```，通过onNext信号发送最多一个元素，onComplete信号表示成功完成，onError信号表示错误发生
+
+### Flux和Mono使用示例
+
+  - 创建一个String序列：
+    ```
+    Flux<String> seq1 = Flux.just("foo", "bar", "foobar");
+
+    List<String> iterable = Arrays.asList("foo", "bar", "foobar");
+    Flux<String> seq2 = Flux.fromIterable(iterable);
+    
+    Mono<String> noData = Mono.empty(); 
+    Mono<String> data = Mono.just("foo");
+    ```
+  - subscribe方法：
+    - 
+    ```
+    Flux<Integer> ints = Flux.range(1, 3); 
+    ints.subscribe();
+    
+    Flux<Integer> ints = Flux.range(1, 4); 
+    ints.subscribe(
+      i -> System.out.println(i),
+      error -> System.err.println("Error " + error),
+      () -> System.out.println("Done")); 
+    ```
+  - BaseSubscriber:
+    - BaseSubscriber的实例是一次性使用的，当它订阅到第二个Publisher时，就取消对第一个Publisher的订阅
+    - 示例：
+      ```
+      public class SampleSubscriber<T> extends BaseSubscriber<T> {
+
+        public void hookOnSubscribe(Subscription subscription) {
+          System.out.println("Subscribed");
+          request(1);
+        }
+
+        public void hookOnNext(T value) {
+          System.out.println(value);
+          request(1);
+        }
+      }
+      ```
+  - 反压和更新请求的方式：
+    - 当实现反压时，消费端压力会通过发送一个请求到上游的方式传播到源。当前的请求和即是当前的需求或待处理的请求，需求上限为MAX_VALUE
+    - 更新请求的操作符：
+      - buffer(N)
+      - request(2)
+      - prefetch
+      - limitRate
+      - limitRequest
+
+## 创建一个序列
+
+  
+    
+    
+
 
 
 ## 参考
