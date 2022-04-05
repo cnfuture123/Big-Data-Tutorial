@@ -89,8 +89,7 @@
     
     <img width="892" alt="image" src="https://user-images.githubusercontent.com/46510621/161702862-e649406f-ed18-47e2-afb9-5a7f0e06f194.png">
 
-    - Flux<T>
-
+  - ```Flux<T>```是一个标准的```Publisher<T> ```，表示一个0-N个元素的异步序列，可以由完成信号或错误终止，相应的调用下游Subscriber的onNext, onComplete, and onError方法
 
 ### Mono
 
