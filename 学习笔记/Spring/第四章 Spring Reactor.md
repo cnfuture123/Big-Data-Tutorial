@@ -36,7 +36,7 @@
     </dependencies>
     ```
     
-## 响应式编程
+## 响应式编程简介
 
   - 概述：
     - 响应式编程是一种异步编程范式，关注于数据流和变化的传播
@@ -74,11 +74,27 @@
         - 向上游传播信号是用于实现反压：
           - 一个subscriber可以在无界模式工作，让源以最快的速度推送所有数据
           - 或者使用请求机制向源发送信号通知最多可以接收n个元素
+
+## Reactor核心特性
+
+  - 概述：
+    - Reactor项目的主要artifact是reactor-core
+    - Reactor引入可组合的实现了Publisher反应型，并提供了丰富的操作符：Flux and Mono
+      - Flux对象表示一个包含N个元素的序列
+      - Mono对象表示单值或空元素（0/1）
+
+### Flux
+
+  - Flux转换流程：
+    
+    <img width="892" alt="image" src="https://user-images.githubusercontent.com/46510621/161702862-e649406f-ed18-47e2-afb9-5a7f0e06f194.png">
+
+    - Flux<T>
+
+
+### Mono
+
    
-    
-    
-
-
 
 
 ## 参考
