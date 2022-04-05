@@ -255,6 +255,19 @@
 
         new Thread(() -> flux.subscribe(System.out::println)); 
         ```
+        
+### 错误处理
+
+  - 错误处理操作符：
+    - 静态保底值：
+      ```
+      Flux.just(10)
+        .map(this::doSomethingDangerous)
+        .onErrorReturn("RECOVERED");
+      ```
+    - 保底方法：
+      
+        
 
 
 ## 参考
