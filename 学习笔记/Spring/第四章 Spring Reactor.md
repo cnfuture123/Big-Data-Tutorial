@@ -149,12 +149,112 @@
       - limitRate
       - limitRequest
 
-## 创建一个序列
+### 创建一个序列
 
-  
-    
-    
+  - 同步的generate：
+    - 通过generate方法创建Flux是最简单的方式
+    - 示例：
+      ```
+      Flux<String> flux = Flux.generate(
+        AtomicLong::new,
+          (state, sink) -> { 
+          long i = state.getAndIncrement(); 
+          sink.next("3 x " + i + " = " + 3*i);
+          if (i == 10) sink.complete();
+          return state; 
+        }, (state) -> System.out.println("state: " + state)); 
+      ```
+  - 异步且多线程的create
+    - 它暴露FluxSink，提供next, error, and complete方法。不同于generate，它没有基于状态的变量
+    - 示例：
+      ```
+      Flux<String> bridge = Flux.create(sink -> {
+          myEventProcessor.register( 
+            new MyEventListener<String>() { 
 
+              public void onDataChunk(List<String> chunk) {
+                for(String s : chunk) {
+                  sink.next(s); 
+                }
+              }
+
+              public void processComplete() {
+                  sink.complete(); 
+              }
+          });
+      });
+      ```
+  - 异步且单线程的push
+    - push处于generate和create之间，适用于处理来自单个生产者的事件
+    - 示例：
+      ```
+      Flux<String> bridge = Flux.push(sink -> {
+          myEventProcessor.register(
+            new SingleThreadEventListener<String>() { 
+
+              public void onDataChunk(List<String> chunk) {
+                for(String s : chunk) {
+                  sink.next(s); 
+                }
+              }
+
+              public void processComplete() {
+                  sink.complete(); 
+              }
+
+              public void processError(Throwable e) {
+                  sink.error(e); 
+              }
+          });
+      });
+      ```
+     
+### 线程和调度器
+    
+  - 概述：
+    - Reactor是并发无关的，它不强制实施并发模型
+    - 获取一个Flux或Mono不意味它在一个专用的线程运行，相反大多数操作符继续在前一个操作符执行的线程中工作
+    - 在Reactor中，执行模型由Scheduler决定的，Scheduler类似于ExecutorService，负责调度任务
+  - Schedulers类提供静态方法，访问如下执行上下文：
+    - 没有执行上下文(Schedulers.immediate())：提交的Runnable任务将会在当前线程上直接执行
+    - 单个，可重用的线程（Schedulers.single())：为所有调用方重用相同的线程，直到Scheduler被弃用；如果需要为每次调用分配一个专用线程，每次调用时使用Schedulers.newSingle()
+    - 无界、弹性的线程池(Schedulers.elastic())：会隐藏背压问题并导致线程过多的问题，被Schedulers.boundedElastic()取代
+    - 有界、弹性的线程池(Schedulers.boundedElastic())：它根据需要创建新的工作线程池并重用空闲的线程，它对可以创建的后备线程数有上限（默认值为CPU内核数 x 10），达到上限后，最多 能提交100000个任务将被排队，并在线程可用时重新调度
+    - 针对并行工作进行调整的固定工作线程池(Schedulers.parallel())：它创建和CPU核数相同多的工作线程
+  - publishOn和subscribeOn：
+    - Reactor提供了2种方式切换执行上下文：publishOn和subscribeOn
+    - publishOn：
+      - 它从上游获取信号，并在下游重播它们，同时从关联的调度器对工作线程执行回调
+      - 它影响后续运算符的执行：
+        - 切换执行上下文到Scheduler选择的某个线程
+        - onNext调用按顺序进行，因此这会占用单个线程
+        - 除非它们在特定的调度器上工作，否则publishOn之后的操作符继续在同一个线程中执行
+      - 示例：
+        ```
+        Scheduler s = Schedulers.newParallel("parallel-scheduler", 4); 
+
+        final Flux<String> flux = Flux
+            .range(1, 2)
+            .map(i -> 10 + i)  
+            .publishOn(s)  
+            .map(i -> "value " + i);  
+
+        new Thread(() -> flux.subscribe(System.out::println)); 
+        ```
+    - subscribeOn:
+      - subscribeOn应用于订阅阶段，无论将subscribeOn放置在链条的什么位置，它总是影响源的上下文
+      - 示例：
+        ```
+        Scheduler s = Schedulers.newParallel("parallel-scheduler", 4); 
+
+        final Flux<String> flux = Flux
+            .range(1, 2)
+            .map(i -> 10 + i)  
+            .subscribeOn(s)  
+            .map(i -> "value " + i);  
+
+        new Thread(() -> flux.subscribe(System.out::println)); 
+        ```
 
 
 ## 参考
