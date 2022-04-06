@@ -143,6 +143,10 @@
     - 无界、弹性的线程池(Schedulers.elastic())：调度器会动态创建工作线程，线程数无上界，会隐藏背压问题并导致线程过多的问题，被Schedulers.boundedElastic()取代
     - 有界、弹性的线程池(Schedulers.boundedElastic())：它根据需要创建新的工作线程池并重用空闲的线程，它可以创建的线程数有上限（默认值为CPU内核数x10），达到上限后，最多能提交100000个任务将被排队，并在线程可用时重新调度
     - 针对并行工作进行调整的固定工作线程池(Schedulers.parallel())：它创建和CPU核数相同多的工作线程
+    - 区别：
+
+      <img width="830" alt="image" src="https://user-images.githubusercontent.com/46510621/161965929-526e974a-421d-4d03-a940-743235cd0d59.png">
+      
   - publishOn和subscribeOn：
     - Reactor提供了2种方式切换执行上下文：publishOn和subscribeOn
     - publishOn：
