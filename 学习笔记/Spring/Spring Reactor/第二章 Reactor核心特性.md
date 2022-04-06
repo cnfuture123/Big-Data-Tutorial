@@ -35,7 +35,6 @@
     Mono<String> data = Mono.just("foo");
     ```
   - subscribe方法：
-    - 
     ```
     Flux<Integer> ints = Flux.range(1, 3); 
     ints.subscribe();
