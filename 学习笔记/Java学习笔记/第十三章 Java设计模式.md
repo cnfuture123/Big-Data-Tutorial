@@ -93,6 +93,41 @@
           }
         }        
         ```
+  - 静态内部类实现单例：
+    - 静态内部类初始化过程是懒加载的过程，在程序没有访问静态内部类中的成员时，程序是不会进行该类初始化，直到我们调用的时候，才会进行初始化，才会存在JVM的堆中
+    - 示例：
+      ```
+      public class Singleton {    
+         private Singleton() {}    
+         private static class Holder {       
+            static Singleton instance = new Singleton();    
+         }
+         public static Singleton getInstance() {  
+          return Holder.instance;    
+         }    
+      }  
+      ```
+    - 使用示例：
+      ```
+      public class Experiment {
+        private String expId;
+        private Map<String, ExperimentGroup> groups;
+        
+        @Data
+        public static class ExperimentGroup {
+            private String groupId;
+            private int start;
+            private int end;
+            private List<String> whiteList;
+            private ExpConfig config;
+        }
+        
+        public static class ExpConfig extends HashMap<String, Map<String, List<Strategy>>> {
+        }
+        
+        public static class Strategy extends HashMap<String, Object> {}
+      }
+      ```
   - 单例模式优点：
     - 在内存中只有一个对象，节省内存空间
     - 避免频繁的创建销毁对象，可以提高性能
