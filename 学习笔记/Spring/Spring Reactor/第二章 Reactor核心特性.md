@@ -181,4 +181,7 @@
 
         new Thread(() -> flux.subscribe(System.out::println)); 
         ```
+    - publishOn和subscribeOn区别：
+      - publishOn影响在其之后的operator执行的线程池，而subscribeOn则会从源头影响整个执行过程。publishOn的影响范围和它的位置有关，而subscribeOn的影响范围则和位置无关
+
         
