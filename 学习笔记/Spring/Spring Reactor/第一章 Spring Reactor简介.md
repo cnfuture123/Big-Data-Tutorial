@@ -72,3 +72,9 @@
         - 向上游传播信号是用于实现反压：
           - 一个subscriber可以在无界模式工作，让源以最快的速度推送所有数据
           - 或者使用请求机制向源发送信号通知最多可以接收n个元素
+
+## 参考
+
+  - https://spring.io/reactive
+  - https://projectreactor.io/docs/core/release/reference/#producing
+
