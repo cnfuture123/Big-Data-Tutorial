@@ -1,37 +1,3 @@
-# 开发SpringBoot应用
-
-## 依赖
-
-  - 添加web依赖：
-    ```
-    <dependencies>
-      <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
-    </dependencies>
-    ```
-  
-## 编写代码
-
-  - 开发Demo:
-    ```
-    @RestController
-    @EnableAutoConfiguration
-    public class MyApplication {
-        @RequestMapping("/")
-        String home() {
-            return "Hello World!";
-        }
-        public static void main(String[] args) {
-            SpringApplication.run(MyApplication.class, args);
-        }
-    }
-    ```
-    - 注解说明：
-      - @RestController: 提示这是一个Web @Controller, 因此Spring使用它处理访问的web请求
-      - @RequestMapping: 提供路由信息
-
 ## 依赖管理
 
   - Spring Boot会自动管理依赖的版本，并且这些依赖版本是匹配的，用户也可以指定某个版本去覆盖Sring Boot提供的版本
@@ -64,6 +30,23 @@
       </dependency>
       ```
   - 自动装配原理：
+    - 核心依赖：spring-boot-starter-parent
+      ```
+      <parent>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-parent</artifactId>
+          <version>2.4.4</version>
+          <relativePath/>
+      </parent>
+      ```
+      - 它的父依赖：规定所有依赖的版本信息
+        ```
+        <parent>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-dependencies</artifactId>
+          <version>2.4.4</version>
+        </parent>
+        ```
     - @EnableAutoConfiguration是开启自动装配的核心注解，EnableAutoConfiguration是通过AutoConfigurationImportSelector类实现自动装配核心功能
     - AutoConfigurationImportSelector类实现ImportSelector接口，并实现了这个接口中的selectImports方法，该方法主要用于获取所有符合条件的类的全限定类名，这些类需要被加载到IoC 容器中
     - getAutoConfigurationEntry方法调用链：
