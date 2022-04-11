@@ -62,6 +62,10 @@
       ```
     - 如果类不在类路径上，可以使用excludeName属性，并指定该类的全限定名
 
+## 条件配置
+
+## Spring Boot数据访问实现原理
+
 ## 参考
 
   - https://cloud.tencent.com/developer/article/1912976
