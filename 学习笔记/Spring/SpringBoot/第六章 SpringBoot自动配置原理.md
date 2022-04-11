@@ -28,6 +28,7 @@
         </parent>
         ```
     - 核心注解@SpringBootApplication
+      - 
       - 包含注解：
         ```
         @SpringBootConfiguration
@@ -50,13 +51,6 @@
           @Import({Registrar.class})
           public @interface AutoConfigurationPackage
           ```
-          
-    - @EnableAutoConfiguration是开启自动装配的核心注解，EnableAutoConfiguration是通过AutoConfigurationImportSelector类实现自动装配核心功能
-    - AutoConfigurationImportSelector类实现ImportSelector接口，并实现了这个接口中的selectImports方法，该方法主要用于获取所有符合条件的类的全限定类名，这些类需要被加载到IoC 容器中
-    - getAutoConfigurationEntry方法调用链：
-    
-      ![Uploading image.png…]()
-
     - 总结：Spring Boot通过@EnableAutoConfiguration开启自动装配，通过SpringFactoriesLoader最终加载META-INF/spring.factories中的自动配置类实现自动装配，自动配置类其实就是通过@Conditional按需加载的配置类，想要其生效必须引入spring-boot-starter-xxx包实现起步依赖
   - 禁用某个自动配置类：
     - 在@SpringBootApplication中使用exclude属性指定需要禁用的配置类
