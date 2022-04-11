@@ -47,9 +47,10 @@
         ```
         - AutoConfigurationPackage: 指定默认的包规则，将添加该注解的类所在的package作为自动配置package进行管理。当SpringBoot应用启动时默认会将启动类所在的package作为自动配置的package，然后使用@Import注解将其注入到ioc容器中
           ```
-          @Import(AutoConfigurationPackages.Registrar.class)
+          @Import({Registrar.class})
           public @interface AutoConfigurationPackage
           ```
+          
     - @EnableAutoConfiguration是开启自动装配的核心注解，EnableAutoConfiguration是通过AutoConfigurationImportSelector类实现自动装配核心功能
     - AutoConfigurationImportSelector类实现ImportSelector接口，并实现了这个接口中的selectImports方法，该方法主要用于获取所有符合条件的类的全限定类名，这些类需要被加载到IoC 容器中
     - getAutoConfigurationEntry方法调用链：
