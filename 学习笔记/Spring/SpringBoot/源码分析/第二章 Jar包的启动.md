@@ -27,6 +27,72 @@
       - 为什么不直接将我们的Application启动类设置为Main-Class启动呢？
         - class文件在BOOT-INF/classes/目录下，在Java默认的jar包加载规则下找不到我们的Application启动类，需要通过JarLauncher启动加载
     - org.springframework.boot.loader目录：Spring Boot的spring-boot-loader工具模块，它就是java -jar xxx.jar启动Spring Boot项目的秘密所在，上面的Main-Class指定的就是该工具模块中的一个类
+      - JarLauncher: 
+        - 类图：
+          
+          <img width="479" alt="image" src="https://user-images.githubusercontent.com/46510621/162951158-00e4edaf-42ed-4bec-9930-c74a23659951.png">
+
+        - JarLauncher代码：
+          ````
+          public class JarLauncher extends ExecutableArchiveLauncher {
+              static final Archive.EntryFilter NESTED_ARCHIVE_ENTRY_FILTER;
+
+              static {
+                  NESTED_ARCHIVE_ENTRY_FILTER = (entry -> entry.isDirectory() ? entry.getName().equals("BOOT-INF/classes/") : entry.getName().startsWith("BOOT-INF/lib/"));
+              }
+
+              public JarLauncher() {}
+
+              protected JarLauncher(Archive archive) {
+                  super(archive);
+              }
+
+              protected ClassPathIndexFile getClassPathIndex(Archive archive) throws IOException {
+                  if (archive instanceof org.springframework.boot.loader.archive.ExplodedArchive) {
+                      String location = getClassPathIndexFileLocation(archive);
+                      return ClassPathIndexFile.loadIfPossible(archive.getUrl(), location);
+                  }
+                  return super.getClassPathIndex(archive);
+              }
+
+              private String getClassPathIndexFileLocation(Archive archive) throws IOException {
+                  Manifest manifest = archive.getManifest();
+                  Attributes attributes = (manifest != null) ? manifest.getMainAttributes() : null;
+                  String location = (attributes != null) ? attributes.getValue("Spring-Boot-Classpath-Index") : null;
+                  return (location != null) ? location : "BOOT-INF/classpath.idx";
+              }
+
+              protected boolean isPostProcessingClassPathArchives() {
+                  return false;
+              }
+
+              protected boolean isSearchCandidate(Archive.Entry entry) {
+                  return entry.getName().startsWith("BOOT-INF/");
+              }
+
+              protected boolean isNestedArchive(Archive.Entry entry) {
+                  return NESTED_ARCHIVE_ENTRY_FILTER.matches(entry);
+              }
+
+              public static void main(String[] args) throws Exception {
+                  (new JarLauncher()).launch(args);
+              }
+          }
+          ```
+          - 通过JarLauncher启动加载应用时会执行main()，实际调用的是父类ExecutableArchiveLauncher的父类Launcher的launch()
+          - launch方法：
+            - launch代码：
+              ```
+              protected void launch(String[] args) throws Exception {
+                  if (!isExploded())
+                      JarFile.registerUrlProtocolHandler();
+                  ClassLoader classLoader = createClassLoader(getClassPathArchivesIterator());
+                  String jarMode = System.getProperty("jarmode");
+                  String launchClass = (jarMode != null && !jarMode.isEmpty()) ? "org.springframework.boot.loader.jarmode.JarModeLauncher" : getMainClass();
+                  launch(args, launchClass, classLoader);
+              }
+              ```
+              
       
 
 
