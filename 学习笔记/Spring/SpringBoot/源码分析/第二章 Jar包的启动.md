@@ -161,7 +161,7 @@
                   mainMethod.invoke((Object)null, new Object[] { this.args });
               }
               ```
-        - JarLauncher执行流程总结：通过java -jar启动应用时，根据Main-Class配置会调用org.springframework.boot.loader.JarLauncher的main(String[])方法；其中会先创建一个自定义的ClassLoader类加载器，可从BOOT-INF目录下加载出我们Spring Boot应用的Class类对象，包括依赖的第三方jar包中的Class类对象；然后根据Start-Class配置调用我们Spring Boot应用启动类的main(String[])方法（反射），这样也就启动了应用        
+        - JarLauncher执行流程总结：通过java -jar启动应用时，根据Main-Class配置会调用JarLauncher的main(String[])方法；其中会先创建一个自定义的ClassLoader类加载器，可从BOOT-INF目录下加载出我们Spring Boot应用的Class类对象，包括依赖的第三方jar包中的Class类对象；然后根据Start-Class配置调用我们Spring Boot应用启动类的main(String[])方法（反射），这样也就启动了应用        
 
 ## 参考
 
