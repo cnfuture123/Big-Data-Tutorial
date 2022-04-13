@@ -32,6 +32,10 @@
           
           <img width="479" alt="image" src="https://user-images.githubusercontent.com/46510621/162951158-00e4edaf-42ed-4bec-9930-c74a23659951.png">
 
+        - JarLauncher执行流程：
+          
+          <img width="1246" alt="image" src="https://user-images.githubusercontent.com/46510621/163146808-f08cb490-34d1-42b3-ab3d-31384c6f842b.png">
+          
         - JarLauncher代码：
           ```
           public class JarLauncher extends ExecutableArchiveLauncher {
