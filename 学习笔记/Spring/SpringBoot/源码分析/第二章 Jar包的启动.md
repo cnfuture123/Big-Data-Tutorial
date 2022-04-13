@@ -72,9 +72,91 @@
                   } catch (Error error) {}
               }
               ```
-          - getClassPathArchivesIterator: 
-            
-              
+          - getClassPathArchivesIterator: 子类ExecutableArchiveLauncher获取当前jar所有archive条目信息
+            ```
+            protected Iterator<Archive> getClassPathArchivesIterator() throws Exception {
+                Archive.EntryFilter searchFilter = this::isSearchCandidate;
+                Iterator<Archive> archives = this.archive.getNestedArchives(searchFilter, entry ->
+                        (isNestedArchive(entry) && !isEntryIndexed(entry)));
+                if (isPostProcessingClassPathArchives())
+                    archives = applyClassPathArchivePostProcessing(archives);
+                return archives;
+            }
+            ```
+            - archive的初始化: 这个archive是在创建JarLauncher实例化对象的时候初始化的
+              ```
+              protected final Archive createArchive() throws Exception {
+                  ProtectionDomain protectionDomain = getClass().getProtectionDomain();
+                  CodeSource codeSource = protectionDomain.getCodeSource();
+                  URI location = (codeSource != null) ? codeSource.getLocation().toURI() : null;
+                  String path = (location != null) ? location.getSchemeSpecificPart() : null;
+                  if (path == null)
+                      throw new IllegalStateException("Unable to determine code source archive");
+                  File root = new File(path);
+                  if (!root.exists())
+                      throw new IllegalStateException("Unable to determine code source archive from " + root);
+                  return root.isDirectory() ? (Archive)new ExplodedArchive(root) : (Archive)new JarFileArchive(root);
+              }
+              ```
+            - isSearchCandidate: 判断当前jar包中的哪些Archive对象是可以被搜索的，可搜索的条件是在BOOT-INF/目录下
+              ```
+              protected boolean isSearchCandidate(Archive.Entry entry) {
+                  return entry.getName().startsWith("BOOT-INF/");
+              }
+              ```
+            - getNestedArchives: 从archive（当前 jar 包）解析出所有Archive条目信息，返回JarFileArchive对象
+          - createClassLoader：
+            ```
+            protected ClassLoader createClassLoader(Iterator<Archive> archives) throws Exception {
+                List<URL> urls = new ArrayList<>(50);
+                while (archives.hasNext())
+                    urls.add(((Archive)archives.next()).getUrl());
+                return createClassLoader(urls.<URL>toArray(new URL[0]));
+            }
+
+            protected ClassLoader createClassLoader(URL[] urls) throws Exception {
+                return new LaunchedURLClassLoader(isExploded(), getArchive(), urls, getClass().getClassLoader());
+            }
+            ```
+            - 获取所有JarFileArchive对应的URL
+            - 创建Spring Boot自定义的ClassLoader类加载器：LaunchedURLClassLoader
+          - getMainClass: 子类ExecutableArchiveLauncher获取主类
+            ```
+            protected String getMainClass() throws Exception {
+                Manifest manifest = this.archive.getManifest();
+                String mainClass = null;
+                if (manifest != null)
+                    mainClass = manifest.getMainAttributes().getValue("Start-Class");
+                if (mainClass == null)
+                    throw new IllegalStateException("No 'Start-Class' manifest entry specified in " + this);
+                return mainClass;
+            }
+            ```
+            - 获取jar包的Manifest对象，也就是META-INF/MANIFEST.MF文件中的属性
+            - 获取启动类也就是Start-Class配置
+          - launch: 
+            ```
+            protected void launch(String[] args, String launchClass, ClassLoader classLoader) throws Exception {
+                Thread.currentThread().setContextClassLoader(classLoader);
+                createMainMethodRunner(launchClass, args, classLoader).run();
+            }
+            ```
+            - 设置当前线程的ClassLoader为刚创建的类加载器
+            - createMainMethodRunner: 创建一个MainMethodRunner对象（main方法执行器）
+              ```
+              protected MainMethodRunner createMainMethodRunner(String mainClass, String[] args, ClassLoader classLoader) {
+                  return new MainMethodRunner(mainClass, args);
+              }
+              ```
+            - MainMethodRunner.run(): 反射的方式执行主类的main()，启动Spring Boot应用
+              ```
+              public void run() throws Exception {
+                  Class<?> mainClass = Class.forName(this.mainClassName, false, Thread.currentThread().getContextClassLoader());
+                  Method mainMethod = mainClass.getDeclaredMethod("main", new Class[] { String[].class });
+                  mainMethod.setAccessible(true);
+                  mainMethod.invoke((Object)null, new Object[] { this.args });
+              }
+              ```
 
 ## 参考
 
