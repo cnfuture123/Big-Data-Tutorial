@@ -33,7 +33,7 @@
           <img width="479" alt="image" src="https://user-images.githubusercontent.com/46510621/162951158-00e4edaf-42ed-4bec-9930-c74a23659951.png">
 
         - JarLauncher代码：
-          ````
+          ```
           public class JarLauncher extends ExecutableArchiveLauncher {
               public static void main(String[] args) throws Exception {
                   (new JarLauncher()).launch(args);
@@ -52,10 +52,29 @@
               launch(args, launchClass, classLoader);
           }
           ```
+          - registerUrlProtocolHandler: 注册URL（jar）协议的处理器，主要是使用自定义的URLStreamHandler处理器处理jar包
+            ```
+            public static void registerUrlProtocolHandler() {
+                Handler.captureJarContextUrl();
+                String handlers = System.getProperty("java.protocol.handler.pkgs", "");
+                System.setProperty("java.protocol.handler.pkgs",
+                        "".equals(handlers) ? "org.springframework.boot.loader" : (handlers + "|" + "org.springframework.boot.loader"));
+                resetCachedUrlHandlers();
+            }
+            ```
+            - 获取系统变量中的java.protocol.handler.pkgs配置的URLStreamHandler路径
+            - 将Spring Boot自定义的URL协议处理器路径（org.springframework.boot.loader）添加至系统变量中
+            - 重置已缓存的URLStreamHandler处理器，避免重复创建
+              ```
+              private static void resetCachedUrlHandlers() {
+                  try {
+                      URL.setURLStreamHandlerFactory(null);
+                  } catch (Error error) {}
+              }
+              ```
+          - getClassPathArchivesIterator: 
+            
               
-      
-
-
 
 ## 参考
 
