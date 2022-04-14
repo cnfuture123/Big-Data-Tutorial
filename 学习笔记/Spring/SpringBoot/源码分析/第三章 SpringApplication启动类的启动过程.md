@@ -68,6 +68,57 @@
   - 流程分析图：
   
     <img width="1103" alt="image" src="https://user-images.githubusercontent.com/46510621/163306850-6840b8eb-48d9-4e04-a9d9-64708c9aca42.png">
+    
+  - SpringApplication构造器源码分析：
+    ```
+    public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
+        this.sources = new LinkedHashSet();
+        this.bannerMode = Mode.CONSOLE;
+        this.logStartupInfo = true;
+        this.addCommandLineProperties = true;
+        this.addConversionService = true;
+        this.headless = true;
+        this.registerShutdownHook = true;
+        this.additionalProfiles = new HashSet();
+        this.isCustomEnvironment = false;
+        this.lazyInitialization = false;
+        // 设置资源加载器resourceLoader，默认为null，可以通过SpringApplicationBuilder设置
+        this.resourceLoader = resourceLoader;
+        Assert.notNull(primarySources, "PrimarySources must not be null");
+        // 设置primarySources为主要的Class类对象，通常是我们的启动类
+        this.primarySources = new LinkedHashSet(Arrays.asList(primarySources));
+        // 确定Web应用的类型，可选值：NONE，SERVLET，REACTIVE
+        this.webApplicationType = WebApplicationType.deduceFromClasspath();
+        // 初始化所有ApplicationContextInitializer类型的对象，并保存至initializers集合中
+        this.setInitializers(this.getSpringFactoriesInstances(ApplicationContextInitializer.class));
+        // 初始化所有ApplicationListener类型的对象，并保存至listeners集合中
+        this.setListeners(this.getSpringFactoriesInstances(ApplicationListener.class));
+        // 获取当前被调用的main方法所属的Class类对象
+        this.mainApplicationClass = this.deduceMainApplicationClass();
+    }
+    ```
+    - 确定Web应用的类型:
+      ```
+      this.webApplicationType = WebApplicationType.deduceFromClasspath();
+      
+      static WebApplicationType deduceFromClasspath() {
+          if (ClassUtils.isPresent("org.springframework.web.reactive.DispatcherHandler", (ClassLoader)null) &&                  !ClassUtils.isPresent("org.springframework.web.servlet.DispatcherServlet", (ClassLoader)null) && !ClassUtils.isPresent("org.glassfish.jersey.servlet.ServletContainer", (ClassLoader)null)) {
+              return REACTIVE;
+          } else {
+              String[] var0 = SERVLET_INDICATOR_CLASSES;
+              int var1 = var0.length;
+
+              for(int var2 = 0; var2 < var1; ++var2) {
+                  String className = var0[var2];
+                  if (!ClassUtils.isPresent(className, (ClassLoader)null)) {
+                      return NONE;
+                  }
+              }
+
+              return SERVLET;
+          }
+      }
+      ```
 
   
     
