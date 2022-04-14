@@ -63,6 +63,14 @@
     private boolean lazyInitialization;
     ```
     
+## SpringApplication实例化流程
+
+  - 流程分析图：
+  
+    <img width="1103" alt="image" src="https://user-images.githubusercontent.com/46510621/163306850-6840b8eb-48d9-4e04-a9d9-64708c9aca42.png">
+
+  
+    
     
     
     
