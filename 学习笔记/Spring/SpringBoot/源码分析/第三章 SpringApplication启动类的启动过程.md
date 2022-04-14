@@ -132,7 +132,58 @@
           return instances;
       }
       ```
-      - 获取ApplicationContextInitializer类型的对象
+      - 获取ApplicationContextInitializer类型的对象，通过类加载器从META-INF/spring.factories文件中获取ApplicationContextInitializer类型的类称
+        ```
+        public static List<String> loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
+            String factoryTypeName = factoryType.getName();
+            return (List)loadSpringFactories(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());
+        }
+        ```
+      - 反射的方式创建ApplicationContextInitializer实例
+        ```
+        private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, ClassLoader classLoader, Object[] args, 
+        Set<String> names) {
+            List<T> instances = new ArrayList(names.size());
+            Iterator var7 = names.iterator();
+            while(var7.hasNext()) {
+                String name = (String)var7.next();
+                try {
+                    Class<?> instanceClass = ClassUtils.forName(name, classLoader);
+                    Assert.isAssignable(type, instanceClass);
+                    Constructor<?> constructor = instanceClass.getDeclaredConstructor(parameterTypes);
+                    T instance = BeanUtils.instantiateClass(constructor, args);
+                    instances.add(instance);
+                } catch (Throwable var12) {
+                    throw new IllegalArgumentException("Cannot instantiate " + type + " : " + name, var12);
+                }
+            }
+            return instances;
+        }
+        ```
+    - 初始化所有ApplicationListener类型的对象，并保存至listeners集合中，流程同上一步
+      ```
+      this.setListeners(this.getSpringFactoriesInstances(ApplicationListener.class));
+      ```
+    - 获取当前被调用的main方法所属的Class类对象，遍历方法调用栈，找到main方法所在的Class类对象并返回
+      ```
+      private Class<?> deduceMainApplicationClass() {
+          try {
+              StackTraceElement[] stackTrace = (new RuntimeException()).getStackTrace();
+              StackTraceElement[] var2 = stackTrace;
+              int var3 = stackTrace.length;
+
+              for(int var4 = 0; var4 < var3; ++var4) {
+                  StackTraceElement stackTraceElement = var2[var4];
+                  if ("main".equals(stackTraceElement.getMethodName())) {
+                      return Class.forName(stackTraceElement.getClassName());
+                  }
+              }
+          } catch (ClassNotFoundException var6) {
+          }
+
+          return null;
+      }
+      ```
         
         
         
