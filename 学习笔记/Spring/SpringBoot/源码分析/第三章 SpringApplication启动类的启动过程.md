@@ -97,12 +97,14 @@
         this.mainApplicationClass = this.deduceMainApplicationClass();
     }
     ```
-    - 确定Web应用的类型:
+    - 确定Web应用的类型: 根据类路径上存在org.springframework.web.reactive.DispatcherHandler或org.springframework.web.servlet.DispatcherServlet判断
       ```
       this.webApplicationType = WebApplicationType.deduceFromClasspath();
       
       static WebApplicationType deduceFromClasspath() {
-          if (ClassUtils.isPresent("org.springframework.web.reactive.DispatcherHandler", (ClassLoader)null) &&                  !ClassUtils.isPresent("org.springframework.web.servlet.DispatcherServlet", (ClassLoader)null) && !ClassUtils.isPresent("org.glassfish.jersey.servlet.ServletContainer", (ClassLoader)null)) {
+          if (ClassUtils.isPresent("org.springframework.web.reactive.DispatcherHandler", (ClassLoader)null) && !ClassUtils.isPresent(
+          "org.springframework.web.servlet.DispatcherServlet", (ClassLoader)null) && !ClassUtils.isPresent(
+          "org.glassfish.jersey.servlet.ServletContainer", (ClassLoader)null)) {
               return REACTIVE;
           } else {
               String[] var0 = SERVLET_INDICATOR_CLASSES;
@@ -114,11 +116,26 @@
                       return NONE;
                   }
               }
-
               return SERVLET;
           }
       }
       ```
+    - 初始化所有ApplicationContextInitializer类型的对象，并保存至initializers集合中
+      ```
+      this.setInitializers(this.getSpringFactoriesInstances(ApplicationContextInitializer.class));
+      
+      private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
+          ClassLoader classLoader = this.getClassLoader();
+          Set<String> names = new LinkedHashSet(SpringFactoriesLoader.loadFactoryNames(type, classLoader));
+          List<T> instances = this.createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
+          AnnotationAwareOrderComparator.sort(instances);
+          return instances;
+      }
+      ```
+      - 获取ApplicationContextInitializer类型的对象
+        
+        
+        
 
   
     
