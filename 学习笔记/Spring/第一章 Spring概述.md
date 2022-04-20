@@ -60,11 +60,19 @@
     - IoC的实现策略：
       - 依赖查找：在应用程序里面主动调用IoC容器提供的接口去获取对应的Bean对象
       - 依赖注入：在IoC容器启动或者初始化的时候，通过构造器、字段、setter方法或者接口等方式注入依赖。依赖注入在IoC容器中的实现也是调用相关的接口获取Bean对象，只不过这些工作在IoC容器启动时由容器实现了
+    - 依赖注入方式：
+      - 构造器注入：通过构造器的参数注入相关依赖对象
+      - Setter注入：通过Setter方法注入依赖对象，也可以理解为字段注入
+      - 两者的区别：
+        - 构造器注入在初始化该对象时才会注入依赖对象，一定程度上保证了Bean初始化后就是不变的对象，这样对于我们的程序和维护性都会带来便利
+        - 构造器注入不允许出现循环依赖，因为它要求被注入的对象都是成熟态，保证能够实例化，而Setter注入或字段注入没有这样的要求
+        - 构造器注入可以保证依赖的对象能够有序的被注入，而Setter注入或字段注入底层是通过反射机制进行注入，无法完全保证注入的顺序
+      - 接口回调注入：通过实现Aware接口（例如 BeanNameAware、ApplicationContextAware）可以注入相关对象，Spring在初始化这类Bean时会调用其setXxx方法注入对象
   - IOC容器在Spring中的实现：
     - 通过IOC容器读取Bean的实例之前，需要先将IOC容器本身实例化
     - Spring提供了IOC容器的两种实现方式：
       - BeanFactory：IOC容器的基本实现，是Spring内部的基础设施，是面向Spring本身的
-      - ApplicationContext：BeanFactory的子接口，提供了更多高级特性，面向Spring的使用者
+      - ApplicationContext：BeanFactory的子接口，提供了更多高级特性：面向切面、配置元信息、资源管理、事件机制、国际化、注解、Environment抽象等，面向Spring的使用者
   - ApplicationContext的主要实现类：
     - ClassPathXmlApplicationContext：对应类路径下的XML格式的配置文件
     - FileSystemXmlApplicationContext：对应文件系统中的XML格式的配置文件
@@ -91,14 +99,6 @@
           <constructor-arg value="01"/>
           <constructor-arg value="cn"/>
           <constructor-arg value="28"/>
-        </bean>
-        ```
-      - 通过索引值指定参数位置:
-        ```
-        <bean id="student" class="cn.bean.Student">
-          <constructor-arg value="01" index="0"/>
-          <constructor-arg value="cn" index="1"/>
-          <constructor-arg value="28" index="2"/>
         </bean>
         ```
   - 赋值支持的类型：
