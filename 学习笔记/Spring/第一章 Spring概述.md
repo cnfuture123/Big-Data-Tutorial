@@ -190,6 +190,9 @@
 
 ### bean的生命周期（重要）
 
+  - 生命周期：
+    - Spring Bean元信息配置阶段：通过面向资源（XML 或 Properties）、面向注解、面向API进行配置
+    - 
   - Spring IOC容器对bean的生命周期进行管理的过程：
     - 通过构造器或工厂方法创建bean实例
     - 为bean的属性设置值和对其他bean的引用
