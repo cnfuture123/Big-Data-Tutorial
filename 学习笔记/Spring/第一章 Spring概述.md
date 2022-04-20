@@ -1,8 +1,14 @@
 ## Spring概述
 
   - 概述：
-    - Spring是一个开源框架
-    - Spring是一个IOC(DI)和AOP容器框架
+    - Spring是一个开源框架，提供IOC和AOP特性，它提供了非常多的组件，能够让你在开发Java应用的过程变得更加容易，弹性地支持其他软件框架
+    - 优势和不足：
+      - 优势：Spring面向模块进行开发，根据不同的功能进行划分，根据需求引入对应的模块即可，对于开发人员非常友好
+        - Spring IoC容器，将我们的Java对象作为Spring Bean进行管理，管理着Bean的整个生命周期
+        - Spring MVC提供“模型-视图-控制器”（Model-View-Controller）架构和随时可用的组件，用于开发灵活且松散耦合的Web应用程序
+        - Spring AOP提供面向切面编程的接口
+      - 不足：
+        - 整个Spring体系比较复杂，对于开发人员需要一定的学习成本
   - Spring特性：
     - 非侵入式：基于Spring开发的应用中的对象可以不依赖于Spring API
     - 依赖注入：DI-Dependency Injection，是IOC（反转控制）最经典的实现
