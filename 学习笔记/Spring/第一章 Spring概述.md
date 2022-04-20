@@ -192,7 +192,10 @@
 
   - 生命周期：
     - Spring Bean元信息配置阶段：通过面向资源（XML 或 Properties）、面向注解、面向API进行配置
-    - 
+    - Spring Bean元信息解析阶段：对上一步的配置元信息进行解析，解析成BeanDefinition对象，该对象包含定义Bean的所有信息，用于实例化一个Spring Bean
+    - Spring Bean元信息注册阶段：将BeanDefinition配置元信息 保存至BeanDefinitionRegistry的ConcurrentHashMap集合中
+    - Spring BeanDefinition合并阶段：定义的Bean可能存在层次关系，则需要将它们进行合并，存在相同配置则覆盖父属性，最终生成一个RootBeanDefinition对象
+    - Spring Bean的实例化阶段：
   - Spring IOC容器对bean的生命周期进行管理的过程：
     - 通过构造器或工厂方法创建bean实例
     - 为bean的属性设置值和对其他bean的引用
