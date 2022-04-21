@@ -149,8 +149,24 @@
   
 ### FactoryBean
 
-  - Spring中有两种类型的bean，一种是普通bean，另一种是工厂bean，即FactoryBean。
-  - 工厂bean跟普通bean不同，其返回的对象不是指定类的一个实例，其返回的是该工厂bean的getObject方法所返回的对象。
+  - 概述：
+    - Spring中有两种类型的bean，一种是普通bean，另一种是工厂bean，即FactoryBean
+    - FactoryBean跟普通bean不同，其返回的对象不是指定类的一个实例，其返回的是该工厂bean的getObject方法所返回的对象
+  - ObjectFactory、FactoryBean和BeanFactory的区别：
+    - ObjectFactory：提供的是延迟依赖查找，想要获取某一类型的Bean，需要调用其getObject()才能依赖查找到目标Bean对象。ObjectFactory就是一个对象工厂，想要获取该类型的对象，需要调用其getObject()方法生产一个对象
+    - FactoryBean：不提供延迟性，在被依赖注入或依赖查找时，得到的就是通过getObject()拿到的实际对象
+    - BeanFactory：Spring底层IoC容器，里面保存了所有的单例Bean
+  - BeanFactory是如何处理循环依赖：
+    - 这里的循环依赖指的是单例模式下的Bean字段注入时出现的循环依赖。构造器注入对于Spring无法自动解决（应该考虑代码设计是否有问题），可通过延迟初始化来处理。Spring只解决单例模式下的循环依赖
+    - BeanFactory中处理循环依赖的方法主要借助于以下3个Map集合，当通过getBean依赖查找时会首先依次从上面三个Map获取，存在则返回，不存在则进行初始化
+      - singletonObjects（一级 Map）：保存了所有已经初始化好的单例Bean，也就是会保存Spring IoC容器中所有单例的Spring Bean
+      - earlySingletonObjects（二级 Map）：保存从三级Map获取到的正在初始化的Bean
+      - singletonFactories（三级 Map）：保存了正在初始化的Bean对应的ObjectFactory实现类，调用其getObject()返回正在初始化的Bean对象（仅实例化还没完全初始化好），如果存在则将获取到的Bean对象并保存至二级Map，同时从当前三级Map移除该ObjectFactory实现类
+    - 示例：两个Bean出现循环依赖，A依赖B，B依赖A；当我们去依赖查找A，在实例化后初始化前会先生成一个ObjectFactory对象（可获取当前正在初始化A）保存在上面的singletonFactories中，初始化的过程需注入B；接下来去查找B，初始B的时候又要去注入A，又去查找A，这时可以通过singletonFactories直接拿到正在初始化的A，那么就可以完成B的初始化，然后继续A的初始化，这样就避免出现循环依赖
+    - 为什么需要上面的二级Map：
+      - 因为通过三级Map获取Bean会有相关SmartInstantiationAwareBeanPostProcessor#getEarlyBeanReference(..) 的处理，避免重复处理，处理后返回的可能是一个代理对象
+      - 例如在循环依赖中一个Bean可能被多个Bean依赖， A -> B（也依赖 A） -> C -> A，当你获取A时，后续B和C都要注入A，没有上面的二级Map的话，三级Map保存的ObjectFactory实现类会被调用两次，会重复处理，可能出现问题，这样做在性能上也有所提升
+    - 参考：https://zhuanlan.zhihu.com/p/62382615
 
 ### bean的高级配置
 
@@ -208,7 +224,18 @@
     - BeanDefinition是Spring Bean的“前身”，其内部包含了初始化一个Bean的所有元信息，在Spring初始化一个Bean的过程中需要根据该对象生成一个Bean对象并进行一系列的初始化工作
   
 ### Spring应用上下文（ApplicationContext）的生命周期
-  - 
+  
+  - Spring应用上下文启动准备阶段：设置相关属性，例如启动时间、状态标识、Environment对象
+  - BeanFactory初始化阶段：初始化一个BeanFactory对象，加载出BeanDefinition；设置相关组件：ClassLoader类加载器、表达式语言处理器、属性编辑器，并添加BeanPostProcessor处理器等
+  - BeanFactory后置处理阶段：主要是执行BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor的处理，对BeanFactory和BeanDefinitionRegistry进行后置处理
+  - BeanFactory注册BeanPostProcessor阶段：主要初始化BeanPostProcessor类型的Bean（依赖查找），在Spring Bean生命周期的许多节点都能见到该类型的处理器
+  - 初始化内建Bean：初始化当前Spring应用上下文的MessageSource对象（国际化文案相关）、ApplicationEventMulticaster事件广播器对象、ThemeSource对象
+  - Spring事件监听器注册阶段：获取到所有的ApplicationListener事件监听器进行注册，并广播早期事件
+  - BeanFactory初始化完成阶段：初始化所有还未初始化的Bean（不是抽象、单例模式、不是懒加载方式）
+  - Spring应用上下文刷新完成阶段：清除当前Spring应用上下文中的缓存，并发布上下文刷新事件
+  - Spring应用上下文启动阶段：需要主动调用AbstractApplicationContext#start()方法，会调用所有Lifecycle的start()方法，最后会发布上下文启动事件
+  - Spring应用上下文停止阶段：需要主动调用AbstractApplicationContext#stop() 方法，会调用所有Lifecycle的stop()方法，最后会发布上下文停止事件
+  - Spring应用上下文关闭阶段：发布当前Spring应用上下文关闭事件，销毁所有的单例Bean，关闭底层BeanFactory容器
  
 ### 引用外部属性文件
 
@@ -289,8 +316,8 @@
           base-package="com.cn.component" 
           resource-pattern="autowire/*.class"/>
         ```
-  - Spring循环依赖问题？
-    - 参考：https://zhuanlan.zhihu.com/p/62382615
+  - @Bean的处理流程：
+    - Spring应用上下文生命周期，在BeanDefinition（@Component注解、XML配置）的加载完后，会执行所有BeanDefinitionRegistryPostProcessor类型的处理器，Spring内部有一个 ConfigurationClassPostProcessor处理器，它会对所有的配置类进行处理，解析其内部的注解（@PropertySource、@ComponentScan、@Import、@ImportResource、@Bean），其中@Bean注解标注的方法会生成对应的BeanDefinition对象并注册
   
 ### Spring事件机制
   
@@ -308,6 +335,10 @@
   - @EventListener的工作原理：
     - @EventListener用于标注在方法上面，该方法则可以用来处理Spring的相关事件
     - Spring内部有一个处理器EventListenerMethodProcessor，它实现了SmartInitializingSingleton接口，在所有的Bean（不是抽象、单例模式、不是懒加载方式）初始化后，Spring会再次遍历所有初始化好的单例Bean对象时会执行该处理器对该Bean进行处理。在EventListenerMethodProcessor中会对标注了@EventListener注解的方法进行解析，如果符合条件则生成一个 ApplicationListener事件监听器并注册
+  
+### 参考
+  
+  - https://www.cnblogs.com/lifullmoon/p/14422101.html#1-什么是-spring-framework-
 
 
 
