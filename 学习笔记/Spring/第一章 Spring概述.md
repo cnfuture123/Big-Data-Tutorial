@@ -293,7 +293,7 @@
   - Spring应用上下文就是一个ApplicationEventPublisher事件发布器，其内部有一个ApplicationEventMulticaster事件广播器（被观察者），里面保存了所有的ApplicationListener事件监听器（观察者）。Spring应用上下文发布一个事件后会通过ApplicationEventMulticaster事件广播器进行广播，能够处理该事件类型的ApplicationListener事件监听器则进行处理
   - @EventListener的工作原理：
     - @EventListener用于标注在方法上面，该方法则可以用来处理Spring的相关事件
-    
+    - Spring内部有一个处理器EventListenerMethodProcessor，它实现了SmartInitializingSingleton接口，在所有的Bean（不是抽象、单例模式、不是懒加载方式）初始化后，Spring会再次遍历所有初始化好的单例Bean对象时会执行该处理器对该Bean进行处理。在EventListenerMethodProcessor中会对标注了@EventListener注解的方法进行解析，如果符合条件则生成一个 ApplicationListener事件监听器并注册
 
 
 
