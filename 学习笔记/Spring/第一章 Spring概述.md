@@ -240,14 +240,23 @@
     - 根据类型自动装配：将类型匹配的bean作为属性注入到另一个bean中
     - 根据名称自动装配：必须将目标bean的名称和属性名设置的完全相同
 
-### 通过注解配置bean
+### Spring注解
 
-  - 使用注解标识组件
-    - @Component：普通组件
-    - @Controller：表述层控制器组件
+  - Spring模式注解：
+    - @Component：通用组件
+    - @Controller：Web控制器组件
     - @Service：业务逻辑层组件
     - @Repository：持久化层组件
-    - 注意：事实上Spring并没有能力识别一个组件到底是不是它所标记的类型，即使将@Respository注解用在一个表述层控制器组件上面也不会产生任何错误，所以@Respository、@Service、@Controller这几个注解仅仅是为了让开发人员自己明确当前的组件扮演的角色。
+    - @Configuration：配置类模式注解
+    - Spring模式注解都是@Component的派生注解，@Component注解是一个通用组件注解，标注这个注解后表明你需要将其作为一个Spring Bean进行使用，而其他注解都有各自的作用，例如@Controller及其派生注解用于Web场景下处理HTTP请求，@Configuration注解通常会将这个Spring Bean作为一个配置类，也会被CGLIB提供，帮助实现AOP特性
+  - 装配注解：
+    - @ImportResource：替换XML元素<import>
+    - @Import：导入Configuration类
+    - @ComponentScan：扫描指定package下标注Spring模式注解的类
+  - 依赖注入注解：
+    
+  
+  
   - 扫描组件（重要）：
     - 指定被扫描的包：
       ```
