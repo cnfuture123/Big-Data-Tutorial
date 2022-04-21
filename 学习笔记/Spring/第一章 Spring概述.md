@@ -183,10 +183,11 @@
   - 在<bean>元素的scope属性里设置bean的作用域，以决定这个bean是单实例的还是多实例的。
   - 默认情况下，Spring只为每个在IOC容器里声明的bean创建唯一实例，整个IOC容器范围内都能共享该实例：所有后续的getBean()调用和bean引用都将返回这个唯一的bean实例。该作用域被称为singleton，它是所有bean的默认作用域。
   - 作用域配置：
-    - singleton：单个Bean实例
-    - prototype：每次调用getBean()都会返回一个新的实例
-    - request：每次HTTP请求都会创建一个新的Bean，该作用域仅适用于WebApplicationContext环境
-    - session：同一个HTTP Session共享一个Bean，不同的HTTP Session使用不同的Bean。该作用域仅适用于WebApplicationContext环境
+    - singleton：单个Bean实例，一个BeanFactory有且仅有一个实例
+    - prototype：每次依赖查找和依赖注入生成新Bean对象，每次调用getBean()都会返回一个新的实例
+    - request：将Spring Bean存储在ServletRequest上下文中，每次HTTP请求都会创建一个新的Bean，该作用域仅适用于WebApplicationContext环境
+    - session：将Spring Bean存储在HttpSession中，同一个HTTP Session共享一个Bean，不同的HTTP Session使用不同的Bean。该作用域仅适用于WebApplicationContext环境
+    - application：将Spring Bean存储在ServletContext中
 
 ### bean的生命周期（重要）
 
@@ -195,21 +196,17 @@
     - Spring Bean元信息解析阶段：对上一步的配置元信息进行解析，解析成BeanDefinition对象，该对象包含定义Bean的所有信息，用于实例化一个Spring Bean
     - Spring Bean元信息注册阶段：将BeanDefinition配置元信息 保存至BeanDefinitionRegistry的ConcurrentHashMap集合中
     - Spring BeanDefinition合并阶段：定义的Bean可能存在层次关系，则需要将它们进行合并，存在相同配置则覆盖父属性，最终生成一个RootBeanDefinition对象
-    - Spring Bean的实例化阶段：
-  - Spring IOC容器对bean的生命周期进行管理的过程：
-    - 通过构造器或工厂方法创建bean实例
-    - 为bean的属性设置值和对其他bean的引用
-    - 调用bean的初始化方法
-    - 使用bean
-    - 当容器关闭时，调用bean的销毁方法
+    - Spring Bean的实例化阶段：首先通过类加载器加载出一个Class对象，通过它的构造器创建一个实例对象，构造器注入在此处会完成。在实例化阶段Spring提供了实例化前后两个扩展点（InstantiationAwareBeanPostProcessor的postProcessBeforeInstantiation、postProcessAfterInstantiation方法）
+    - Spring Bean属性赋值阶段：在Spring实例化后，需要对其相关属性进行赋值，注入依赖的对象。首先获取该对象所有属性与属性值的映射，可能已定义，也可能需要注入，在这里都会进行赋值（反射机制）
+    - Aware接口回调阶段：如果Spring Bean是Spring提供的Aware接口类型（例如BeanNameAware、ApplicationContextAware），这里会进行接口的回调，注入相关对象（例如beanName、ApplicationContext）
+    - Spring Bean初始化阶段：调用Spring Bean配置的初始化方法，执行顺序：@PostConstruct标注方法、实现InitializingBean接口的afterPropertiesSet()、自定义初始化方法。在初始化阶段Spring提供了初始化前后两个扩展点（BeanPostProcessor的postProcessBeforeInitialization、postProcessAfterInitialization方法）
+    - Spring Bean初始化完成阶段：在所有的Bean初始化后，Spring会再次遍历所有初始化好的单例Bean对象
+    - Spring Bean销毁阶段：当Spring应用上下文关闭或者你主动销毁某个Bean时则进入Spring Bean的销毁阶段，执行顺序：@PreDestroy注解的销毁动作、实现了DisposableBean接口的Bean的回调、destroy-method自定义的销毁方法
+    - Spring垃圾收集（GC）
   - 在配置bean时，通过init-method和destroy-method属性为bean指定初始化和销毁方法
-  - bean的后置处理器：
-    - bean后置处理器允许在调用初始化方法前后对bean进行额外的处理
-    - bean后置处理器对IOC容器里的所有bean实例逐一处理，而非单一实例。
-    - bean后置处理器需要实现接口org.springframework.beans.factory.config.BeanPostProcessor，并调用以下两个方法：
-      - postProcessBeforeInitialization(Object, String)
-      - postProcessAfterInitialization(Object, String)
-
+  - BeanDefinition定义：
+    - BeanDefinition是Spring Bean的“前身”，其内部包含了初始化一个Bean的所有元信息，在Spring初始化一个Bean的过程中需要根据该对象生成一个Bean对象并进行一系列的初始化工作
+ 
 ### 引用外部属性文件
 
   - 当bean的配置信息逐渐增多时，查找和修改一些bean的配置信息就变得愈加困难。这时可以将一部分信息提取到bean配置文件的外部，以properties格式的属性文件保存起来，同时在bean的配置文件中引用properties属性文件中的内容，从而实现一部分属性值在发生变化时仅修改properties属性文件即可。这种技术多用于连接数据库的基本信息的配置。
