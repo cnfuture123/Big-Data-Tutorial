@@ -206,6 +206,9 @@
   - 在配置bean时，通过init-method和destroy-method属性为bean指定初始化和销毁方法
   - BeanDefinition定义：
     - BeanDefinition是Spring Bean的“前身”，其内部包含了初始化一个Bean的所有元信息，在Spring初始化一个Bean的过程中需要根据该对象生成一个Bean对象并进行一系列的初始化工作
+  
+### Spring应用上下文（ApplicationContext）的生命周期
+  - 
  
 ### 引用外部属性文件
 
@@ -254,9 +257,24 @@
     - @Import：导入Configuration类
     - @ComponentScan：扫描指定package下标注Spring模式注解的类
   - 依赖注入注解：
-    
-  
-  
+    - @Autowired：Bean依赖注入
+      - 根据类型实现自动装配
+      - 构造器、普通字段(即使是非public)、一切具有参数的方法都可以应用@Autowired注解
+      - 默认情况下，所有使用@Autowired注解的属性都需要被设置。当Spring找不到匹配的bean装配属性时，会抛出异常
+      - 若某一属性允许不被设置，可以设置@Autowired注解的required属性为false
+      - 默认情况下，当IOC容器里存在多个类型兼容的bean时，Spring会尝试匹配bean的id值是否与变量名相同，如果相同则进行装配。如果bean的id值不相同，通过类型的自动装配将无法工作。此时可以在@Qualifier注解里提供bean的名称。
+    - @Qualifier：细粒度的@Autowired依赖查找
+    - @Resource注解：要求提供一个bean名称的属性，若该属性为空，则自动采用标注处的变量或方法名作为bean的名称
+    - @Inject注解：@Inject和@Autowired注解一样也是按类型注入匹配的bean，但没有reqired属性
+  - @Enable模块驱动：
+    - @EnableWebMvc：启动整个Web MVC模块
+    - @EnableTransactionManagement：启动整个事务管理模块
+    - @EnableCaching：启动整个缓存模块
+    - @EnableAsync：启动整个异步处理模块
+    - 这类注解底层原理就是通过@Import注解导入相关类（Configuration Class、 ImportSelector接口实现、ImportBeanDefinitionRegistrar接口实现），来实现引入某个模块或功能
+  - 条件注解：
+    - @Conditional：引入某个Bean的条件限定
+    - @Profile：基于@Conditional实现，限定Bean的Spring应用环境
   - 扫描组件（重要）：
     - 指定被扫描的包：
       ```
@@ -271,19 +289,6 @@
           base-package="com.cn.component" 
           resource-pattern="autowire/*.class"/>
         ```
-  - 组件装配（重要）：
-    - Controller组件中往往需要用到Service组件的实例，Service组件中往往需要用到Repository组件的实例。Spring可以通过注解的方式帮我们实现属性的装配。
-    - 在指定要扫描的包时，<context:component-scan> 元素会自动注册一个bean的后置处理器：AutowiredAnnotationBeanPostProcessor的实例。该后置处理器可以自动装配标记了@Autowired、@Resource或@Inject注解的属性。
-      - @Autowired注解：
-        - 根据类型实现自动装配
-        - 构造器、普通字段(即使是非public)、一切具有参数的方法都可以应用@Autowired注解
-        - 默认情况下，所有使用@Autowired注解的属性都需要被设置。当Spring找不到匹配的bean装配属性时，会抛出异常
-        - 若某一属性允许不被设置，可以设置@Autowired注解的required属性为false
-        - 默认情况下，当IOC容器里存在多个类型兼容的bean时，Spring会尝试匹配bean的id值是否与变量名相同，如果相同则进行装配。如果bean的id值不相同，通过类型的自动装配将无法工作。此时可以在@Qualifier注解里提供bean的名称。
-      - @Resource注解：
-        - 要求提供一个bean名称的属性，若该属性为空，则自动采用标注处的变量或方法名作为bean的名称。
-      - @Inject注解：
-        - @Inject和@Autowired注解一样也是按类型注入匹配的bean，但没有reqired属性。
   - Spring循环依赖问题？
     - 参考：https://zhuanlan.zhihu.com/p/62382615
   
