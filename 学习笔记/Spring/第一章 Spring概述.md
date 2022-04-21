@@ -277,6 +277,23 @@
         - @Inject和@Autowired注解一样也是按类型注入匹配的bean，但没有reqired属性。
   - Spring循环依赖问题？
     - 参考：https://zhuanlan.zhihu.com/p/62382615
+  
+### Spring事件机制
+  
+  - 主要角色：
+    - Spring事件：org.springframework.context.ApplicationEvent，实现了java.util.EventListener接口
+    - Spring事件监听器：org.springframework.context.ApplicationListener，实现了java.util.EventObject类
+    - Spring事件发布器：org.springframework.context.ApplicationEventPublisher
+    - Spring事件广播器：org.springframework.context.event.ApplicationEventMulticaster
+  - Spring内建的事件：
+    - ContextRefreshedEvent：Spring应用上下文就绪事件
+    - ContextStartedEvent：Spring应用上下文启动事件
+    - ContextStoppedEvent：Spring应用上下文停止事件
+    - ContextClosedEvent：Spring应用上下文关闭事件
+  - Spring应用上下文就是一个ApplicationEventPublisher事件发布器，其内部有一个ApplicationEventMulticaster事件广播器（被观察者），里面保存了所有的ApplicationListener事件监听器（观察者）。Spring应用上下文发布一个事件后会通过ApplicationEventMulticaster事件广播器进行广播，能够处理该事件类型的ApplicationListener事件监听器则进行处理
+  - @EventListener的工作原理：
+    - @EventListener用于标注在方法上面，该方法则可以用来处理Spring的相关事件
+    
 
 
 
